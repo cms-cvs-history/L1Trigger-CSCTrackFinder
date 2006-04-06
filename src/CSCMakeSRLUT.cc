@@ -14,11 +14,14 @@
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 
+#include <Geometry/Records/interface/MuonGeometryRecord.h>
+
 #include "DataFormats/MuonDetId/interface/CSCTriggerNumbering.h"
 #include "DataFormats/MuonDetId/interface/CSCDetId.h"
 
 #include "L1Trigger/CSCCommonTrigger/interface/CSCBitWidths.h"
 #include "L1Trigger/CSCTrackFinder/interface/CSCSectorReceiverLUT.h"
+#include "L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeometry.h"
 
 #include "L1Trigger/CSCTrackFinder/interface/CSCMakeSRLUT.h"
 
@@ -37,13 +40,13 @@ CSCMakeSRLUT::CSCMakeSRLUT(edm::ParameterSet const& conf)
 	{	
 	  if(st == 1)
 	    for(int ss = CSCTriggerNumbering::minTriggerSubSectorId(); ss <= CSCTriggerNumbering::maxTriggerSubSectorId(); ++ss)
-	      {
+	      {		
 		mySR[e-1][se-1][ss-1][st-1] = new CSCSectorReceiverLUT(e,se,ss,st,LUTparam);
 	      }
 	  else
 	    {
 	      mySR[e-1][se-1][0][st-1] = new CSCSectorReceiverLUT(e,se,0,st,LUTparam);
-	      mySR[e-1][se-1][1][st-1] = NULL; // Save space.
+	      mySR[e-1][se-1][1][st-1] = mySR[e-1][se-1][0][st-1]; // Save space.
 	    }	  
 	}
 }
@@ -65,6 +68,11 @@ CSCMakeSRLUT::~CSCMakeSRLUT()
 
 void CSCMakeSRLUT::analyze(edm::Event const& e, edm::EventSetup const& iSetup) 
 {
+  edm::ESHandle<CSCGeometry> pDD;
+
+  iSetup.get<MuonGeometryRecord>().get( pDD );
+  CSCTriggerGeometry::setGeometry(pDD);
+
   if(writeLocalPhi)
     {
       std::string filename = std::string("LocalPhiLUT") + ((binary) ? std::string(".bin") : std::string(".dat"));
@@ -81,7 +89,45 @@ void CSCMakeSRLUT::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
     {}
 
   if(writeGlobalEta)
-    {}
+    {
+      std::string prefix = "GlobalEtaME";
+      std::ofstream GlobalEtaLUT;
+
+      for(int e = CSCDetId::minEndcapId(); e <= CSCDetId::maxEndcapId(); ++e)
+	for(int se = CSCTriggerNumbering::minTriggerSectorId(); se <= CSCTriggerNumbering::maxTriggerSectorId(); ++se)
+	  for(int st = CSCDetId::minStationId(); st <= CSCDetId::maxStationId(); ++st)
+	    for(int ss = CSCTriggerNumbering::minTriggerSubSectorId(); ss <= CSCTriggerNumbering::maxTriggerSubSectorId(); ++ss)
+	      {
+		CSCSectorReceiverLUT::gbletadat thedata;
+		if(st == 1)
+		  {		    
+		    std::string fname = prefix + mySR[e-1][se-1][ss-1][st-1]->encodeFileIndex() + fileSuffix();
+		    GlobalEtaLUT.open(fname.c_str());
+		    for(int i=0; i < 1 << CSCBitWidths::kLocalPhiAddressWidth; ++i)
+		      {
+			thedata = mySR[e-1][se-1][ss-1][st-1]->globalEtaME(i);
+			if(binary) GlobalEtaLUT.write(reinterpret_cast<char*>(&thedata), sizeof(unsigned short));
+			else GlobalEtaLUT << std::hex << (*reinterpret_cast<unsigned short*>(&thedata)) << std::endl;
+		      }
+		    GlobalEtaLUT.close();
+		  }
+		else
+		  {
+		    if(ss == 1)
+		      {		
+			std::string fname = prefix + mySR[e-1][se-1][0][st-1]->encodeFileIndex() + fileSuffix();
+			GlobalEtaLUT.open(fname.c_str());
+			for(int i=0; i < 1<<CSCBitWidths::kLocalPhiAddressWidth; ++i)
+			  {
+			    thedata = mySR[e-1][se-1][0][st-1]->globalEtaME(i);
+			    if(binary) GlobalEtaLUT.write(reinterpret_cast<char*>(&thedata), sizeof(unsigned short));
+			    else GlobalEtaLUT << std::hex << (*reinterpret_cast<unsigned short*>(&thedata)) << std::endl;
+			  }
+			GlobalEtaLUT.close();
+		      }
+		  }
+	      }
+    }
 }
 
 std::string CSCMakeSRLUT::fileSuffix() const {
