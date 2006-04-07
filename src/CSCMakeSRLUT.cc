@@ -107,7 +107,7 @@ void CSCMakeSRLUT::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 		      {
 			thedata = mySR[e-1][se-1][ss-1][st-1]->globalEtaME(i);
 			if(binary) GlobalEtaLUT.write(reinterpret_cast<char*>(&thedata), sizeof(unsigned short));
-			else GlobalEtaLUT << std::hex << (*reinterpret_cast<unsigned short*>(&thedata)) << std::endl;
+			else GlobalEtaLUT << std::dec << (*reinterpret_cast<unsigned short*>(&thedata)) << std::endl;
 		      }
 		    GlobalEtaLUT.close();
 		  }
