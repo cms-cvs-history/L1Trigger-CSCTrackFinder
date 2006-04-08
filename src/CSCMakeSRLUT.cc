@@ -28,6 +28,9 @@
 CSCMakeSRLUT::CSCMakeSRLUT(edm::ParameterSet const& conf)
 {
   writeLocalPhi = conf.getUntrackedParameter<bool>("WriteLocalPhi",true);
+  station = conf.getUntrackedParameter<int>("Station",-1);
+  sector = conf.getUntrackedParameter<int>("Sector",-1);
+  endcap = conf.getUntrackedParameter<int>("Endcap",-1);
   writeGlobalPhi = conf.getUntrackedParameter<bool>("WriteGlobalPhi",true);
   writeGlobalEta = conf.getUntrackedParameter<bool>("WriteGlobalEta",true);
   binary = conf.getUntrackedParameter<bool>("BinaryOutput",true);
@@ -81,7 +84,7 @@ void CSCMakeSRLUT::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 	{
 	  CSCSectorReceiverLUT::lclphidat thedata = mySR[0][0][0][0]->localPhi(i);
 	  if(binary) LocalPhiLUT.write(reinterpret_cast<char*>(&thedata), sizeof(unsigned short));
-	  else LocalPhiLUT << std::hex << (*reinterpret_cast<unsigned short*>(&thedata)) << std::endl;
+	  else LocalPhiLUT << std::dec << (*reinterpret_cast<unsigned short*>(&thedata)) << std::endl;
 	}
     }
 
@@ -94,39 +97,43 @@ void CSCMakeSRLUT::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
       std::ofstream GlobalEtaLUT;
 
       for(int e = CSCDetId::minEndcapId(); e <= CSCDetId::maxEndcapId(); ++e)
-	for(int se = CSCTriggerNumbering::minTriggerSectorId(); se <= CSCTriggerNumbering::maxTriggerSectorId(); ++se)
-	  for(int st = CSCDetId::minStationId(); st <= CSCDetId::maxStationId(); ++st)
-	    for(int ss = CSCTriggerNumbering::minTriggerSubSectorId(); ss <= CSCTriggerNumbering::maxTriggerSubSectorId(); ++ss)
-	      {
-		CSCSectorReceiverLUT::gbletadat thedata;
-		if(st == 1)
-		  {		    
-		    std::string fname = prefix + mySR[e-1][se-1][ss-1][st-1]->encodeFileIndex() + fileSuffix();
-		    GlobalEtaLUT.open(fname.c_str());
-		    for(int i=0; i < 1 << CSCBitWidths::kLocalPhiAddressWidth; ++i)
-		      {
-			thedata = mySR[e-1][se-1][ss-1][st-1]->globalEtaME(i);
-			if(binary) GlobalEtaLUT.write(reinterpret_cast<char*>(&thedata), sizeof(unsigned short));
-			else GlobalEtaLUT << std::dec << (*reinterpret_cast<unsigned short*>(&thedata)) << std::endl;
-		      }
-		    GlobalEtaLUT.close();
-		  }
-		else
-		  {
-		    if(ss == 1)
-		      {		
-			std::string fname = prefix + mySR[e-1][se-1][0][st-1]->encodeFileIndex() + fileSuffix();
-			GlobalEtaLUT.open(fname.c_str());
-			for(int i=0; i < 1<<CSCBitWidths::kLocalPhiAddressWidth; ++i)
-			  {
-			    thedata = mySR[e-1][se-1][0][st-1]->globalEtaME(i);
-			    if(binary) GlobalEtaLUT.write(reinterpret_cast<char*>(&thedata), sizeof(unsigned short));
-			    else GlobalEtaLUT << std::hex << (*reinterpret_cast<unsigned short*>(&thedata)) << std::endl;
-			  }
-			GlobalEtaLUT.close();
-		      }
-		  }
-	      }
+	if(endcap == -1 || endcap == e)
+	  for(int se = CSCTriggerNumbering::minTriggerSectorId(); se <= CSCTriggerNumbering::maxTriggerSectorId(); ++se)
+	    if(sector == -1 || sector == se)
+	      for(int st = CSCDetId::minStationId(); st <= CSCDetId::maxStationId(); ++st)
+		if(station == -1 || station == st)
+		  for(int ss = CSCTriggerNumbering::minTriggerSubSectorId(); ss <= CSCTriggerNumbering::maxTriggerSubSectorId(); ++ss)
+		    {
+		      
+		      CSCSectorReceiverLUT::gbletadat thedata;
+		      if(st == 1)
+			{		    
+			  std::string fname = prefix + mySR[e-1][se-1][ss-1][st-1]->encodeFileIndex() + fileSuffix();
+			  GlobalEtaLUT.open(fname.c_str());
+			  for(int i=0; i < 1 << CSCBitWidths::kLocalPhiAddressWidth; ++i)
+			    {
+			      thedata = mySR[e-1][se-1][ss-1][st-1]->globalEtaME(i);
+			      if(binary) GlobalEtaLUT.write(reinterpret_cast<char*>(&thedata), sizeof(unsigned short));
+			      else GlobalEtaLUT << std::dec << (*reinterpret_cast<unsigned short*>(&thedata)) << std::endl;
+			    }
+			  GlobalEtaLUT.close();
+			}
+		      else
+			{
+			  if(ss == 1)
+			    {		
+			      std::string fname = prefix + mySR[e-1][se-1][0][st-1]->encodeFileIndex() + fileSuffix();
+			      GlobalEtaLUT.open(fname.c_str());
+			      for(int i=0; i < 1<<CSCBitWidths::kLocalPhiAddressWidth; ++i)
+				{
+				  thedata = mySR[e-1][se-1][0][st-1]->globalEtaME(i);
+				  if(binary) GlobalEtaLUT.write(reinterpret_cast<char*>(&thedata), sizeof(unsigned short));
+				  else GlobalEtaLUT << std::hex << (*reinterpret_cast<unsigned short*>(&thedata)) << std::endl;
+				}
+			      GlobalEtaLUT.close();
+			    }
+			}
+		    }
     }
 }
 
