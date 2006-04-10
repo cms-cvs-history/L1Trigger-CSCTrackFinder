@@ -139,6 +139,6 @@ void CSCMakeSRLUT::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 
 std::string CSCMakeSRLUT::fileSuffix() const {
   std::string fileName = "";
-  fileName += ((binary) ? "LUT.bin" : "LUT.dat");
+  fileName += ((binary) ? ".bin" : ".dat");
   return fileName;
 }
