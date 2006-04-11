@@ -61,11 +61,11 @@ void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetu
   for(unsigned int address = 0; address < 1<<CSCBitWidths::kLocalPhiAddressWidth; ++address)
     {
       unsigned short mLUT, tstLUT;
-      CSCSectorReceiverLUT::lclphidat mout, tstout;
+      lclphidat mout, tstout;
       mout = myLUT->localPhi(address);
       tstout = testLUT->localPhi(address);
-      mLUT = (*reinterpret_cast<unsigned short*>(&mout));
-      tstLUT = (*reinterpret_cast<unsigned short*>(&tstout));
+      mLUT = mout.toint();
+      tstLUT = tstout.toint();
       if(mLUT != tstLUT)
 	edm::LogInfo("mismatch|LocalPhi") << mLUT<< " != " << tstLUT;
     }
@@ -75,7 +75,7 @@ void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetu
   // should match for all valid inputs
   for(int c = CSCTriggerNumbering::minTriggerCscId(); c <= CSCTriggerNumbering::maxTriggerCscId(); ++c)
     {
-      CSCSectorReceiverLUT::gbletadat mgEta, tstgEta;
+      gbletadat mgEta, tstgEta;
 
       CSCTriggerGeomManager* geom = CSCTriggerGeometry::get();
       CSCChamber* thechamber = geom->chamber(endcap, station, sector, subsector, c);
@@ -90,22 +90,24 @@ void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetu
 	      {
 
 		ntot += 1.0;
-		unsigned theadd = (c<<15) | (wg<<8) | (phil << 6) | 0;
-		
-		mgEta = myLUT->globalEtaME(theadd);
-		tstgEta = testLUT->globalEtaME(theadd);
-		unsigned short my = (*reinterpret_cast<unsigned short*>(&mgEta));
-		unsigned short test = (*reinterpret_cast<unsigned short*>(&tstgEta));
-		
-		if(my != test)
-		  {
-		    edm::LogInfo("mismatch:GlobalEta") << c << ' ' << phil << ' ' << wg << ' '
-						       << my << " != " << test;
-		  }
-		else if( my == test )
+				
+		mgEta = myLUT->globalEtaME(0, (phil << 8), wg, c);
+		tstgEta = testLUT->globalEtaME(0, (phil << 8), wg, c);
+		unsigned short my, test;
+	
+		my = mgEta.toint();
+		test = tstgEta.toint();
+
+		if( my == test )
 		  nmatch += 1.0;
-		if( my == test + 1 || my == test - 1 )
+		else if( my == test + 1 || my == test - 1 )
 		  nwithinone += 1.0;
+		else
+                  {
+		    std::cout << mgEta.global_eta << std::endl;
+		    edm::LogInfo("mismatch:GlobalEta") << c << ' ' << wg << ' ' << phil << ' ' << 0 << ' ' << my << " != " << test;
+                  }
+
 	      }
 	}
     }
