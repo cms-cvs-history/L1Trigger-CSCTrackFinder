@@ -87,11 +87,11 @@ void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetu
         {
           const CSCLayerGeometry* layergeom = thechamber->layer(3)->geometry();
           int nWireGroups = layergeom->numberOfWireGroups();
-
-          for(int wg = 0; wg < nWireGroups; ++wg)
-            for(int phil = 0; phil < 1<<CSCBitWidths::kLocalPhiDataBitWidth; ++phil)
-              {
-
+	  
+	  for(int wg = 0; wg < nWireGroups; ++wg)
+	    for(int phil = 0; phil < 1<<CSCBitWidths::kLocalPhiDataBitWidth; ++phil)
+	      {
+		
                 ntotphi += 1.0;
 
                 mgPhi = myLUT->globalPhiME(phil, wg, c);
@@ -103,7 +103,7 @@ void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetu
 
                 if( my == test )
                   nmatchphi += 1.0;
-                else if( my == test + 1 || my == test - 1 )
+                else if( my <= test + 5 && my >= test - 5 )
                   nwithinonephi += 1.0;
                 else
                   {
@@ -155,7 +155,7 @@ void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetu
 	}
     }
   edm::LogInfo("MatchingInfo") << "PERCENT MATCHING GLOBAL PHI VALUES: "<< nmatchphi/ntotphi;
-  edm::LogInfo("MatchingInfo") << "PERCENT WITHIN ONE PHI UNIT: " << nwithinonephi/ntotphi;
+  edm::LogInfo("MatchingInfo") << "PERCENT WITHIN .105 DEG: " << nwithinonephi/ntotphi;
   edm::LogInfo("MatchingInfo") << "PERCENT GPHI ACCEPTABLE: " << (nmatchphi + nwithinonephi)/ntotphi;
 
   edm::LogInfo("MatchingInfo") << "PERCENT MATCHING GLOBAL ETA VALUES: "<< nmatcheta/ntoteta;
