@@ -89,7 +89,50 @@ void CSCMakeSRLUT::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
     }
 
   if(writeGlobalPhi)
-    {}
+    {
+      std::string prefix = "GlobalPhiME";
+      std::ofstream GlobalPhiLUT;
+
+      for(int e = CSCDetId::minEndcapId(); e <= CSCDetId::maxEndcapId(); ++e)
+        if(endcap == -1 || endcap == e)
+          for(int se = CSCTriggerNumbering::minTriggerSectorId(); se <= CSCTriggerNumbering::maxTriggerSectorId(); ++se)
+            if(sector == -1 || sector == se)
+              for(int st = CSCDetId::minStationId(); st <= CSCDetId::maxStationId(); ++st)
+                if(station == -1 || station == st)
+                  for(int ss = CSCTriggerNumbering::minTriggerSubSectorId(); ss <= CSCTriggerNumbering::maxTriggerSubSectorId(); ++ss)
+                    {
+
+                      unsigned short thedata;
+                      if(st == 1)
+                        {
+			  std::string fname = prefix + mySR[e-1][se-1][ss-1][st-1]->encodeFileIndex() + fileSuffix();
+                          GlobalPhiLUT.open(fname.c_str());
+                          for(int i=0; i < 1 << CSCBitWidths::kGlobalPhiAddressWidth; ++i)
+                            {
+                              thedata = mySR[e-1][se-1][ss-1][st-1]->globalPhiME(i).toint();
+                              if(binary) GlobalPhiLUT.write(reinterpret_cast<char*>(&thedata), sizeof(unsigned short));
+                              else GlobalPhiLUT << std::dec << thedata << std::endl;
+			    }
+                          GlobalPhiLUT.close();
+                        }
+                      else
+                        {
+                          if(ss == 1)
+                            {
+			      std::string fname = prefix + mySR[e-1][se-1][0][st-1]->encodeFileIndex() + fileSuffix();
+                              GlobalPhiLUT.open(fname.c_str());
+                              for(int i=0; i < 1<<CSCBitWidths::kGlobalPhiAddressWidth; ++i)
+                                {
+                                  thedata = mySR[e-1][se-1][0][st-1]->globalPhiME(i).toint();
+                                  if(binary) GlobalPhiLUT.write(reinterpret_cast<char*>(&thedata), sizeof(unsigned short));
+                                  else GlobalPhiLUT << std::dec << thedata << std::endl;
+                                }
+                              GlobalPhiLUT.close();
+                            }
+                        }
+                    }
+    }
+  
 
   if(writeGlobalEta)
     {
@@ -110,7 +153,7 @@ void CSCMakeSRLUT::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 			{		    
 			  std::string fname = prefix + mySR[e-1][se-1][ss-1][st-1]->encodeFileIndex() + fileSuffix();
 			  GlobalEtaLUT.open(fname.c_str());
-			  for(int i=0; i < 1 << CSCBitWidths::kLocalPhiAddressWidth; ++i)
+			  for(int i=0; i < 1 << CSCBitWidths::kGlobalEtaAddressWidth; ++i)
 			    {
 			      thedata = mySR[e-1][se-1][ss-1][st-1]->globalEtaME(i).toint();
 			      if(binary) GlobalEtaLUT.write(reinterpret_cast<char*>(&thedata), sizeof(unsigned short));
@@ -124,7 +167,7 @@ void CSCMakeSRLUT::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 			    {		
 			      std::string fname = prefix + mySR[e-1][se-1][0][st-1]->encodeFileIndex() + fileSuffix();
 			      GlobalEtaLUT.open(fname.c_str());
-			      for(int i=0; i < 1<<CSCBitWidths::kLocalPhiAddressWidth; ++i)
+			      for(int i=0; i < 1<<CSCBitWidths::kGlobalEtaAddressWidth; ++i)
 				{
 				  thedata = mySR[e-1][se-1][0][st-1]->globalEtaME(i).toint();
 				  if(binary) GlobalEtaLUT.write(reinterpret_cast<char*>(&thedata), sizeof(unsigned short));

@@ -70,9 +70,52 @@ void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetu
 	edm::LogInfo("mismatch|LocalPhi") << mLUT<< " != " << tstLUT;
     }
 
-  double ntot = 0.0, nmatch = 0.0, nwithinone = 0.0;
+  double ntoteta = 0.0, nmatcheta = 0.0, nwithinoneeta = 0.0;
+  double ntotphi = 0.0, nmatchphi = 0.0, nwithinonephi = 0.0;
+
+  //test global phi
+  // should match (or be close) for all valid inputs.
+
+  for(int c = CSCTriggerNumbering::minTriggerCscId(); c <= CSCTriggerNumbering::maxTriggerCscId(); ++c)
+    {
+      gblphidat mgPhi, tstgPhi;
+
+      CSCTriggerGeomManager* geom = CSCTriggerGeometry::get();
+      CSCChamber* thechamber = geom->chamber(endcap, station, sector, subsector, c);
+      
+      if(thechamber)
+        {
+          const CSCLayerGeometry* layergeom = thechamber->layer(3)->geometry();
+          int nWireGroups = layergeom->numberOfWireGroups();
+
+          for(int wg = 0; wg < nWireGroups; ++wg)
+            for(int phil = 0; phil < 1<<CSCBitWidths::kLocalPhiDataBitWidth; ++phil)
+              {
+
+                ntotphi += 1.0;
+
+                mgPhi = myLUT->globalPhiME(phil, wg, c);
+                tstgPhi = testLUT->globalPhiME(phil, wg, c);
+                unsigned short my, test;
+
+                my = mgPhi.toint();
+                test = tstgPhi.toint();
+
+                if( my == test )
+                  nmatchphi += 1.0;
+                else if( my == test + 1 || my == test - 1 )
+                  nwithinonephi += 1.0;
+                else
+                  {
+		    edm::LogInfo("mismatch:GlobalPhi") << c << ' ' << wg << ' ' << phil << ' ' << 0 << ' ' << my << " != " << test;
+                  }
+
+              }
+        }
+    }
+
   //test global eta
-  // should match for all valid inputs
+  // should match (or be close) for all valid inputs.
   for(int c = CSCTriggerNumbering::minTriggerCscId(); c <= CSCTriggerNumbering::maxTriggerCscId(); ++c)
     {
       gbletadat mgEta, tstgEta;
@@ -89,7 +132,7 @@ void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetu
 	    for(int phil = 0; phil < 4; ++phil)
 	      {
 
-		ntot += 1.0;
+		ntoteta += 1.0;
 				
 		mgEta = myLUT->globalEtaME(0, (phil << 8), wg, c);
 		tstgEta = testLUT->globalEtaME(0, (phil << 8), wg, c);
@@ -99,9 +142,9 @@ void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetu
 		test = tstgEta.toint();
 
 		if( my == test )
-		  nmatch += 1.0;
+		  nmatcheta += 1.0;
 		else if( my == test + 1 || my == test - 1 )
-		  nwithinone += 1.0;
+		  nwithinoneeta += 1.0;
 		else
                   {
 		    std::cout << mgEta.global_eta << std::endl;
@@ -111,9 +154,13 @@ void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetu
 	      }
 	}
     }
-  edm::LogInfo("MatchingInfo") << "PERCENT MATCHING GLOBAL ETA VALUES: "<< nmatch/ntot;
-  edm::LogInfo("MatchingInfo") << "PERCENT WITHIN ONE ETA UNIT: " << nwithinone/ntot;
-  edm::LogInfo("MatchingInfo") << "PERCENT ACCEPTABLE: " << (nmatch + nwithinone)/ntot;
+  edm::LogInfo("MatchingInfo") << "PERCENT MATCHING GLOBAL PHI VALUES: "<< nmatchphi/ntotphi;
+  edm::LogInfo("MatchingInfo") << "PERCENT WITHIN ONE PHI UNIT: " << nwithinonephi/ntotphi;
+  edm::LogInfo("MatchingInfo") << "PERCENT GPHI ACCEPTABLE: " << (nmatchphi + nwithinonephi)/ntotphi;
+
+  edm::LogInfo("MatchingInfo") << "PERCENT MATCHING GLOBAL ETA VALUES: "<< nmatcheta/ntoteta;
+  edm::LogInfo("MatchingInfo") << "PERCENT WITHIN ONE ETA UNIT: " << nwithinoneeta/ntoteta;
+  edm::LogInfo("MatchingInfo") << "PERCENT GETA ACCEPTABLE: " << (nmatcheta + nwithinoneeta)/ntoteta;
 
 }
 
