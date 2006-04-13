@@ -55,7 +55,6 @@ void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetu
   iSetup.get<MuonGeometryRecord>().get( pDD );
   CSCTriggerGeometry::setGeometry(pDD);  
   
-  
   // test local phi
   // should match for all inputs
   for(unsigned int address = 0; address < 1<<CSCBitWidths::kLocalPhiAddressWidth; ++address)
