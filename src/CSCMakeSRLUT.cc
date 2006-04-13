@@ -1,8 +1,8 @@
 /** 
- * Demo analyzer for reading digis.
- * Validates against raw data unpack.
- * author L. Gray 2/26/06 
- * ripped from Jeremy's and Rick's analyzers
+ *
+ * Analyzer that writes LUTs.
+ *
+ *\author L. Gray (4/13/06)
  *   
  */
 
@@ -90,7 +90,8 @@ void CSCMakeSRLUT::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 
   if(writeGlobalPhi)
     {
-      std::string prefix = "GlobalPhiME";
+      std::string MEprefix = "GlobalPhiME";
+      std::string MBprefix = "GlobalPhiMB";
       std::ofstream GlobalPhiLUT;
 
       for(int e = CSCDetId::minEndcapId(); e <= CSCDetId::maxEndcapId(); ++e)
@@ -105,7 +106,7 @@ void CSCMakeSRLUT::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
                       unsigned short thedata;
                       if(st == 1)
                         {
-			  std::string fname = prefix + mySR[e-1][se-1][ss-1][st-1]->encodeFileIndex() + fileSuffix();
+			  std::string fname = MEprefix + mySR[e-1][se-1][ss-1][st-1]->encodeFileIndex() + fileSuffix();
                           GlobalPhiLUT.open(fname.c_str());
                           for(int i=0; i < 1 << CSCBitWidths::kGlobalPhiAddressWidth; ++i)
                             {
@@ -114,12 +115,25 @@ void CSCMakeSRLUT::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
                               else GlobalPhiLUT << std::dec << thedata << std::endl;
 			    }
                           GlobalPhiLUT.close();
-                        }
+			  
+			  // Write MB global phi LUTs
+
+			  fname = MBprefix + mySR[e-1][se-1][ss-1][st-1]->encodeFileIndex() + fileSuffix();
+			  GlobalPhiLUT.open(fname.c_str());
+                          for(int i=0; i < 1 << CSCBitWidths::kGlobalPhiAddressWidth; ++i)
+                            {
+                              thedata = mySR[e-1][se-1][ss-1][st-1]->globalPhiMB(i).toint();
+                              if(binary) GlobalPhiLUT.write(reinterpret_cast<char*>(&thedata), sizeof(unsigned short));
+                              else GlobalPhiLUT << std::dec << thedata << std::endl;
+                            }
+                          GlobalPhiLUT.close();
+
+			}
                       else
                         {
                           if(ss == 1)
                             {
-			      std::string fname = prefix + mySR[e-1][se-1][0][st-1]->encodeFileIndex() + fileSuffix();
+			      std::string fname = MEprefix + mySR[e-1][se-1][0][st-1]->encodeFileIndex() + fileSuffix();
                               GlobalPhiLUT.open(fname.c_str());
                               for(int i=0; i < 1<<CSCBitWidths::kGlobalPhiAddressWidth; ++i)
                                 {

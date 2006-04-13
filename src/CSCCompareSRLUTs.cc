@@ -1,8 +1,8 @@
 /** 
- * Demo analyzer for reading digis.
- * Validates against raw data unpack.
- * author L. Gray 2/26/06 
- * ripped from Jeremy's and Rick's analyzers
+ *
+ * Analyzer to compare one LUT to another and record the differences.
+ * author L. Gray 4/13/06 
+ *
  *   
  */
 
