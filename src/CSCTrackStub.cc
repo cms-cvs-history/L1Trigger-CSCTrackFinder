@@ -7,6 +7,13 @@ double CSCTrackStub::thePhiBinning = CSCConstants::SECTOR_RAD/(1<<CSCBitWidths::
 double CSCTrackStub::theEtaBinning = (CSCConstants::maxEta - CSCConstants::minEta)/CSCConstants::etaBins;
 
 CSCTrackStub::CSCTrackStub(const CSCCorrelatedLCTDigi& aDigi,
+			   const CSCDetId& aDetId): theDetId_(aDetId),
+						    theDigi_(aDigi),
+						    thePhi_(0),
+						    theEta_(0)
+{}
+
+CSCTrackStub::CSCTrackStub(const CSCCorrelatedLCTDigi& aDigi,
 			   const CSCDetId& aDetId, 
 			   const unsigned& phi, const unsigned& eta): theDetId_(aDetId),
 								      theDigi_(aDigi),
