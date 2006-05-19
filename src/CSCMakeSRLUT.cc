@@ -23,7 +23,7 @@
 #include "L1Trigger/CSCTrackFinder/interface/CSCSectorReceiverLUT.h"
 #include "L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeometry.h"
 
-#include "L1Trigger/CSCTrackFinder/interface/CSCMakeSRLUT.h"
+#include "L1Trigger/CSCTrackFinder/src/CSCMakeSRLUT.h"
 
 CSCMakeSRLUT::CSCMakeSRLUT(edm::ParameterSet const& conf)
 {
