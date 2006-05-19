@@ -1,4 +1,5 @@
 #include <L1Trigger/CSCTrackFinder/interface/CSCMuonPortCard.h>
+#include <L1Trigger/CSCCommonTrigger/interface/CSCConstants.h>
 
 void CSCMuonPortCard::loadDigis(const CSCCorrelatedLCTDigiCollection& thedigis)
 {
@@ -19,8 +20,27 @@ void CSCMuonPortCard::loadDigis(const CSCCorrelatedLCTDigiCollection& thedigis)
     }  
 }
 
-std::vector<CSCTrackStub> CSCMuonPortCard::sort(const unsigned& sector, const unsigned& station, const int& bx)
+std::vector<CSCTrackStub> CSCMuonPortCard::sort(const unsigned& endcap, const unsigned& station, 
+						const unsigned& sector, const unsigned& subsector, const int& bx)
 {
   std::vector<CSCTrackStub> result;
+  std::vector<CSCTrackStub>::iterator LCT;
+
+  result = _stubs.get(endcap, station, sector, subsector, bx);
+
+  /// Make sure no Quality 0 or non-valid LCTs come through the portcard.
+  for(LCT = result.begin(); LCT != result.end(); LCT++)
+    {
+      if( !(LCT->getQuality() && LCT->isValid()) )
+	result.erase(LCT, LCT);
+    }
+
+  if(result.size()) 
+    {
+      std::sort(result.begin(), result.end(), std::greater<CSCTrackStub>());
+      if(result.size() > CSCConstants::maxStubs) /// Can only return maxStubs or less LCTs.
+	result.erase(result.begin() + CSCConstants::maxStubs, result.end());
+    }  
+
   return result;
 }
