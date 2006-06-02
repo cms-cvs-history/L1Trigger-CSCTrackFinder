@@ -40,6 +40,12 @@ std::vector<CSCTrackStub> CSCMuonPortCard::sort(const unsigned& endcap, const un
       std::sort(result.begin(), result.end(), std::greater<CSCTrackStub>());
       if(result.size() > CSCConstants::maxStubs) /// Can only return maxStubs or less LCTs.
 	result.erase(result.begin() + CSCConstants::maxStubs, result.end());
+
+
+      /// go through the sorted list and label the LCTs with a sorting number
+      unsigned i = 0;
+      for(LCT = result.begin(); LCT != result.end(); LCT++)
+	LCT->setMPCLink(++i);
     }  
 
   return result;
