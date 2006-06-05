@@ -1,0 +1,67 @@
+#Common Parameters for the various CSCTrackFinder producers
+block CSCTrackFinderCommon =
+{
+   #minimum and maximum bx to process
+   untracked int32 minBX = -3
+   untracked int32 maxBX = 3
+}
+
+block CSCTrackFinderProducerNames =
+{
+   #names of input sources
+   untracked string CSCTrackProducer = "l1csctracks"
+   untracked string CorrelatedLCTProducer = "lctproducer"
+   untracked string SectorReceiverInput = "cscmuonportcard"
+}
+
+module cscmuonportcard = CSCTFLCTProducer
+{
+   using CSCTrackFinderProducerNames
+   PSet MuonPortCard =
+      {
+	using CSCTrackFinderCommon
+      }
+}
+
+module l1csctracks = CSCTFTrackProducer
+{   
+   using CSCTrackFinderProducerNames
+
+   PSet SectorProcessor = 
+      {
+        using CSCTrackFinderCommon
+        
+	untracked uint32 CoreLatency = 6
+	untracked bool UseBXA = true 
+	untracked vuint32 EtaWindows = {2, 2, 2, 2, 2, 2}
+	untracked uint32 BXAExtendLength = 1               
+
+   	PSet SRLUT = {
+			untracked bool ReadLUTs = false
+			untracked bool Binary = false
+			untracked string LUTPath = "./"
+		     }
+
+   	PSet PTLUT = {
+			untracked bool ReadPtLUT = false
+			untracked uint32 PtMethod = 1
+			untracked uint32 LowQualityFlag = 4
+		     }
+      }
+}
+
+module csctfmuonsorter = CSCTFCandidateProducer
+{
+   using CSCTrackFinderProducerNames
+   PSet MuonSorter = 
+      {
+	using CSCTrackFinderCommon
+      }
+}
+
+#the four possible execution sequences
+
+sequence mpc = {cscmuonportcard}
+sequence csc_sp_tracks = {cscmuonportcard, l1csctracks}
+sequence csc_tf_cands = {cscmuonportcard, l1csctracks, csctfmuonsorter}
+sequence csc_sp_ms = {l1csctracks, csctfmuonsorter}
