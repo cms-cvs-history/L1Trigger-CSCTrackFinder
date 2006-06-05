@@ -3,6 +3,8 @@
 
 void CSCMuonPortCard::loadDigis(const CSCCorrelatedLCTDigiCollection& thedigis)
 {
+  clear();
+
   CSCCorrelatedLCTDigiCollection::DigiRangeIterator Citer;
 
   // First step is to put everything from the digi container into a trigger container.
