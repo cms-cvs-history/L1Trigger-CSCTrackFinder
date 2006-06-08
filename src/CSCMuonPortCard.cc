@@ -1,6 +1,8 @@
 #include <L1Trigger/CSCTrackFinder/interface/CSCMuonPortCard.h>
 #include <L1Trigger/CSCCommonTrigger/interface/CSCConstants.h>
 
+#include <FWCore/MessageLogger/interface/MessageLogger.h>
+
 void CSCMuonPortCard::loadDigis(const CSCCorrelatedLCTDigiCollection& thedigis)
 {
   clear();
@@ -17,6 +19,8 @@ void CSCMuonPortCard::loadDigis(const CSCCorrelatedLCTDigiCollection& thedigis)
       for(; Diter != Dend; Diter++)
 	{
 	  CSCTrackStub theStub((*Diter),(*Citer).first);
+	  LogDebug("CSCMuonPortCard:loadDigis()") << "Inserting stub with digi:\n" <<  theStub.getDigi() 
+						  << "DetId: " << theStub.getDetId() << std::endl;
 	  _stubs.push_back(theStub);
 	}     
     }  

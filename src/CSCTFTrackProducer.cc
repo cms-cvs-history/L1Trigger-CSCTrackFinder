@@ -36,7 +36,7 @@ void CSCTFTrackProducer::produce(edm::Event & e, const edm::EventSetup& c)
   CSCTriggerGeometry::setGeometry(pDD);
 
   edm::Handle<CSCCorrelatedLCTDigiCollection> LCTs;
-  std::auto_ptr<std::vector<csc::L1Track> > track_product(new std::vector<csc::L1Track>());
+  std::auto_ptr<std::vector<csc::L1Track> > track_product(new std::vector<csc::L1Track>);
 
   e.getByLabel(input_module, LCTs);
 

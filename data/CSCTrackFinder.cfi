@@ -2,8 +2,8 @@
 block CSCTrackFinderCommon =
 {
    #minimum and maximum bx to process
-   untracked int32 minBX = -3
-   untracked int32 maxBX = 3
+   untracked int32 MinBX = 3
+   untracked int32 MaxBX = 9
 }
 
 block CSCTrackFinderProducerNames =

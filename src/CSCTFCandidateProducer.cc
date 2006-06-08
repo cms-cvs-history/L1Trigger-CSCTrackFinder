@@ -25,7 +25,7 @@ CSCTFCandidateProducer::~CSCTFCandidateProducer()
 void CSCTFCandidateProducer::produce(edm::Event & e, const edm::EventSetup& c)
 {
   edm::Handle<std::vector<csc::L1Track> > tracks;
-  std::auto_ptr<std::vector<L1MuRegionalCand> > cand_product(new std::vector<L1MuRegionalCand>());
+  std::auto_ptr<std::vector<L1MuRegionalCand> > cand_product(new std::vector<L1MuRegionalCand>);
 
   e.getByLabel(input_module, tracks);
 

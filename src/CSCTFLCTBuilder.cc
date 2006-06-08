@@ -31,12 +31,12 @@ void CSCTFLCTBuilder::buildLCTs(const CSCCorrelatedLCTDigiCollection* input,
 	    se <= CSCTriggerNumbering::maxTriggerSectorId(); ++se)
 	  {
 	    if(st == 1)
-	      {
+	      {		
 		std::vector<CSCTrackStub> subs1, subs2;
 		subs1 = m_muonportcard->sort(e, st, se, 1, bx);
 		subs2 = m_muonportcard->sort(e, st, se, 2, bx);
 		result.insert(result.end(), subs1.begin(), subs1.end());
-		result.insert(result.end(), subs1.begin(), subs2.end());
+		result.insert(result.end(), subs2.begin(), subs2.end());		
 	      }
 	    else
 	      {
@@ -48,5 +48,7 @@ void CSCTFLCTBuilder::buildLCTs(const CSCCorrelatedLCTDigiCollection* input,
 
   std::vector<CSCTrackStub>::const_iterator itr = result.begin();
   for(; itr != result.end(); itr++)
-    output->insertDigi(itr->getDetId(), itr->getDigi());
+    {
+      output->insertDigi(itr->getDetId(), itr->getDigi());
+    }
 }

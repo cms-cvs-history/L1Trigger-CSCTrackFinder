@@ -25,7 +25,7 @@ CSCTFLCTProducer::~CSCTFLCTProducer()
 void CSCTFLCTProducer::produce(edm::Event & e, const edm::EventSetup& c)
 {
   edm::Handle<CSCCorrelatedLCTDigiCollection> input_lcts;
-  std::auto_ptr<CSCCorrelatedLCTDigiCollection> selected_lcts(new CSCCorrelatedLCTDigiCollection());
+  std::auto_ptr<CSCCorrelatedLCTDigiCollection> selected_lcts(new CSCCorrelatedLCTDigiCollection);
 
   e.getByLabel(input_module, input_lcts);
 
