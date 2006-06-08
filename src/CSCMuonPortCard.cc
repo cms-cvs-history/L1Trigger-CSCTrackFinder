@@ -19,8 +19,6 @@ void CSCMuonPortCard::loadDigis(const CSCCorrelatedLCTDigiCollection& thedigis)
       for(; Diter != Dend; Diter++)
 	{
 	  CSCTrackStub theStub((*Diter),(*Citer).first);
-	  LogDebug("CSCMuonPortCard:loadDigis()") << "Inserting stub with digi:\n" <<  theStub.getDigi() 
-						  << "DetId: " << theStub.getDetId() << std::endl;
 	  _stubs.push_back(theStub);
 	}     
     }  
