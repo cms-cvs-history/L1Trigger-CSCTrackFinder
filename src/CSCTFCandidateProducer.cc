@@ -2,7 +2,7 @@
 #include <L1Trigger/CSCTrackFinder/src/CSCTFCandidateBuilder.h>
 
 #include <vector>
-#include <DataFormats/L1CSCTrackFinder/interface/L1Track.h>
+#include <DataFormats/L1CSCTrackFinder/interface/L1CSCTrackCollection.h>
 #include <DataFormats/L1GlobalMuonTrigger/interface/L1MuRegionalCand.h>
 
 #include <FWCore/Framework/interface/Handle.h>
@@ -24,7 +24,7 @@ CSCTFCandidateProducer::~CSCTFCandidateProducer()
 
 void CSCTFCandidateProducer::produce(edm::Event & e, const edm::EventSetup& c)
 {
-  edm::Handle<std::vector<csc::L1Track> > tracks;
+  edm::Handle<L1CSCTrackCollection> tracks;
   std::auto_ptr<std::vector<L1MuRegionalCand> > cand_product(new std::vector<L1MuRegionalCand>);
 
   e.getByLabel(input_module, tracks);
