@@ -1,4 +1,5 @@
 <use name=L1Trigger/CSCTrackFinder>
+<use name=root>
 
 <library file=analysis/CSCMakeSRLUT.cc name=CSCMakeSRLUT>
      <flags SEAL_PLUGIN_NAME="CSCMakeSRLUT">
@@ -6,4 +7,8 @@
 
 <library file=analysis/CSCCompareSRLUTs.cc name=CSCCompareSRLUTs>
      <flags SEAL_PLUGIN_NAME="CSCCompareSRLUTs">
+</library>
+
+<library file=analysis/CSCTFEfficiencies.cc name=CSCTFEfficiencies>
+     <flags SEAL_PLUGIN_NAME="CSCTFEfficiencies">
 </library>
