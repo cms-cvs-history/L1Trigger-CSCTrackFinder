@@ -1,5 +1,8 @@
 #include <L1Trigger/CSCTrackFinder/test/analysis/CSCTFEfficiencies.h>
 
+#include <SimDataFormats/Track/interface/EmbdSimTrackContainer.h>
+#include <DataFormats/L1GlobalMuonTrigger/interface/L1MuRegionalCand.h>
+
 CSCTFEfficiencies::CSCTFEfficiencies(edm::ParameterSet const& conf)
 {
 }
@@ -88,5 +91,47 @@ void CSCTFEfficiencies::endJob()
 
 void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 {
+  // initialize various counters
+  Int_t cnttrk = 0, cntGen = 0;
+  Int_t netaq1 = 0, netaq2 = 0, netaq3 = 0, netatot = 0;
+  Int_t nLoose = 0, nTight = 0;
+  Int_t nPt0 = 0, nPt0q1 = 0, nPt0q2 = 0;
+  Int_t nPt10 = 0, nPt20 = 0, nPt40 = 0, nPt60 = 0;
+  
   // get MC truth and track data here... then run analysis functions
+  edm::Handle<edm::EmbdSimTrackContainer> simTracks;
+  edm::Handle<std::vector<L1MuRegionalCand> > tfTracks;
+
+  e.getByLabel("csctfmuonsorter","CSC", tfTracks);
+  e.getByLabel("SimG4Object",simTracks);
+
+  edm::EmbdSimTrackContainer::const_iterator simTrk = simTracks->begin();
+  std::vector<L1MuRegionalCand>::const_iterator tfTrk;
+
+
+  for(; simTrk != simTracks->end(); simTrk++)
+    {
+      HepLorentzVector mom = simTrk->momentum();
+
+      if( simTrk->type() != 0 && mom.t() > 0.2 )
+	if(mom.perp() > 2 && simTracks->size() < 300)
+	  if(fabs(simTrk->type()) == 13)
+	    {
+	      ++cntGen;
+
+	      double genEta = mom.pseudoRapidity();
+
+	      if( fabs(genEta)>= 1.2 && fabs(genEta) < 2.1 )
+		hAllPt->Fill( mom.perp() );
+
+	      if( mom.perp() >= 10 ) hAllEta->Fill( fabs(genEta) );
+
+	      tfTrk = tfTracks->begin();
+	      for(; tfTrk != tfTracks->end(); tfTrk++)
+		{
+		  // fill in crude track mapping and rest of effic
+		}
+	    }
+    }
+  
 }
