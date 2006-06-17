@@ -1,10 +1,13 @@
-#ifndef CSCTrackFinder_MakeLUT_h
-#define CSCTrackFinder_MakeLUT_h
+#ifndef CSCTrackFinder_CompareSRLUTs_h
+#define CSCTrackFinder_CompareSRLUTs_h
 
 /** 
  * \author L. Gray 2/26/06 
  *   
  */
+
+#include "PluginManager/ModuleDef.h"
+#include "FWCore/Framework/interface/MakerMacros.h"
 
 #include <iostream>
 #include "FWCore/Framework/interface/EDAnalyzer.h"
@@ -19,21 +22,21 @@
 
 class CSCSectorReceiverLUT;
 
-class CSCMakeSRLUT : public edm::EDAnalyzer {
+class CSCCompareSRLUTs : public edm::EDAnalyzer {
  public:
-  explicit CSCMakeSRLUT(edm::ParameterSet const& conf);
-  virtual ~CSCMakeSRLUT();
+  explicit CSCCompareSRLUTs(edm::ParameterSet const& conf);
+  virtual ~CSCCompareSRLUTs();
   virtual void analyze(edm::Event const& e, edm::EventSetup const& iSetup);
   //virtual void endJob();
  private:
   // variables persistent across events should be declared here.
   //
-  
-  std::string fileSuffix() const;   
-  CSCSectorReceiverLUT* mySR[2][6][2][4]; // [Endcap][Sector][Subsector][Station]
-  bool writeLocalPhi, writeGlobalPhi, writeGlobalEta, binary;
-  int endcap, sector, station;
+  CSCSectorReceiverLUT* myLUT, *testLUT; // [Endcap][Sector][Subsector][Station]
+  bool binary;
+  int endcap, sector, station, subsector;
   edm::ParameterSet LUTparam;
 };
+
+DEFINE_FWK_MODULE(CSCCompareSRLUTs)
 
 #endif

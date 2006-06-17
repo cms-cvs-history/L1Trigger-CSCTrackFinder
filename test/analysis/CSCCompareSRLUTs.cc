@@ -26,7 +26,7 @@
 
 #include <FWCore/MessageLogger/interface/MessageLogger.h>
 
-#include "L1Trigger/CSCTrackFinder/src/CSCCompareSRLUTs.h"
+#include "L1Trigger/CSCTrackFinder/test/analysis/CSCCompareSRLUTs.h"
 
 CSCCompareSRLUTs::CSCCompareSRLUTs(edm::ParameterSet const& conf)
 {
