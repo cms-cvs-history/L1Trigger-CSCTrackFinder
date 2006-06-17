@@ -1,0 +1,9 @@
+<use name=L1Trigger/CSCTrackFinder>
+
+<library file=analysis/CSCMakeSRLUT.cc name=CSCMakeSRLUT>
+     <flags SEAL_PLUGIN_NAME="CSCMakeSRLUT">
+</library>
+
+<library file=analysis/CSCCompareSRLUTs.cc name=CSCCompareSRLUTs>
+     <flags SEAL_PLUGIN_NAME="CSCCompareSRLUTs">
+</library>
