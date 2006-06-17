@@ -31,6 +31,8 @@ class CSCTFEfficiencies : public edm::EDAnalyzer {
  private:
   // variables persistent across events should be declared here.
   //
+  Int_t cnttrk, cntGen;
+
   TH1F* hPtGen, *hPtCSC;
 
   TH1F* hAllPt, *hPt0, *hPt0q1, *hPt0q2, *hPt10, *hPt20, *hPt40, *hPt60;
