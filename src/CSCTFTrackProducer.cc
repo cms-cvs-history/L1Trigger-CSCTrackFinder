@@ -1,5 +1,7 @@
 #include <L1Trigger/CSCTrackFinder/src/CSCTFTrackProducer.h>
 
+#include <L1Trigger/CSCTrackFinder/src/CSCTFTrackBuilder.h>
+
 #include <vector>
 #include <DataFormats/L1CSCTrackFinder/interface/L1CSCTrackCollection.h>
 #include <DataFormats/CSCDigi/interface/CSCCorrelatedLCTDigiCollection.h>

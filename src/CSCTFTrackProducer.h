@@ -6,7 +6,7 @@
 #include <FWCore/Framework/interface/EDProducer.h>
 #include <FWCore/ParameterSet/interface/ParameterSet.h>
 
-#include <L1Trigger/CSCTrackFinder/src/CSCTFTrackBuilder.h>
+class CSCTFTrackBuilder;
 
 class CSCTFTrackProducer : public edm::EDProducer
 {
