@@ -24,16 +24,18 @@
 class CSCTFEfficiencies : public edm::EDAnalyzer {
  public:
   explicit CSCTFEfficiencies(edm::ParameterSet const& conf);
-  virtual ~CSCTFEfficiencies();
+  virtual ~CSCTFEfficiencies() {}
   virtual void analyze(edm::Event const& e, edm::EventSetup const& iSetup);
   virtual void endJob();
   virtual void beginJob(edm::EventSetup const&);
  private:
   // variables persistent across events should be declared here.
   //
+
+  void DeleteHistos();
   Int_t cnttrk, cntGen;
 
-  TH1F* hPtGen, *hPtCSC;
+  //TH1F* hPtGen, *hPtCSC;
 
   TH1F* hAllPt, *hPt0, *hPt0q1, *hPt0q2, *hPt10, *hPt20, *hPt40, *hPt60;
   TH1F* hEffPt0, *hEffPt0q1, *hEffPt0q2, *hEffPt10, *hEffPt20, *hEffPt40, *hEffPt60;

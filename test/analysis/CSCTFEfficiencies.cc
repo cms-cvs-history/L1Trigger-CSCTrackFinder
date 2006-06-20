@@ -25,10 +25,10 @@ CSCTFEfficiencies::CSCTFEfficiencies(edm::ParameterSet const& conf)
   cntGen = 0;
 }
 
-CSCTFEfficiencies::~CSCTFEfficiencies()
+void CSCTFEfficiencies::DeleteHistos()
 {
-  if(hPtGen) delete hPtGen;
-  if(hPtCSC) delete hPtCSC;
+  //if(hPtGen) delete hPtGen;
+  //if(hPtCSC) delete hPtCSC;
   if(hAllPt) delete hAllPt;
   if(hPt0) delete hPt0;
   if(hPt0q1) delete hPt0q1;
@@ -198,6 +198,7 @@ void CSCTFEfficiencies::endJob()
   delete c1;
   delete fitThresh;
 
+  DeleteHistos();
 }
 
 void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
@@ -232,8 +233,8 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	      double genPhi = (mom.phi() > 0) ? mom.phi() : mom.phi() + 2*M_PI;
 	      double genEta = mom.pseudoRapidity();
 	      
-	      std::cout << "Sim Muon: Pt " << mom.perp() << " GeV, Eta " << genEta
-			<< " , Phi " << genPhi << std::endl;
+	      //std::cout << "Sim Muon: Pt " << mom.perp() << " GeV, Eta " << genEta
+	      //		<< " , Phi " << genPhi << std::endl;
 	      	      
 	      if( fabs(genEta)>= 1.2 && fabs(genEta) < 2.1 )
 		hAllPt->Fill( mom.perp() );
@@ -243,8 +244,8 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	      tfTrk = tfTracks->begin();
 	      for(; tfTrk != tfTracks->end(); tfTrk++)
 		{
-		  std::cout << "TF Muon: Pt " << tfTrk->ptValue() << " GeV, Eta " << tfTrk->etaValue() 
-			    << " Phi " << tfTrk->phiValue() << std::endl;
+		  // std::cout << "TF Muon: Pt " << tfTrk->ptValue() << " GeV, Eta " << tfTrk->etaValue() 
+		  //	    << " Phi " << tfTrk->phiValue() << std::endl;
 		  // quick and dirty track matching..
 		  if(sqrt(pow((tfTrk->etaValue() - genEta),2.) + 
 			  pow((tfTrk->phiValue() - genPhi),2.)) < .3357)
@@ -275,6 +276,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 			  if(tfTrk->quality() > 0 && tfTrk->ptValue() >= 20) ++nPt20;
 			  if(tfTrk->quality() > 0 && tfTrk->ptValue() >= 40) ++nPt40;
 			  if(tfTrk->quality() > 0 && tfTrk->ptValue() >= 60) ++nPt60;
+			  //if(tfTrk->quality() > 1) hAllPt->Fill(mom.perp());
 			}
 		    }
 		}
