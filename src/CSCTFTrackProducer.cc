@@ -17,7 +17,7 @@
 
 CSCTFTrackProducer::CSCTFTrackProducer(const edm::ParameterSet& pset)
 {
-  input_module = pset.getUntrackedParameter<std::string>("SectorReceiverInput","cscmuonportcard");
+  input_module = pset.getUntrackedParameter<std::string>("SectorReceiverInput","lctproducer");
   edm::ParameterSet sp_pset = pset.getParameter<edm::ParameterSet>("SectorProcessor");
   my_builder = new CSCTFTrackBuilder(sp_pset);
   produces<L1CSCTrackCollection>();
@@ -40,7 +40,7 @@ void CSCTFTrackProducer::produce(edm::Event & e, const edm::EventSetup& c)
   edm::Handle<CSCCorrelatedLCTDigiCollection> LCTs;
   std::auto_ptr<L1CSCTrackCollection> track_product(new L1CSCTrackCollection);
 
-  e.getByLabel(input_module, LCTs);
+  e.getByLabel(input_module,"MPCSORTED", LCTs);
 
   my_builder->buildTracks(LCTs.product(), track_product.get());
   

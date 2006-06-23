@@ -1,26 +1,10 @@
-#Common Parameters for the various CSCTrackFinder producers
-block CSCTrackFinderCommon =
-{
-   #minimum and maximum bx to process
-   untracked int32 MinBX = 3
-   untracked int32 MaxBX = 9
-}
+include "L1Trigger/CSCCommonTrigger/data/CSCCommonTrigger.cfi"
 
 block CSCTrackFinderProducerNames =
 {
    #names of input sources
    untracked string CSCTrackProducer = "l1csctracks"
-   untracked string CorrelatedLCTProducer = "lctproducer"
-   untracked string SectorReceiverInput = "cscmuonportcard"
-}
-
-module cscmuonportcard = CSCTFLCTProducer
-{
-   using CSCTrackFinderProducerNames
-   PSet MuonPortCard =
-      {
-	using CSCTrackFinderCommon
-      }
+   untracked string SectorReceiverInput = "lctproducer"
 }
 
 module l1csctracks = CSCTFTrackProducer
@@ -29,7 +13,7 @@ module l1csctracks = CSCTFTrackProducer
 
    PSet SectorProcessor = 
       {
-        using CSCTrackFinderCommon
+        using CSCCommonTrigger
         
 	untracked uint32 CoreLatency = 6
 	untracked bool UseBXA = true 
@@ -55,13 +39,10 @@ module csctfmuonsorter = CSCTFCandidateProducer
    using CSCTrackFinderProducerNames
    PSet MuonSorter = 
       {
-	using CSCTrackFinderCommon
+	using CSCCommonTrigger
       }
 }
 
-#the four possible execution sequences
-
-sequence mpc = {cscmuonportcard}
-sequence csc_sp_tracks = {cscmuonportcard, l1csctracks}
-sequence csc_tf_cands = {cscmuonportcard, l1csctracks, csctfmuonsorter}
-sequence csc_sp_ms = {l1csctracks, csctfmuonsorter}
+#the two possible execution sequences
+sequence csc_sp_tracks = {l1csctracks}
+sequence csc_tf_cands = {l1csctracks, csctfmuonsorter}
