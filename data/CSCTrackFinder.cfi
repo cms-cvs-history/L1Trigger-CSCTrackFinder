@@ -3,8 +3,8 @@ include "L1Trigger/CSCCommonTrigger/data/CSCCommonTrigger.cfi"
 block CSCTrackFinderProducerNames =
 {
    #names of input sources
-   untracked string CSCTrackProducer = "l1csctracks"
-   untracked string SectorReceiverInput = "lctproducer"
+   untracked InputTag CSCTrackProducer = l1csctracks
+   untracked InputTag SectorReceiverInput = lctproducer:MPCSORTED
 }
 
 module l1csctracks = CSCTFTrackProducer
