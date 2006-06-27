@@ -1,6 +1,6 @@
 #include <L1Trigger/CSCTrackFinder/test/analysis/CSCTFEfficiencies.h>
 
-#include <SimDataFormats/Track/interface/EmbdSimTrackContainer.h>
+#include <SimDataFormats/Track/interface/SimTrackContainer.h>
 #include <DataFormats/L1GlobalMuonTrigger/interface/L1MuRegionalCand.h>
 
 #include <TMath.h>
@@ -210,13 +210,13 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
   Int_t nPt10 = 0, nPt20 = 0, nPt40 = 0, nPt60 = 0;
   
   // get MC truth and track data here... then run analysis functions
-  edm::Handle<edm::EmbdSimTrackContainer> simTracks;
+  edm::Handle<edm::SimTrackContainer> simTracks;
   edm::Handle<std::vector<L1MuRegionalCand> > tfTracks;
 
   e.getByLabel("csctfmuonsorter","CSC", tfTracks);
   e.getByLabel("SimG4Object",simTracks);
 
-  edm::EmbdSimTrackContainer::const_iterator simTrk = simTracks->begin();
+  edm::SimTrackContainer::const_iterator simTrk = simTracks->begin();
   std::vector<L1MuRegionalCand>::const_iterator tfTrk;
 
 
