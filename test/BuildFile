@@ -1,3 +1,5 @@
+<use name=SimDataFormats/Track>
+<use name=heppdt>
 <use name=L1Trigger/CSCTrackFinder>
 <use name=root>
 
