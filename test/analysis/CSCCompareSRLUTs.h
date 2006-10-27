@@ -37,6 +37,6 @@ class CSCCompareSRLUTs : public edm::EDAnalyzer {
   edm::ParameterSet LUTparam;
 };
 
-DEFINE_FWK_MODULE(CSCCompareSRLUTs)
+DEFINE_FWK_MODULE(CSCCompareSRLUTs);
 
 #endif

@@ -44,6 +44,6 @@ class CSCTFEfficiencies : public edm::EDAnalyzer {
   TH1F* hEffEtaLoose, *hEffEtaTight, *hEffEtaQ1, *hEffEtaQ2, *hEffEtaQ3, *hEffEtaTot;
 };
 
-DEFINE_FWK_MODULE(CSCTFEfficiencies)
+DEFINE_FWK_MODULE(CSCTFEfficiencies);
 
 #endif
