@@ -7,6 +7,7 @@
 #include <DataFormats/CSCDigi/interface/CSCCorrelatedLCTDigiCollection.h>
 #include <DataFormats/L1CSCTrackFinder/interface/CSCTriggerContainer.h>
 #include <DataFormats/L1CSCTrackFinder/interface/CSCTrackStub.h>
+#include <DataFormats/L1DTTrackFinder/interface/L1MuDTChambPhContainer.h>
 
 #include <L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeometry.h>
 #include <Geometry/Records/interface/MuonGeometryRecord.h>
@@ -41,12 +42,14 @@ void CSCTFTrackProducer::produce(edm::Event & e, const edm::EventSetup& c)
   CSCTriggerGeometry::setGeometry(pDD);
 
   edm::Handle<CSCCorrelatedLCTDigiCollection> LCTs;
+  edm::Handle<L1MuDTChambPhContainer> dttrig;
   std::auto_ptr<L1CSCTrackCollection> track_product(new L1CSCTrackCollection);
   std::auto_ptr<CSCTriggerContainer<CSCTrackStub> > dt_stubs(new CSCTriggerContainer<CSCTrackStub>);
 
   e.getByLabel(input_module.label(),input_module.instance(), LCTs);
+  e.getByType(dttrig);
 
-  my_builder->buildTracks(LCTs.product(), track_product.get(), dt_stubs.get());
+  my_builder->buildTracks(LCTs.product(), dttrig.product(), track_product.get(), dt_stubs.get());
   
   e.put(track_product);
   e.put(dt_stubs);
