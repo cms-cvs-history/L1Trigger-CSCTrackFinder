@@ -14,3 +14,7 @@
 <library file=analysis/CSCTFEfficiencies.cc name=CSCTFEfficiencies>
      <flags SEAL_PLUGIN_NAME="CSCTFEfficiencies">
 </library>
+
+<library file=analysis/CSCTrackStubAnalysis.cc name=CSCTrackStubAnalysis>
+     <flags SEAL_PLUGIN_NAME="CSCTrackStubAnalysis">
+</library>
