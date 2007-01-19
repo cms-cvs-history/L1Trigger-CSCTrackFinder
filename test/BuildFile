@@ -1,7 +1,20 @@
 <use name=SimDataFormats/Track>
 <use name=heppdt>
 <use name=L1Trigger/CSCTrackFinder>
+
+<use name=FWCore/Framework>
+<use name=FWCore/Utilities>
+<use name=DataFormats/CSCDigi>
+<use name=Geometry/Records>
+<use name=Geometry/CSCGeometry>
+<use name=L1Trigger/CSCCommonTrigger>
+<use name=L1Trigger/CSCTriggerPrimitives>
+<use name=SimDataFormats/HepMCProduct>
+<use name=SimDataFormats/EncodedEventId>
+#<lib name=CSCTriggerPrimitivesReader>
+
 <use name=root>
+
 
 <library file=analysis/CSCMakeSRLUT.cc name=CSCMakeSRLUT>
      <flags SEAL_PLUGIN_NAME="CSCMakeSRLUT">
@@ -18,3 +31,7 @@
 <library file=analysis/CSCTrackStubAnalysis.cc name=CSCTrackStubAnalysis>
      <flags SEAL_PLUGIN_NAME="CSCTrackStubAnalysis">
 </library>
+
+#<library file=analysis/CSCTFStubReader.cc name=CSCTFStubReader>
+#     <flags SEAL_PLUGIN_NAME="CSCTFStubReader">
+#</library>
