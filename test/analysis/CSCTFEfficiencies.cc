@@ -169,6 +169,24 @@ void CSCTFEfficiencies::endJob()
 
   c1->Print("CSCTFEfficiencies.ps(");
 
+  fitThresh->SetLineColor(4);
+  hEffPt0q1->Fit("fitThresh");
+
+  fitThresh->SetLineColor(3);
+  hEffPt0q2->Fit("fitThresh");
+  
+  hEffPt0->Draw("P");
+  
+  hEffPt0q1->SetMarkerColor(4);
+  hEffPt0q1->SetMarkerStyle(20);
+  hEffPt0q1->Draw("same P");
+  
+  hEffPt0q2->SetMarkerColor(3);
+  hEffPt0q2->SetMarkerStyle(22);
+  hEffPt0q2->Draw("same P");
+  
+  c1->Print("CSCTFEfficiencies.ps");
+
   hEffEtaQ1->SetTitle("Efficiency vs. Eta");
   hEffEtaQ1->GetXaxis()->SetTitle("|Eta|");
   hEffEtaQ1->GetYaxis()->SetTitle("Efficiency");
@@ -214,7 +232,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
   edm::Handle<std::vector<L1MuRegionalCand> > tfTracks;
 
   e.getByLabel("csctfmuonsorter","CSC", tfTracks);
-  e.getByLabel("SimG4Object",simTracks);
+  e.getByLabel("g4SimHits",simTracks);
 
   edm::SimTrackContainer::const_iterator simTrk = simTracks->begin();
   std::vector<L1MuRegionalCand>::const_iterator tfTrk;
