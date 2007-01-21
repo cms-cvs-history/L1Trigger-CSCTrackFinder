@@ -1,4 +1,4 @@
-#include "CSCTFStubReader.h"
+#include "L1Trigger/CSCTrackFinder/test/analysis/CSCTFStubReader.h"
 
 //-------------------------------
 // Collaborating Class Headers --
@@ -24,10 +24,12 @@
 #include "DataFormats/MuonDetId/interface/CSCTriggerNumbering.h"
 #include "L1Trigger/CSCTrackFinder/interface/CSCTFSectorProcessor.h"//
 #include "DataFormats/L1CSCTrackFinder/interface/TrackStub.h"//
-#include <L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeometry.h>
 #include "L1Trigger/CSCTrackFinder/interface/CSCSectorReceiverLUT.h"//
 #include "L1Trigger/CSCTrackFinder/interface/CSCTrackFinderDataTypes.h"//
 #include "L1Trigger/CSCTrackFinder/interface/CSCTFPtLUT.h"//
+#include "L1Trigger/CSCCommonTrigger/interface/CSCConstants.h"
+#include "L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeometry.h"
+
 
 #include "TCanvas.h"
 #include "TFile.h"
@@ -47,7 +49,7 @@ const Int_t CSCTFStubReader::MAX_WG[CSC_TYPES] = {//max. number of wiregroups
 
 const Int_t CSCTFStubReader::MAX_HS[CSC_TYPES] = {//max. number of halfstrips
   128, 160, 128,  96, 160, 160, 160, 160, 160, 160};
-const int CSCTFStubReader::ptype[CSCTFConstants::NUM_CLCT_PATTERNS]= {
+const int CSCTFStubReader::ptype[CSCConstants::NUM_CLCT_PATTERNS]= {
   -999,  3, -3,  2,  -2,  1, -1,  0};  // "signed" pattern (== phiBend)
 
 
@@ -84,6 +86,7 @@ CSCTFStubReader::CSCTFStubReader(const edm::ParameterSet& conf){
     }
   fAnalysis = new TFile(outFile.c_str(), "RECREATE");
   event=0;
+
 }
 
 
@@ -112,8 +115,9 @@ void CSCTFStubReader::analyze(const edm::Event& ev,
   event++;
   edm::ESHandle<CSCGeometry> cscGeom;
   setup.get<MuonGeometryRecord>().get(cscGeom);
-  CSCTriggerGeometry::setGeometry(cscGeom);
   geom_ = &*cscGeom;
+
+  CSCTriggerGeometry::setGeometry(cscGeom);
 
   edm::Handle<CSCALCTDigiCollection> alcts;
   edm::Handle<CSCCLCTDigiCollection> clcts;
@@ -127,6 +131,7 @@ void CSCTFStubReader::analyze(const edm::Event& ev,
   MCStudies(ev,lcts_mpc.product(),alcts.product(),clcts.product());
   //compareGetAClctMethods(lcts_mpc.product(),alcts.product(),clcts.product());
 }
+
 void CSCTFStubReader::MCStudies(const edm::Event& ev,
 				const CSCCorrelatedLCTDigiCollection* lcts_mpc,
 				const CSCALCTDigiCollection* alcts,
@@ -137,20 +142,6 @@ void CSCTFStubReader::MCStudies(const edm::Event& ev,
   ev.getManyByType(allhepmcp);
   //cout << "HepMC info: " << allhepmcp.size() << endl;
   if (allhepmcp.size() > 0) {
-    const HepMC::GenEvent& mc = allhepmcp[0]->getHepMCData();
-    int i = 0;
-    for (HepMC::GenEvent::particle_const_iterator p = mc.particles_begin();
-	 p != mc.particles_end(); ++p) {
-      int id = (*p)->pdg_id();
-      double phitmp = (*p)->momentum().phi();
-      if (phitmp < 0) phitmp += 2.*M_PI;
-      if(debug) LogDebug("CSCTFStubReader") << "MC part #" << ++i << ": id = "  << id
-					    << ", status = " << (*p)->status()
-					    << ", pT = " << (*p)->momentum().perp() << " GeV"
-					    << ", eta = " << (*p)->momentum().pseudoRapidity()
-					    << ", phi = " << phitmp*180./M_PI << " deg";
-    }
-
     // If hepMC info is there, try to get wire and comparator digis,
     // and SimHits.
     edm::Handle<CSCWireDigiCollection>       wireDigis;
@@ -164,11 +155,11 @@ void CSCTFStubReader::MCStudies(const edm::Event& ev,
     if (debug) LogDebug("CSCTFStubReader")
       << "   #CSC SimHits: " << simHits->size();
 
-
     fillMuSimHitsVsMuDigis(ev, lcts_mpc, alcts,clcts, wireDigis.product(), compDigis.product(),
 			   simHits.product());
   }
 }
+
 void CSCTFStubReader::fillMuSimHitsVsMuDigis(const edm::Event& ev,
 					     const CSCCorrelatedLCTDigiCollection* lcts,
 					     const CSCALCTDigiCollection* alcts,
@@ -180,7 +171,7 @@ void CSCTFStubReader::fillMuSimHitsVsMuDigis(const edm::Event& ev,
 
   std::vector<edm::Handle<edm::HepMCProduct> > allhepmcp;
   ev.getManyByType(allhepmcp);
-  //std::cout << "HepMC info5D: " << allhepmcp.size() << endl;
+  //if (debug) cout << "HepMC info: " << allhepmcp.size() << endl;
   const HepMC::GenEvent& mc = allhepmcp[0]->getHepMCData();
   int igenp = 0;
   double genEta=0, genPhi=0;
@@ -189,19 +180,18 @@ void CSCTFStubReader::fillMuSimHitsVsMuDigis(const edm::Event& ev,
     int id = (*p)->pdg_id();
     double phitmp = (*p)->momentum().phi();
     if (phitmp < 0) phitmp += 2.*M_PI;
-    if(debug) LogDebug("CSCTFStubReader") << "CSCTFStubReader "
-					  << "MC part #" << ++igenp << ": id = "  << id
-					  << ", status = " << (*p)->status()
-					  << ", pT = " << (*p)->momentum().perp() << " GeV"
-					  << ", eta = " << (*p)->momentum().pseudoRapidity()
-					  << ", phi = " << phitmp*180./M_PI << " deg"<<std::endl;
+    if (debug) LogDebug("CSCTFStubReader")
+      << "MC part #" << ++igenp << ": id = "  << id
+      << ", status = " << (*p)->status()
+      << ", pT = " << (*p)->momentum().perp() << " GeV"
+      << ", eta = " << (*p)->momentum().pseudoRapidity()
+      << ", phi = " << phitmp*180./M_PI << " deg";
     if((id==13||id==-13)&& (*p)->momentum().perp()>0 )
       {
 	genEta=(*p)->momentum().pseudoRapidity();
 	genPhi=phitmp;
       }
   }
-   
 
   const Double_t ETA_BIN = 0.0125;
   const Double_t PHI_BIN = 62.*M_PI/180./4096.; // 0.26 mrad
@@ -221,328 +211,333 @@ void CSCTFStubReader::fillMuSimHitsVsMuDigis(const edm::Event& ev,
   CSCCathodeLCTAnalyzer clct_analyzer;
   clct_analyzer.setGeometry(geom_);
    //for stubs 
-   CSCTriggerContainer<csctf::TrackStub> stub_list;
-   CSCCorrelatedLCTDigiCollection::DigiRangeIterator detUnitIt;
-   for(detUnitIt = lcts->begin(); detUnitIt != lcts->end(); detUnitIt++)
-     {
+  CSCTriggerContainer<csctf::TrackStub> stub_list;
+  CSCCorrelatedLCTDigiCollection::DigiRangeIterator detUnitIt;
+  for(detUnitIt = lcts->begin(); detUnitIt != lcts->end(); detUnitIt++) {
     const CSCDetId& id = (*detUnitIt).first;
     const CSCCorrelatedLCTDigiCollection::Range& range = (*detUnitIt).second;
     for (CSCCorrelatedLCTDigiCollection::const_iterator digiIt = range.first;
 	 digiIt != range.second; digiIt++) {
-          csctf::TrackStub theStub((*digiIt),id);
-          stub_list.push_back(theStub);
-        }
-     }
+      csctf::TrackStub theStub((*digiIt),id);
+      stub_list.push_back(theStub);
+    }
+  }
 
-   for(int e = CSCDetId::minEndcapId(); e <= CSCDetId::maxEndcapId(); ++e)
-     {
-       for(int s = CSCTriggerNumbering::minTriggerSectorId();
-	   s <= CSCTriggerNumbering::maxTriggerSectorId(); ++s)
-	 {
-	   CSCTriggerContainer<csctf::TrackStub> current_e_s = stub_list.get(e, s);
-	   std::vector<csctf::TrackStub> stub_vec = current_e_s.get();
-	   std::vector<csctf::TrackStub>::const_iterator end = stub_vec.end();
-	   //	   hStubNumSector[s-1]->Fill(stub_vec.size());
-	   for(std::vector<csctf::TrackStub>::iterator itr = stub_vec.begin(); itr != end; itr++)
-	     {
-	       if(itr->station() != 5 ) 
-		 {
-		   CSCDetId id = CSCDetId(itr->getDetId().rawId());
-		   if( ( id.triggerSector() >= 1 )            &&
-		       ( id.triggerSector() <= MAX_SECTORS )  &&
-		       ( id.station()       >= 1 )            &&
-		       ( id.station()       <= MAX_STATIONS ) &&
-		       ( id.triggerCscId()  >= 1 )            &&
-		       ( id.triggerCscId()  <= MAX_CHAMBERS ) )
-		     {
-		       unsigned fpga = (id.station() == 1) ? CSCTriggerNumbering::triggerSubSectorFromLabels(id) - 1 : id.station();
-		       // run through SR_LUTs   
-		       lclphidat lclPhi = srLUTs_[e-1][s-1][FPGAs[fpga]]->localPhi(itr->getStrip(),
-										   itr->getCLCTPattern(), itr->getQuality(), itr->getBend());
-		       gblphidat gblPhi = srLUTs_[e-1][s-1][FPGAs[fpga]]->globalPhiME(lclPhi.phi_local,
-										      itr->getKeyWG(), itr->cscid());
-		       gbletadat gblEta = srLUTs_[e-1][s-1][FPGAs[fpga]]->globalEtaME(lclPhi.phi_bend_local,
-										      lclPhi.phi_local, itr->getKeyWG(), itr->cscid());
-		       itr->setEtaPacked(gblEta.global_eta);
-		       itr->setPhiPacked(gblPhi.global_phi);
-		       //======change lphi->gphi
-		       double cent = CSCTFConstants::SECTOR1_CENT_RAD;
-		       double sec = CSCTFConstants::SECTOR_RAD;//SECTOR_DEG=62
-		       double gphi = itr->phiValue() + cent - sec/2. + (s-1)*M_PI/3. ;// you should calc the sector offset carefully
-		       
-		       if (gphi > TWOPI ) gphi -= TWOPI;
-		       
-		       int station = id.station()-1; //according to station #
-		       //==because in lable station num start from 1, but we need it start from 0
-		       int csctype = getCSCType(id);//according to csctype #
-		       
-		       
-		       bool alct_valid = false;
-		       bool clct_valid = false;
-		       bool lct_valid = itr->isValid();
-		       if (lct_valid) {
-			 
-			 hLctMPCEndcap->Fill(id.endcap());
-			 hLctMPCStation->Fill(id.station());
-			 hLctMPCSector->Fill(id.triggerSector());
-			 hLctMPCRing->Fill(id.ring());
-			 hLctMPCChamber[id.station()-1]->Fill(id.triggerCscId());
-			 
-			 int quality = itr->getQuality();
-			 hLctMPCQuality->Fill(quality);
-			 hLctMPCBXN->Fill(itr->getBX());
-			 
-			 alct_valid = (quality != 4 && quality != 5);
-			 if (alct_valid) {
-			   hLctMPCKeyGroup->Fill(itr->getKeyWG());
-			 }
-			 
-			 clct_valid = (quality != 1 && quality != 3);
-			 if (clct_valid) {
-			   hLctMPCKeyStrip->Fill(itr->getStrip());
-			   hLctMPCStripType->Fill(itr->getStripType());
-			   hLctMPCPattern->Fill(itr->getCLCTPattern());
-			   hLctMPCBend->Fill(itr->getBend());
-			 }
-			 
-			 
-			 
-			 
-			 CSCALCTDigi anodeLCT;
-			 CSCCLCTDigi cathodeLCT;
-			 
-			 if (quality != 4 && quality != 5)//lct_alct_valid
-			   {
-			     int ialct=0;
-			     CSCALCTDigiCollection::DigiRangeIterator AdetUnitIt;
-			     for (AdetUnitIt = alcts->begin(); AdetUnitIt != alcts->end(); AdetUnitIt++) {
-			       const CSCDetId& aid = (*AdetUnitIt).first;
-			       const CSCALCTDigiCollection::Range& range = (*AdetUnitIt).second;
-			       for (CSCALCTDigiCollection::const_iterator digiIt = range.first;
-				    digiIt != range.second; digiIt++) {
-				 alct_valid = (*digiIt).isValid();
-				 if (alct_valid) {
-				   if(id == aid && //lct_id == alct_id
-				      itr->getKeyWG()==(*digiIt).getKeyWG() &&
-				      itr->getBX()==(*digiIt).getBX())
-				     {
-				       anodeLCT = *digiIt;
-				       ialct++;
-				     }//lctID == id
-				 }//alct_valid
-			       }//range
-			     }//alct loop
-			   }//(quality!=4 && !=5 )
-			 if (quality != 1 && quality != 3)//lct_clct_valid
-			   {
-			     int iclct=0;
-			     CSCCLCTDigiCollection::DigiRangeIterator CdetUnitIt;
-			     for (CdetUnitIt = clcts->begin(); CdetUnitIt != clcts->end(); CdetUnitIt++) {
-			       const CSCDetId& cid = (*CdetUnitIt).first;
-			       const CSCCLCTDigiCollection::Range& range = (*CdetUnitIt).second;
-			       for (CSCCLCTDigiCollection::const_iterator digiIt = range.first;
-				    digiIt != range.second; digiIt++) {
-				 
-				 clct_valid = (*digiIt).isValid();
-				 //if (clct_1.isValid() && clct_valid) {
-				 if (clct_valid) {
-				   if(id==cid && //lct_id == clct_id
-				      itr->getStrip()==(*digiIt).getKeyStrip() &&
-				      itr->getCLCTPattern()==(*digiIt).getPattern())
-				 {
-				   cathodeLCT = *digiIt;
-				   iclct++;
-				 }//lctID == id
-				 }//clct_valid
-			       }//range
-			     }//clct loop
-			   }// quality!=1 && !=3
-			 
-			 alct_valid = anodeLCT.isValid();
-			 clct_valid = cathodeLCT.isValid();
-			 int clctStripType=cathodeLCT.getStripType();		       
-			 int clctKeyStrip = cathodeLCT.getKeyStrip();// halfstrip #
-			 if (clctStripType == 0) clctKeyStrip /= 4;  // distrip # for distrip ptns
-			 
-			 hAlctValid->Fill(alct_valid);
-			 if (alct_valid) {
-			   hAlctQuality->Fill(anodeLCT.getQuality());
-			   hAlctAccel->Fill(anodeLCT.getAccelerator());
-			   hAlctCollis->Fill(anodeLCT.getCollisionB());
-			   hAlctKeyGroup->Fill(anodeLCT.getKeyWG());
-			   hAlctBXN->Fill(anodeLCT.getBX());
-			   hAlctPerCSC->Fill(csctype);
-			   nValidALCTs++;
-			 }
-			 
-			 // CLCTs
-			 hClctValid->Fill(clct_valid);
-			 if (clct_valid) {
-			   
-			   hClctQuality->Fill(cathodeLCT.getQuality());
-			   hClctStripType->Fill(cathodeLCT.getStripType());
-			   hClctSign->Fill(cathodeLCT.getBend());
-			   hClctBXN->Fill(cathodeLCT.getBX());
-			   hClctCFEB->Fill(cathodeLCT.getCFEB());
-			   //	ClctStrip->Fill(cathodeLCT.getStrip());
-			   hClctKeyStrip[clctStripType]->Fill(clctKeyStrip);
-			   hClctPattern[clctStripType]->Fill(cathodeLCT.getPattern());
-			   hClctPerCSC->Fill(csctype);
-			   hClctPatternCsc[csctype][clctStripType]->Fill(ptype[cathodeLCT.getPattern()]);
-			   if (clctStripType == 0) // distrips
-			     hClctKeyStripCsc[csctype]->Fill(clctKeyStrip);
-			   nValidCLCTs++;
-			   
-			 }
-			 
-			 // Eta resolutions
-			 Bool_t alct_mc = true;
-			 if (alct_valid) {
-			   vector<CSCAnodeLayerInfo> alctInfo =
-			     alct_analyzer.getSimInfo(anodeLCT, id, wiredc, allSimHits);
-			   double hitPhi = -999.0, hitEta = -999.0;
-			   alct_analyzer.nearestWG(alctInfo, hitPhi, hitEta);
-			   
-			   eta_sim = hitEta;
-			   eta_rec = itr->etaValue();// + ETA_HALFBIN;
-			   
-			   if (eta_sim > -990.) { // eta_sim = -999 when MC info is not available
-			     eta_diff  = eta_rec - fabs(eta_sim);
-			     eta_bdiff = eta_diff/ETA_BIN;
-			   }
-			   else {
-			     if (debug)
-			       cout << "+++ Event # " <<event<<" some ALCT MC info is not available +++" << endl;
-			     alct_mc = false;
-			   }
-			 }
-			 
-			 // Phi resolutions
-			 Bool_t clct_mc = true;
-			 if (clct_valid) {
-			   vector<CSCCathodeLayerInfo> clctInfo =
-			     clct_analyzer.getSimInfo(cathodeLCT, id, compdc, allSimHits);
-			   double hitPhi = -999.0, hitEta = -999.0;
-			   clct_analyzer.nearestHS(clctInfo, hitPhi, hitEta);
-			   
-			   phi_sim = hitPhi;
-			   phi_rec = gphi; //+ PHI_HALFBIN;
-			   if (phi_sim > -990.) { // phi_sim = -999 when MC info is not available
-			     phi_diff = phi_rec - phi_sim;
-			     if (fabs(phi_diff) > M_PI) {
-			       if (debug) {
-				 cout << "Correct phi_diff in event # " << event << endl;
-				 cout << "\t Before correction: " << " phi_rec = "  << phi_rec
-				      << " phi_sim = " << phi_sim << " phi_diff = " << phi_diff
-				      << endl;
-			       }
-			       if      (phi_diff >  M_PI) phi_diff -= TWOPI;
-			       else if (phi_diff < -M_PI) phi_diff += TWOPI;
-			       if (debug) {
-				 cout << "\t After correction : "
-				      << " phi_diff = " << phi_diff << endl;
-			       }
-			     }
-			     phi_bdiff = phi_diff/PHI_BIN;
-			     phi_diff *= 1000.; // convert to mrad
-			   }
-			   else {
-			     if (debug)
-			       cout << "+++ Event # " << event << " some CLCT MC info is not available +++" << endl;
-			     clct_mc = false;
-			   }
-			 }
-			 
-			 // Eta histograms
-			 if (alct_valid) {
-			   LctVsEta[station][0]->Fill(eta_rec);
-			   //LctVsEta[station][1]->Fill(lctEta[ilct]);
-			   
-			   //LctVsEtaCsc[csctype]->Fill(lctEta[ilct]);
-			   
-			   if (alct_mc) {
-			     EtaRecVsSim->Fill(fabs(eta_sim), eta_rec);
-			     EtaDiff[0]->Fill(eta_diff);
-			     EtaDiff[1]->Fill(eta_bdiff);
-			     
-			     EtaDiffCsc[csctype][0]->Fill(eta_diff);
-			     EtaDiffCsc[csctype][3]->Fill(eta_bdiff);
-			     EtaDiffCsc[csctype][e]->Fill(eta_diff);
-			     
-			     EtaDiffVsEta[station]->Fill(eta_rec, fabs(eta_diff));
-			     EtaDiffVsWireCsc[csctype]->Fill(anodeLCT.getKeyWG(), eta_bdiff);
-			   }
-			 }
-			 
-			 // Phi histograms
-			 if (clct_valid) {
-			   LctVsPhi[station]->Fill(phi_rec);
-			   if ( clctStripType == 0) // distrips
-			     KeyStripCsc[csctype]->Fill(clctKeyStrip);
-			   int phibend = ptype[cathodeLCT.getPattern()];
-			   //PatternCsc[csctype][clctStripType]->Fill(cathodeLCT.getBend());
-			   PatternCsc[csctype][clctStripType]->Fill(phibend);
-			   
-			   if (clct_mc) {
-			     PhiRecVsSim->Fill(phi_sim, phi_rec);
-			     PhiDiff[0]->Fill(phi_diff);
-			     PhiDiff[1]->Fill(phi_bdiff);
-			     
-			     PhiDiffCsc[csctype][0]->Fill(phi_diff);
-			     PhiDiffCsc[csctype][3]->Fill(phi_bdiff);
-			     PhiDiffCsc[csctype][e]->Fill(phi_diff);
-			     PhiDiffCsc[csctype][clctStripType+4]->Fill(phi_diff);
-			     PhiDiffCsc[csctype][clctStripType+7]->Fill(phi_bdiff);
-			     if (clctStripType == 1 && phibend == 0)
-			       PhiDiffCsc[csctype][6]->Fill(phi_diff); // halfstrips, straight pattern
-			     
-			     PhiDiffVsPhi[station]->Fill(phi_rec, fabs(phi_diff));
-			     PhiDiffVsStripCsc[csctype][clctStripType]->Fill(clctKeyStrip,
-									     phi_diff);
-			     
-			     // Histograms to check phi offsets for various pattern types
-			     if (clctStripType == 1) { // halfstrips
-			       Double_t hsperrad = getHsPerRad(csctype); // halfstrips-per-radian
-			       if((e == 1 && (station==1 || station==2)) ||
-				  (e == 2 && (station==3 || station==4)))
-				 //int phibend = ptype[cathodeLCT.getPattern()];
-				 PhiDiffPattern[phibend+4]->Fill(phi_diff/1000*hsperrad);
-			     }
-			   }
-			 }
-			 
-			 // Eta-vs-phi histograms
-			 if (alct_valid && clct_valid) {
-			   if (alct_mc) {
-			     EtaDiffCsc[csctype][clctStripType+4]->Fill(eta_diff);
-			     EtaDiffVsPhi[station]->Fill(phi_rec, fabs(eta_diff));
-			     EtaDiffVsStripCsc[csctype][clctStripType]->Fill(clctKeyStrip,
-									     eta_bdiff);
-			     if (clctStripType == 1) { // halfstrips
-			       EtaDiffVsStripCsc[csctype][e+1]->Fill(clctKeyStrip,
-								     eta_bdiff);
-			     }
-			   }
-			   if (clct_mc) {
-			     PhiDiffVsEta[station]->Fill(eta_rec, fabs(phi_diff));
-			     PhiDiffVsWireCsc[csctype]->Fill(anodeLCT.getKeyWG(), phi_diff);
-			   }
-			 }//alct clct valid
-		       }//lct_valid
-		     }
-		   else
-		     {
-		       edm::LogWarning("CSCTFStubReader") << "Det ID is out of range";
-		       edm::LogWarning("CSCTFStubReader") << "Sector: " << id.triggerSector();
-		       edm::LogWarning("CSCTFStubReader") << "Station: " <<id.station();
-		       edm::LogWarning("CSCTFStubReader") << "CSCID: " << id.triggerCscId();
-		     }
-		 }//station != 5
-	     }//stub_vec loop
-	 }//trigger sector loop
-     }//endcap loop
-   hAlctPerEvent->Fill(nValidALCTs);
-   hClctPerEvent->Fill(nValidCLCTs);
+  for(int e = CSCDetId::minEndcapId(); e <= CSCDetId::maxEndcapId(); ++e) {
+    for(int s = CSCTriggerNumbering::minTriggerSectorId();
+	s <= CSCTriggerNumbering::maxTriggerSectorId(); ++s) {
+      CSCTriggerContainer<csctf::TrackStub> current_e_s = stub_list.get(e, s);
+      std::vector<csctf::TrackStub> stub_vec = current_e_s.get();
+      std::vector<csctf::TrackStub>::const_iterator end = stub_vec.end();
+      // hStubNumSector[s-1]->Fill(stub_vec.size());
+      for(std::vector<csctf::TrackStub>::iterator itr = stub_vec.begin();
+	  itr != end; itr++) {
+	CSCDetId id(itr->getDetId().rawId());
+	if( ( id.triggerSector() >= 1 )            &&
+	    ( id.triggerSector() <= MAX_SECTORS )  &&
+	    ( id.station()       >= 1 )            &&
+	    ( id.station()       <= MAX_STATIONS ) &&
+	    ( id.triggerCscId()  >= 1 )            &&
+	    ( id.triggerCscId()  <= MAX_CHAMBERS ) ) {
+	  unsigned fpga = (id.station() == 1) ? CSCTriggerNumbering::triggerSubSectorFromLabels(id) - 1 : id.station();
+	  // run through SR_LUTs
+	  lclphidat lclPhi =
+	    srLUTs_[e-1][s-1][FPGAs[fpga]]->localPhi(itr->getStrip(), itr->getPattern(), 
+						     itr->getQuality(),     itr->getBend());
+	  gblphidat gblPhi = srLUTs_[e-1][s-1][FPGAs[fpga]]->globalPhiME(lclPhi.phi_local,
+									 itr->getKeyWG(), itr->cscid());
+	  gbletadat gblEta = srLUTs_[e-1][s-1][FPGAs[fpga]]->globalEtaME(lclPhi.phi_bend_local,
+									 lclPhi.phi_local, itr->getKeyWG(), itr->cscid());
+	  itr->setEtaPacked(gblEta.global_eta);
+	  itr->setPhiPacked(gblPhi.global_phi);
+	  //======change lphi->gphi
+	  double cent = CSCTFConstants::SECTOR1_CENT_RAD;
+	  double sec = CSCTFConstants::SECTOR_RAD;//SECTOR_DEG=62
+	  double gphi = itr->phiValue() + cent - sec/2. + (s-1)*M_PI/3. ;// you should calc the sector offset carefully
+
+	  if (gphi > TWOPI ) gphi -= TWOPI;
+
+	  int station = id.station()-1; //according to station #
+	  //==because in lable station num start from 1, but we need it start from 0
+	  int csctype = getCSCType(id);//according to csctype #
+
+	  bool alct_valid = false;
+	  bool clct_valid = false;
+	  const CSCCorrelatedLCTDigi* lct = itr->getDigi();
+	  bool lct_valid = lct->isValid();
+
+	  if (lct_valid) {
+
+	    hLctMPCEndcap->Fill(id.endcap());
+	    hLctMPCStation->Fill(id.station());
+	    hLctMPCSector->Fill(id.triggerSector());
+	    hLctMPCRing->Fill(id.ring());
+	    hLctMPCChamber[id.station()-1]->Fill(id.triggerCscId());
+
+	    int quality = lct->getQuality();
+	    hLctMPCQuality->Fill(quality);
+	    hLctMPCBXN->Fill(lct->getBX());
+
+	    alct_valid = (quality != 4 && quality != 5);
+	    if (alct_valid) {
+	      hLctMPCKeyGroup->Fill(lct->getKeyWG());
+	    }
+
+	    clct_valid = (quality != 1 && quality != 3);
+	    if (clct_valid) {
+	      hLctMPCKeyStrip->Fill(lct->getStrip());
+	      hLctMPCStripType->Fill(lct->getStripType());
+	      hLctMPCPattern->Fill(lct->getCLCTPattern());
+	      hLctMPCBend->Fill(lct->getBend());
+	    }
+
+	    CSCALCTDigi anodeLCT;
+	    CSCCLCTDigi cathodeLCT;
+
+	    if (quality != 4 && quality != 5) { //lct_alct_valid
+	      int ialct=0;
+	      CSCALCTDigiCollection::DigiRangeIterator AdetUnitIt;
+	      for (AdetUnitIt = alcts->begin(); AdetUnitIt != alcts->end(); AdetUnitIt++) {
+		const CSCDetId& aid = (*AdetUnitIt).first;
+		const CSCALCTDigiCollection::Range& range = (*AdetUnitIt).second;
+		for (CSCALCTDigiCollection::const_iterator digiIt = range.first;
+		     digiIt != range.second; digiIt++) {
+		  alct_valid = (*digiIt).isValid();
+		  if (alct_valid) {
+		    if(id == aid && //lct_id == alct_id
+		       lct->getKeyWG() == (*digiIt).getKeyWG() &&
+		       lct->getBX() == (*digiIt).getBX()) {
+		      anodeLCT = *digiIt;
+		      ialct++;
+		    }//lctID == id
+		  }//alct_valid
+		}//range
+	      }//alct loop
+	    }//(quality!=4 && !=5 )
+	    if (quality != 1 && quality != 3) { //lct_clct_valid
+	      int iclct=0;
+	      CSCCLCTDigiCollection::DigiRangeIterator CdetUnitIt;
+	      for (CdetUnitIt = clcts->begin(); CdetUnitIt != clcts->end(); CdetUnitIt++) {
+		const CSCDetId& cid = (*CdetUnitIt).first;
+		const CSCCLCTDigiCollection::Range& range = (*CdetUnitIt).second;
+		for (CSCCLCTDigiCollection::const_iterator digiIt = range.first;
+		     digiIt != range.second; digiIt++) {
+
+		  clct_valid = (*digiIt).isValid();
+		  //if (clct_1.isValid() && clct_valid) {
+		  if (clct_valid) {
+		    if(id==cid && //lct_id == clct_id
+		       lct->getStrip() == (*digiIt).getKeyStrip() &&
+		       lct->getCLCTPattern() == (*digiIt).getPattern()) {
+		      cathodeLCT = *digiIt;
+		      iclct++;
+		    }//lctID == id
+		  }//clct_valid
+		}//range
+	      }//clct loop
+	    }// quality!=1 && !=3
+
+	    alct_valid = anodeLCT.isValid();
+	    clct_valid = cathodeLCT.isValid();
+	    int clctStripType=cathodeLCT.getStripType();		       
+	    int clctKeyStrip = cathodeLCT.getKeyStrip();// halfstrip #
+	    if (clctStripType == 0) clctKeyStrip /= 4;  // distrip # for distrip ptns
+
+	    hAlctValid->Fill(alct_valid);
+	    if (alct_valid) {
+	      hAlctQuality->Fill(anodeLCT.getQuality());
+	      hAlctAccel->Fill(anodeLCT.getAccelerator());
+	      hAlctCollis->Fill(anodeLCT.getCollisionB());
+	      hAlctKeyGroup->Fill(anodeLCT.getKeyWG());
+	      hAlctBXN->Fill(anodeLCT.getBX());
+	      hAlctPerCSC->Fill(csctype);
+	      nValidALCTs++;
+	    }
+
+	    // CLCTs
+	    hClctValid->Fill(clct_valid);
+	    if (clct_valid) {
+	      hClctQuality->Fill(cathodeLCT.getQuality());
+	      hClctStripType->Fill(cathodeLCT.getStripType());
+	      hClctSign->Fill(cathodeLCT.getBend());
+	      hClctBXN->Fill(cathodeLCT.getBX());
+	      hClctCFEB->Fill(cathodeLCT.getCFEB());
+	      // ClctStrip->Fill(cathodeLCT.getStrip());
+	      hClctKeyStrip[clctStripType]->Fill(clctKeyStrip);
+	      hClctPattern[clctStripType]->Fill(cathodeLCT.getPattern());
+	      hClctPerCSC->Fill(csctype);
+	      hClctPatternCsc[csctype][clctStripType]->Fill(ptype[cathodeLCT.getPattern()]);
+	      if (clctStripType == 0) // distrips
+		hClctKeyStripCsc[csctype]->Fill(clctKeyStrip);
+	      nValidCLCTs++;
+	    }
+
+	    // Eta resolutions
+	    Bool_t alct_mc = true;
+	    if (alct_valid) {
+	      vector<CSCAnodeLayerInfo> alctInfo =
+		alct_analyzer.getSimInfo(anodeLCT, id, wiredc, allSimHits);
+	      double hitPhi = -999.0, hitEta = -999.0;
+	      alct_analyzer.nearestWG(alctInfo, hitPhi, hitEta);
+
+	      eta_sim = hitEta;
+	      eta_rec = itr->etaValue() + ETA_HALFBIN;
+
+	      if (eta_sim > -990.) { // eta_sim = -999 when MC info is not available
+		eta_diff  = eta_rec - fabs(eta_sim);
+		eta_bdiff = eta_diff/ETA_BIN;
+
+		if (debug) LogDebug("CSCTFStubReader")
+		  << "  Endcap = " << id.endcap()
+		  << " station = " << id.station()
+		  << " chamber = " << id.chamber()
+		  << ": eta_sim = " << eta_sim << " eta_rec = " << eta_rec
+		  << " diff = " << eta_diff;
+	      }
+	      else {
+		if (debug) LogDebug("CSCTFStubReader")
+		  << "+++ Event # " << event
+		  << " some ALCT MC info is not available +++";
+		alct_mc = false;
+	      }
+	    }
+
+	    // Phi resolutions
+	    Bool_t clct_mc = true;
+	    if (clct_valid) {
+	      vector<CSCCathodeLayerInfo> clctInfo =
+		clct_analyzer.getSimInfo(cathodeLCT, id, compdc, allSimHits);
+	      double hitPhi = -999.0, hitEta = -999.0;
+	      clct_analyzer.nearestHS(clctInfo, hitPhi, hitEta);
+
+	      phi_sim = hitPhi;
+	      phi_rec = gphi + PHI_HALFBIN;
+	      if (phi_sim > -990.) { // phi_sim = -999 when MC info is not available
+		phi_diff = phi_rec - phi_sim;
+		if (fabs(phi_diff) > M_PI) {
+		  if (debug) {
+		    LogDebug("CSCTFStubReader")
+		      << "Correct phi_diff in event # " << event;
+		    LogDebug("CSCTFStubReader")
+		      << "\t Before correction: " << " phi_rec = "  << phi_rec
+		      << " phi_sim = " << phi_sim << " phi_diff = " << phi_diff;
+		  }
+		  if      (phi_diff >  M_PI) phi_diff -= TWOPI;
+		  else if (phi_diff < -M_PI) phi_diff += TWOPI;
+		  if (debug) {
+		    LogDebug("CSCTFStubReader")
+		      << "\t After correction : "
+		      << " phi_diff = " << phi_diff;
+		  }
+		}
+		phi_bdiff = phi_diff/PHI_BIN;
+		phi_diff *= 1000.; // convert to mrad
+
+		if (debug) LogDebug("CSCTFStubReader")
+		  << "  Endcap = " << id.endcap()
+		  << " station = " << id.station()
+		  << " chamber = " << id.chamber()
+		  << ": phi_sim = " << phi_sim << " phi_rec = " << phi_rec
+		  << " diff = " << phi_diff;
+
+	      }
+	      else {
+		if (debug) LogDebug("CSCTFStubReader")
+		  << "+++ Event # " << event
+		  << " some CLCT MC info is not available +++";
+		clct_mc = false;
+	      }
+	    }
+
+	    // Eta histograms
+	    if (alct_valid) {
+	      LctVsEta[station][0]->Fill(eta_rec);
+	      //LctVsEta[station][1]->Fill(lctEta[ilct]);
+
+	      //LctVsEtaCsc[csctype]->Fill(lctEta[ilct]);
+
+	      if (alct_mc) {
+		EtaRecVsSim->Fill(fabs(eta_sim), eta_rec);
+		EtaDiff[0]->Fill(eta_diff);
+		EtaDiff[1]->Fill(eta_bdiff);
+
+		EtaDiffCsc[csctype][0]->Fill(eta_diff);
+		EtaDiffCsc[csctype][3]->Fill(eta_bdiff);
+		EtaDiffCsc[csctype][e]->Fill(eta_diff);
+
+		EtaDiffVsEta[station]->Fill(eta_rec, fabs(eta_diff));
+		EtaDiffVsWireCsc[csctype]->Fill(anodeLCT.getKeyWG(), eta_bdiff);
+	      }
+	    }
+
+	    // Phi histograms
+	    if (clct_valid) {
+	      LctVsPhi[station]->Fill(phi_rec);
+	      if (clctStripType == 0) // distrips
+		KeyStripCsc[csctype]->Fill(clctKeyStrip);
+	      int phibend = ptype[cathodeLCT.getPattern()];
+	      //PatternCsc[csctype][clctStripType]->Fill(cathodeLCT.getBend());
+	      PatternCsc[csctype][clctStripType]->Fill(phibend);
+
+	      if (clct_mc) {
+		PhiRecVsSim->Fill(phi_sim, phi_rec);
+		PhiDiff[0]->Fill(phi_diff);
+		PhiDiff[1]->Fill(phi_bdiff);
+
+		PhiDiffCsc[csctype][0]->Fill(phi_diff);
+		PhiDiffCsc[csctype][3]->Fill(phi_bdiff);
+		PhiDiffCsc[csctype][e]->Fill(phi_diff);
+		PhiDiffCsc[csctype][clctStripType+4]->Fill(phi_diff);
+		PhiDiffCsc[csctype][clctStripType+7]->Fill(phi_bdiff);
+		if (clctStripType == 1 && phibend == 0)
+		  PhiDiffCsc[csctype][6]->Fill(phi_diff); // halfstrips, straight pattern
+
+		PhiDiffVsPhi[station]->Fill(phi_rec, fabs(phi_diff));
+		PhiDiffVsStripCsc[csctype][clctStripType]->Fill(clctKeyStrip,
+								phi_diff);
+
+		// Histograms to check phi offsets for various pattern types
+		if (clctStripType == 1) { // halfstrips
+		  Double_t hsperrad = getHsPerRad(csctype); // halfstrips-per-radian
+		  if((e == 1 && (station==1 || station==2)) ||
+		     (e == 2 && (station==3 || station==4)))
+		    //int phibend = ptype[cathodeLCT.getPattern()];
+		    PhiDiffPattern[phibend+4]->Fill(phi_diff/1000*hsperrad);
+		}
+	      }
+	    }
+
+	    // Eta-vs-phi histograms
+	    if (alct_valid && clct_valid) {
+	      if (alct_mc) {
+		EtaDiffCsc[csctype][clctStripType+4]->Fill(eta_diff);
+		EtaDiffVsPhi[station]->Fill(phi_rec, fabs(eta_diff));
+		EtaDiffVsStripCsc[csctype][clctStripType]->Fill(clctKeyStrip,
+								eta_bdiff);
+		if (clctStripType == 1) { // halfstrips
+		  EtaDiffVsStripCsc[csctype][e+1]->Fill(clctKeyStrip,
+							eta_bdiff);
+		}
+	      }
+	      if (clct_mc) {
+		PhiDiffVsEta[station]->Fill(eta_rec, fabs(phi_diff));
+		PhiDiffVsWireCsc[csctype]->Fill(anodeLCT.getKeyWG(), phi_diff);
+	      }
+	    }//alct clct valid
+	  }//lct_valid
+	}
+	else
+	  {
+	    edm::LogWarning("CSCTFStubReader") << "Det ID is out of range";
+	    edm::LogWarning("CSCTFStubReader") << "Sector: " << id.triggerSector();
+	    edm::LogWarning("CSCTFStubReader") << "Station: " <<id.station();
+	    edm::LogWarning("CSCTFStubReader") << "CSCID: " << id.triggerCscId();
+	  }
+      }//stub_vec loop
+    }//trigger sector loop
+  }//endcap loop
+  hAlctPerEvent->Fill(nValidALCTs);
+  hClctPerEvent->Fill(nValidCLCTs);
 }
 
 
@@ -565,7 +560,7 @@ int CSCTFStubReader::getCSCType(const CSCDetId& id) {
 
 void CSCTFStubReader::bookMuSimHitsVsMuDigis()
 {
-  hLctMPCPerEvent  = new TH1F("LCTs_per_event", "LCTs per event",    11, -0.5, 10.5);
+  hLctMPCPerEvent  = new TH1F("LCTs_per_event", "LCTs per event",    11, -0.5, 10.5);  
   hLctMPCPerCSC    = new TH1F("LCTs_per_CSC_type", "LCTs per CSC type", 10, -0.5,  9.5);
   hCorrLctMPCPerCSC= new TH1F("Corr_LCTs_per_CSC_type", "Corr. LCTs per CSC type", 10, -0.5,9.5);
   hLctMPCEndcap    = new TH1F("LCT_Endcap", "Endcap",             4, -0.5,  3.5);
@@ -1052,7 +1047,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   c1->Update();
   c1->Print("o_LCT_geometry.png");
   c1->Print("csc_resolution.ps");
-  page++; 
+  page++;
 
   
   //  ps->NewPage();
@@ -1217,7 +1212,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   pad[page]->Divide(2,2);
   pad[page]->cd(1);  hLctMPCQuality->SetLabelSize(0.045, "Y"); hLctMPCQuality->Draw();
   pad[page]->cd(2);  hLctMPCBend->SetLabelSize(0.045, "Y"); hLctMPCBend->Draw();
-  //  pad[page]->cd(3);  hLctMPCAccel->SetLabelSize(0.045, "Y");   hLctMPCAccel->Draw();
+  pad[page]->cd(3);  hLctMPCStripType->SetLabelSize(0.045, "Y"); hLctMPCStripType->Draw();
   pad[page]->cd(4);  hLctMPCBXN->SetLabelSize(0.045, "Y");     hLctMPCBXN->Draw();
   c1->Update();
   c1->Print("o_LCTs.png"); 
@@ -1235,7 +1230,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   gPad->Update();  gStyle->SetStatX(1.00);  gStyle->SetStatY(0.995);
   EtaDiff[0]->GetXaxis()->SetNdivisions(505); // twice fewer divisions
   pad[page]->cd(3);  EtaDiff[0]->Draw();  EtaDiff[0]->Fit("gaus","Q");
-  //  pad[page]->cd(4);  EtaDiff[1]->Draw();  EtaDiff[1]->Fit("gaus","Q");
+  pad[page]->cd(4);  EtaDiff[1]->Draw();  EtaDiff[1]->Fit("gaus","Q");
   c1->Update();
   c1->Print("o_eta_resolution.png"); 
   c1->Print("csc_resolution.ps");
@@ -1655,8 +1650,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
     MeanPhiDiffVsPhi[istation]->GetYaxis()->SetTitleOffset(1.7);
     MeanPhiDiffVsPhi[istation]->GetXaxis()->SetTitle("#phi");
     MeanPhiDiffVsPhi[istation]->GetYaxis()->SetTitle("#LT#phi_rec-#phi_sim#GT (mrad)");
-    if (istation == 0) MeanPhiDiffVsPhi[istation]->SetMaximum(50.);
-    else               MeanPhiDiffVsPhi[istation]->SetMaximum(5.);
+    MeanPhiDiffVsPhi[istation]->SetMaximum(5.);
     pad[page]->cd(istation+1);  MeanPhiDiffVsPhi[istation]->Draw();
   }
     c1->Update(); c1->Print("o_phi_rec-phi_sim_mrad_vs_phi_rec.png");  c1->Print("csc_resolution.ps");page++;
