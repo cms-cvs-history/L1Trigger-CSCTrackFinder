@@ -11,7 +11,7 @@
 <use name=L1Trigger/CSCTriggerPrimitives>
 <use name=SimDataFormats/HepMCProduct>
 <use name=SimDataFormats/EncodedEventId>
-<lib name=CSCTriggerPrimitivesReader>
+#<lib name=CSCTriggerPrimitivesReader>
 
 <use name=root>
 
@@ -32,6 +32,6 @@
      <flags SEAL_PLUGIN_NAME="CSCTrackStubAnalysis">
 </library>
 
-<library file=analysis/CSCTFStubReader.cc name=CSCTFStubReader>
-     <flags SEAL_PLUGIN_NAME="CSCTFStubReader">
-</library>
+#<library file=analysis/CSCTFStubReader.cc name=CSCTFStubReader>
+#     <flags SEAL_PLUGIN_NAME="CSCTFStubReader">
+#</library>
