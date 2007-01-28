@@ -20,7 +20,7 @@
 #include "DataFormats/MuonDetId/interface/CSCTriggerNumbering.h"
 #include "DataFormats/MuonDetId/interface/CSCDetId.h"
 
-#include "DataFormats/L1CSCTrackFinder/interface/CSCBitWidths.h"
+#include "L1Trigger/CSCCommonTrigger/interface/CSCBitWidths.h"
 #include "L1Trigger/CSCTrackFinder/interface/CSCSectorReceiverLUT.h"
 #include "L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeometry.h"
 

@@ -28,9 +28,9 @@
      <flags SEAL_PLUGIN_NAME="CSCTFEfficiencies">
 </library>
 
-<library file=analysis/CSCTrackStubAnalysis.cc name=CSCTrackStubAnalysis>
-     <flags SEAL_PLUGIN_NAME="CSCTrackStubAnalysis">
-</library>
+#<library file=analysis/CSCTrackStubAnalysis.cc name=CSCTrackStubAnalysis>
+#     <flags SEAL_PLUGIN_NAME="CSCTrackStubAnalysis">
+#</library>
 
 #<library file=analysis/CSCTFStubReader.cc name=CSCTFStubReader>
 #     <flags SEAL_PLUGIN_NAME="CSCTFStubReader">
