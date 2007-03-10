@@ -5,7 +5,7 @@
 #include <DataFormats/L1CSCTrackFinder/interface/L1CSCTrackCollection.h>
 #include <DataFormats/L1GlobalMuonTrigger/interface/L1MuRegionalCand.h>
 
-#include <FWCore/Framework/interface/Handle.h>
+#include "DataFormats/Common/interface/Handle.h"
 #include <FWCore/Framework/interface/Event.h>
 
 CSCTFCandidateProducer::CSCTFCandidateProducer(const edm::ParameterSet& pset)
@@ -30,6 +30,6 @@ void CSCTFCandidateProducer::produce(edm::Event & e, const edm::EventSetup& c)
   e.getByLabel(input_module.label(),input_module.instance(), tracks);
 
   my_builder->buildCandidates(tracks.product(), cand_product.get());
-  
+
   e.put(cand_product,"CSC");
 }

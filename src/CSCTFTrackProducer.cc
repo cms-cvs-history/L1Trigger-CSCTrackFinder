@@ -12,7 +12,7 @@
 #include <L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeometry.h>
 #include <Geometry/Records/interface/MuonGeometryRecord.h>
 
-#include <FWCore/Framework/interface/Handle.h>
+#include "DataFormats/Common/interface/Handle.h"
 #include <FWCore/Framework/interface/Event.h>
 #include <FWCore/Framework/interface/EventSetup.h>
 #include <FWCore/Framework/interface/ESHandle.h>
@@ -50,7 +50,7 @@ void CSCTFTrackProducer::produce(edm::Event & e, const edm::EventSetup& c)
   e.getByType(dttrig);
 
   my_builder->buildTracks(LCTs.product(), dttrig.product(), track_product.get(), dt_stubs.get());
-  
+
   e.put(track_product);
   e.put(dt_stubs);
 }
