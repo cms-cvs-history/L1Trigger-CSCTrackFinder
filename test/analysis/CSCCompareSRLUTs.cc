@@ -1,16 +1,16 @@
-/** 
+/**
  *
  * Analyzer to compare one LUT to another and record the differences.
- * author L. Gray 4/13/06 
+ * author L. Gray 4/13/06
  *
- *   
+ *
  */
 
 #include <fstream>
 #include <iostream>
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/Event.h"
-#include "FWCore/Framework/interface/Handle.h"
+#include "DataFormats/Common/interface/Handle.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/ESHandle.h"
@@ -36,7 +36,7 @@ CSCCompareSRLUTs::CSCCompareSRLUTs(edm::ParameterSet const& conf)
   endcap = conf.getUntrackedParameter<int>("Endcap",1);
   binary = conf.getUntrackedParameter<bool>("BinaryInput",false);
   LUTparam = conf.getParameter<edm::ParameterSet>("lutParam");
-  
+
   myLUT = new CSCSectorReceiverLUT(endcap, sector, subsector, station, edm::ParameterSet());
   testLUT = new CSCSectorReceiverLUT(endcap, sector, subsector, station, LUTparam);
 }
@@ -47,14 +47,14 @@ CSCCompareSRLUTs::~CSCCompareSRLUTs()
   delete testLUT;
 }
 
-void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup) 
+void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 {
   // set geometry pointer
   edm::ESHandle<CSCGeometry> pDD;
 
   iSetup.get<MuonGeometryRecord>().get( pDD );
-  CSCTriggerGeometry::setGeometry(pDD);  
-  
+  CSCTriggerGeometry::setGeometry(pDD);
+
   // test local phi
   // should match for all inputs
   for(unsigned int address = 0; address < 1<<CSCBitWidths::kLocalPhiAddressWidth; ++address)
@@ -81,16 +81,16 @@ void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetu
 
       CSCTriggerGeomManager* geom = CSCTriggerGeometry::get();
       CSCChamber* thechamber = geom->chamber(endcap, station, sector, subsector, c);
-      
+
       if(thechamber)
         {
           const CSCLayerGeometry* layergeom = thechamber->layer(3)->geometry();
           int nWireGroups = layergeom->numberOfWireGroups();
-	  
+
 	  for(int wg = 0; wg < nWireGroups; ++wg)
 	    for(int phil = 0; phil < 1<<CSCBitWidths::kLocalPhiDataBitWidth; ++phil)
 	      {
-		
+
                 ntotphi += 1.0;
 
                 mgPhi = myLUT->globalPhiME(phil, wg, c);
@@ -132,11 +132,11 @@ void CSCCompareSRLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetu
 	      {
 
 		ntoteta += 1.0;
-				
+
 		mgEta = myLUT->globalEtaME(0, (phil << 8), wg, c);
 		tstgEta = testLUT->globalEtaME(0, (phil << 8), wg, c);
 		unsigned short my, test;
-	
+
 		my = mgEta.toint();
 		test = tstgEta.toint();
 

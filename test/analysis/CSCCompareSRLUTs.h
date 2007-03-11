@@ -1,9 +1,9 @@
 #ifndef CSCTrackFinder_CompareSRLUTs_h
 #define CSCTrackFinder_CompareSRLUTs_h
 
-/** 
- * \author L. Gray 2/26/06 
- *   
+/**
+ * \author L. Gray 2/26/06
+ *
  */
 
 #include "PluginManager/ModuleDef.h"
@@ -12,7 +12,7 @@
 #include <iostream>
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/Event.h"
-#include "FWCore/Framework/interface/Handle.h"
+#include "DataFormats/Common/interface/Handle.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/ESHandle.h"

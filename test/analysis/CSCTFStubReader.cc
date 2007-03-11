@@ -4,7 +4,7 @@
 // Collaborating Class Headers --
 //-------------------------------
 #include <FWCore/Framework/interface/MakerMacros.h>
-#include <FWCore/Framework/interface/Handle.h>
+#include "DataFormats/Common/interface/Handle.h"
 #include <FWCore/Framework/interface/ESHandle.h>
 #include <FWCore/MessageLogger/interface/MessageLogger.h>
 
@@ -111,7 +111,7 @@ CSCTFStubReader::~CSCTFStubReader(){
 
 void CSCTFStubReader::analyze(const edm::Event& ev,
 			      const edm::EventSetup& setup){
-  
+
   event++;
   edm::ESHandle<CSCGeometry> cscGeom;
   setup.get<MuonGeometryRecord>().get(cscGeom);
@@ -210,7 +210,7 @@ void CSCTFStubReader::fillMuSimHitsVsMuDigis(const edm::Event& ev,
   alct_analyzer.setGeometry(geom_);
   CSCCathodeLCTAnalyzer clct_analyzer;
   clct_analyzer.setGeometry(geom_);
-   //for stubs 
+   //for stubs
   CSCTriggerContainer<csctf::TrackStub> stub_list;
   CSCCorrelatedLCTDigiCollection::DigiRangeIterator detUnitIt;
   for(detUnitIt = lcts->begin(); detUnitIt != lcts->end(); detUnitIt++) {
@@ -242,7 +242,7 @@ void CSCTFStubReader::fillMuSimHitsVsMuDigis(const edm::Event& ev,
 	  unsigned fpga = (id.station() == 1) ? CSCTriggerNumbering::triggerSubSectorFromLabels(id) - 1 : id.station();
 	  // run through SR_LUTs
 	  lclphidat lclPhi =
-	    srLUTs_[e-1][s-1][FPGAs[fpga]]->localPhi(itr->getStrip(), itr->getPattern(), 
+	    srLUTs_[e-1][s-1][FPGAs[fpga]]->localPhi(itr->getStrip(), itr->getPattern(),
 						     itr->getQuality(),     itr->getBend());
 	  gblphidat gblPhi = srLUTs_[e-1][s-1][FPGAs[fpga]]->globalPhiME(lclPhi.phi_local,
 									 itr->getKeyWG(), itr->cscid());
@@ -339,7 +339,7 @@ void CSCTFStubReader::fillMuSimHitsVsMuDigis(const edm::Event& ev,
 
 	    alct_valid = anodeLCT.isValid();
 	    clct_valid = cathodeLCT.isValid();
-	    int clctStripType=cathodeLCT.getStripType();		       
+	    int clctStripType=cathodeLCT.getStripType();
 	    int clctKeyStrip = cathodeLCT.getKeyStrip();// halfstrip #
 	    if (clctStripType == 0) clctKeyStrip /= 4;  // distrip # for distrip ptns
 
@@ -560,7 +560,7 @@ int CSCTFStubReader::getCSCType(const CSCDetId& id) {
 
 void CSCTFStubReader::bookMuSimHitsVsMuDigis()
 {
-  hLctMPCPerEvent  = new TH1F("LCTs_per_event", "LCTs per event",    11, -0.5, 10.5);  
+  hLctMPCPerEvent  = new TH1F("LCTs_per_event", "LCTs per event",    11, -0.5, 10.5);
   hLctMPCPerCSC    = new TH1F("LCTs_per_CSC_type", "LCTs per CSC type", 10, -0.5,  9.5);
   hCorrLctMPCPerCSC= new TH1F("Corr_LCTs_per_CSC_type", "Corr. LCTs per CSC type", 10, -0.5,9.5);
   hLctMPCEndcap    = new TH1F("LCT_Endcap", "Endcap",             4, -0.5,  3.5);
@@ -592,7 +592,7 @@ void CSCTFStubReader::bookMuSimHitsVsMuDigis()
   hAlctCollis   = new TH1F("o_ALCTCollisionFlag", "ALCT collision. flag", 3, -0.5,   2.5);
   hAlctKeyGroup = new TH1F("o_ALCTKeyWireGroup", "ALCT key wiregroup", 120, -0.5, 119.5);
   hAlctBXN      = new TH1F("o_ALCTBx", "ALCT bx",             20, -0.5,  19.5);
- 
+
   //void CSCTriggerPrimitivesReader::bookCLCTHistos() {
   hClctPerEvent  = new TH1F("o_CLCTsPerEvent", "CLCTs per event",    11, -0.5, 10.5);
   hClctPerCSC    = new TH1F("o_CLCTsPerCSCType", "CLCTs per CSC type", 10, -0.5,  9.5);
@@ -1026,7 +1026,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   c1->Update();
   c1->Print("o_Numbers_of_LCTs.png");
   c1->Print("csc_resolution.ps(");
-  page++; 
+  page++;
 
 
   c1->Clear();  c1->cd(0);
@@ -1049,7 +1049,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   c1->Print("csc_resolution.ps");
   page++;
 
-  
+
   //  ps->NewPage();
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
@@ -1144,7 +1144,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   LctVsPhiTot->GetYaxis()->SetTitle("Number of LCTs");
   pad[page]->cd(1);  LctVsPhiTot->Draw();
   c1->Update();
-  c1->Print("o_Number_of_LCTs_as_a_function_of_phi.png"); 
+  c1->Print("o_Number_of_LCTs_as_a_function_of_phi.png");
   c1->Print("csc_resolution.ps");
   page++;
 
@@ -1162,7 +1162,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   pad[page]->cd(4);  hAlctKeyGroup->Draw();
   pad[page]->cd(5);  hAlctBXN->Draw();
   c1->Update();
-  c1->Print("o_ALCTs.png"); 
+  c1->Print("o_ALCTs.png");
   c1->Print("csc_resolution.ps");
   page++;
 
@@ -1185,7 +1185,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   pad[page]->cd(5);  hClctBXN->Draw();
   //  pad[page]->cd(6);  ClctBendAngle->Draw();
   c1->Update();
-  c1->Print("o_CLCTs_1.png"); 
+  c1->Print("o_CLCTs_1.png");
   c1->Print("csc_resolution.ps");
   page++;
 
@@ -1199,7 +1199,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   pad[page]->cd(2);  hClctKeyStrip[0]->Draw();
   pad[page]->cd(3);  hClctKeyStrip[1]->Draw();
   c1->Update();
-  c1->Print("o_CLCTs_2.png"); 
+  c1->Print("o_CLCTs_2.png");
   c1->Print("csc_resolution.ps");
   page++;
 
@@ -1215,7 +1215,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   pad[page]->cd(3);  hLctMPCStripType->SetLabelSize(0.045, "Y"); hLctMPCStripType->Draw();
   pad[page]->cd(4);  hLctMPCBXN->SetLabelSize(0.045, "Y");     hLctMPCBXN->Draw();
   c1->Update();
-  c1->Print("o_LCTs.png"); 
+  c1->Print("o_LCTs.png");
   c1->Print("csc_resolution.ps");
   page++;
 
@@ -1232,7 +1232,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   pad[page]->cd(3);  EtaDiff[0]->Draw();  EtaDiff[0]->Fit("gaus","Q");
   pad[page]->cd(4);  EtaDiff[1]->Draw();  EtaDiff[1]->Fit("gaus","Q");
   c1->Update();
-  c1->Print("o_eta_resolution.png"); 
+  c1->Print("o_eta_resolution.png");
   c1->Print("csc_resolution.ps");
   page++;
 
@@ -1252,7 +1252,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   c1->Update();
   c1->Print("o_eta_rec-eta_sim.png"); c1->Print("csc_resolution.ps");page++;
 
-  //  
+  //
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 			 "#eta_rec-#eta_sim, halfstrips only");
@@ -1266,11 +1266,11 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
       EtaDiffCsc[idh][5]->Fit("gaus","Q");
   }
   c1->Update();
-  c1->Print("o_eta_rec-eta_sim_halfstrips_only.png"); 
+  c1->Print("o_eta_rec-eta_sim_halfstrips_only.png");
   c1->Print("csc_resolution.ps");
   page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 			 "#eta_rec-#eta_sim, distrips only");
@@ -1285,7 +1285,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
   c1->Update(); c1->Print("o_eta_rec-eta_sim_distrips_only.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98, "#eta_rec-#eta_sim, endcap1");
   title->SetFillColor(10);  title->Draw();
@@ -1299,7 +1299,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
   c1->Update(); c1->Print("o_eta_rec-eta_sim_endcap1.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98, "#eta_rec-#eta_sim, endcap2");
   title->SetFillColor(10);  title->Draw();
@@ -1312,7 +1312,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
       EtaDiffCsc[idh][2]->Fit("gaus","Q");
   }
   c1->Update(); c1->Print("o_eta_rec-eta_sim_endcap2.png");  c1->Print("csc_resolution.ps");page++;
-  
+
 
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
@@ -1328,7 +1328,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
   c1->Update(); c1->Print("o_eta_rec-eta_sim_0.0125etabins.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 			 "#LT#eta_rec-#eta_sim#GT vs #eta_rec");
@@ -1365,7 +1365,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
   c1->Update(); c1->Print("o_eta_rec-eta_sim_0.0125etabins_vs_wiregroup.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 			 "#LT#eta_rec-#eta_sim#GT vs #phi_rec");
@@ -1449,7 +1449,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
   c1->Update(); c1->Print("o_eta_rec-eta_sim_0.0125etabins_vs_halfstrip_endcap2.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98, "#phi resolution");
   title->SetFillColor(10);  title->Draw();
@@ -1464,7 +1464,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   pad[page]->cd(4);  PhiDiff[1]->Draw();  PhiDiff[1]->Fit("gaus","Q");
   c1->Update(); c1->Print("o_phi_resolution.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98, "#phi_rec-#phi_sim (mrad)");
   title->SetFillColor(10);  title->Draw();
@@ -1478,7 +1478,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
   c1->Update(); c1->Print("o_phi_rec-phi_sim_mrad.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 			 "#phi_rec-#phi_sim (mrad), halfstrips only");
@@ -1493,7 +1493,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
   c1->Update(); c1->Print("o_phi_rec-phi_sim_mrad_halfstriponly.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 			 "#phi_rec-#phi_sim (mrad), distrips only");
@@ -1508,7 +1508,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
   c1->Update(); c1->Print("o_phi_rec-phi_sim_mrad_distriponly.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 			 "#phi_rec-#phi_sim (mrad), endcap1");
@@ -1523,7 +1523,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
   c1->Update(); c1->Print("o_phi_rec-phi_sim_mrad_endcap1.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 			 "#phi_rec-#phi_sim (mrad), endcap2");
@@ -1538,7 +1538,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
   c1->Update(); c1->Print("o_phi_rec-phi_sim_mrad_endcap2.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 		       "#phi_rec-#phi_sim (mrad), halfstrips only, pattern 0");
@@ -1553,7 +1553,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
   c1->Update(); c1->Print("o_phi_rec-phi_sim_mrad_halfstriponly_pattern0.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 			 "#phi_rec-#phi_sim (0.26 mrad #phi bins)");
@@ -1566,7 +1566,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
   c1->Update(); c1->Print("o_phi_rec-phi_sim_0.26mrad_phibins.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 		   "#phi_rec-#phi_sim (0.26 mrad #phi bins), halfstrips only");
@@ -1579,7 +1579,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
   c1->Update(); c1->Print("o_phi_rec-phi_sim_0.26mrad_phibins_halfstriponly.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 		   "#phi_rec-#phi_sim (0.26 mrad #phi bins), distrips only");
@@ -1592,7 +1592,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
     c1->Update(); c1->Print("o_phi_rec-phi_sim_0.26mrad_phibins_distriponly.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 			 "#LT#phi_rec-#phi_sim#GT (mrad) vs #eta_rec");
@@ -1632,7 +1632,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
     c1->Update(); c1->Print("o_phi_rec-phi_sim_mrad_vs_wiregroup.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98,
 			 "#LT#phi_rec-#phi_sim#GT (mrad) vs #phi_rec");
@@ -1717,7 +1717,7 @@ void CSCTFStubReader::drawMuSimHitsVsMuDigis() {
   }
     c1->Update(); c1->Print("o_clct_distrip_pattern_types.png");  c1->Print("csc_resolution.ps");page++;
 
-  
+
   c1->Clear();  c1->cd(0);
   title = new TPaveLabel(0.1, 0.94, 0.9, 0.98, "ME1/A: pattern types");
   title->SetFillColor(10);  title->Draw();
@@ -1787,17 +1787,17 @@ void CSCTFStubReader::endJob()
 {
   setRootStyle();
 
-  if (bookedMuSimHitsVsMuDigis) 
+  if (bookedMuSimHitsVsMuDigis)
     {
       drawMuSimHitsVsMuDigis();
       drawALCTHistos();
       drawCLCTHistos();
     }
   fAnalysis->Write();
-  if (bookedMuSimHitsVsMuDigis) 
+  if (bookedMuSimHitsVsMuDigis)
     {
       deleteMuSimHitsVsMuDigis();
     }
- 
+
   delete fAnalysis;
 }

@@ -1,9 +1,9 @@
 #ifndef CSCTrackFinder_CSCTFEfficiencies_h
 #define CSCTrackFinder_CSCTFEfficiencies_h
 
-/** 
- * \author L. Gray 6/17/06 
- *   
+/**
+ * \author L. Gray 6/17/06
+ *
  */
 
 #include "PluginManager/ModuleDef.h"
@@ -12,7 +12,7 @@
 #include <iostream>
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/Event.h"
-#include "FWCore/Framework/interface/Handle.h"
+#include "DataFormats/Common/interface/Handle.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/ESHandle.h"
