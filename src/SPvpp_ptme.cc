@@ -358,9 +358,14 @@ initio
 beginfunction
 	begin
 		If (stubn < 3)
-			result = ifelse (CSCid == 1 || CSCid == 3 || CSCid == 4 || CSCid == 6, 1, 0);
+// old ME11 geometry
+//			result = ifelse (CSCid == 1 || CSCid == 3 || CSCid == 4 || CSCid == 6, 1, 0);
+//		Else
+//			result = ifelse (CSCid == 2 || CSCid == 5, 1, 0);
+// new ME11 geometry
+			result = ifelse (CSCid == 2 || CSCid == 4 || CSCid == 6, 1, 0);
 		Else
-			result = ifelse (CSCid == 2 || CSCid == 5, 1, 0);
+			result = ifelse (CSCid == 1 || CSCid == 3 || CSCid == 5, 1, 0);
 
 	end
 endfunction
