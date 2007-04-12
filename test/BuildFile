@@ -17,21 +17,21 @@
 
 
 <library file=analysis/CSCMakeSRLUT.cc name=CSCMakeSRLUT>
-     <flags SEAL_PLUGIN_NAME="CSCMakeSRLUT">
+     <flags EDM_PLUGIN=1>
 </library>
 
 <library file=analysis/CSCCompareSRLUTs.cc name=CSCCompareSRLUTs>
-     <flags SEAL_PLUGIN_NAME="CSCCompareSRLUTs">
+     <flags EDM_PLUGIN=1>
 </library>
 
 <library file=analysis/CSCTFEfficiencies.cc name=CSCTFEfficiencies>
-     <flags SEAL_PLUGIN_NAME="CSCTFEfficiencies">
+     <flags EDM_PLUGIN=1>
 </library>
 
 <library file=analysis/CSCTrackStubAnalysis.cc name=CSCTrackStubAnalysis>
-     <flags SEAL_PLUGIN_NAME="CSCTrackStubAnalysis">
+     <flags EDM_PLUGIN=1>
 </library>
 
 #<library file=analysis/CSCTFStubReader.cc name=CSCTFStubReader>
-#     <flags SEAL_PLUGIN_NAME="CSCTFStubReader">
+#     <flags EDM_PLUGIN=1>
 #</library>
