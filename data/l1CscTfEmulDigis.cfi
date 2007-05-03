@@ -1,0 +1,11 @@
+module l1CscTfEmulDigis = CSCTFCandidateProducer
+{
+
+   untracked InputTag CSCTrackProducer = l1CscTfTrackDigis
+
+   PSet MuonSorter = 
+      {
+        include "L1Trigger/CSCCommonTrigger/data/CSCCommonTrigger.cfi"
+	using CSCCommonTrigger
+      }
+}
