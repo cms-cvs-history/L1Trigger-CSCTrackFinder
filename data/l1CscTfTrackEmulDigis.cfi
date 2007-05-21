@@ -1,5 +1,5 @@
 
-module l1CscTfTrackDigis = CSCTFTrackProducer
+module l1CscTfTrackEmulDigis = CSCTFTrackProducer
 {   
 
    untracked InputTag SectorReceiverInput = l1CscTpgEmulDigis:MPCSORTED
