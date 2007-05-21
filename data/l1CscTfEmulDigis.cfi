@@ -1,7 +1,7 @@
 module l1CscTfEmulDigis = CSCTFCandidateProducer
 {
 
-   untracked InputTag CSCTrackProducer = l1CscTfTrackDigis
+   untracked InputTag CSCTrackProducer = l1CscTfTrackEmulDigis
 
    PSet MuonSorter = 
       {
