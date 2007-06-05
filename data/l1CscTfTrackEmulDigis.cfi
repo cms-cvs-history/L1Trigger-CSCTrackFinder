@@ -1,12 +1,12 @@
+include "L1Trigger/CSCCommonTrigger/data/CSCCommonTrigger.cfi"
 
-module l1CscTfTrackDigis = CSCTFTrackProducer
+module l1CscTfTrackEmulDigis = CSCTFTrackProducer
 {   
 
    untracked InputTag SectorReceiverInput = l1CscTpgEmulDigis:MPCSORTED
 
    PSet SectorProcessor = 
       {
-        include "L1Trigger/CSCCommonTrigger/data/CSCCommonTrigger.cfi"
         using CSCCommonTrigger
         
 	untracked uint32 CoreLatency = 6
