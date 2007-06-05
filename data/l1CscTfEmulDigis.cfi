@@ -1,3 +1,5 @@
+include "L1Trigger/CSCCommonTrigger/data/CSCCommonTrigger.cfi"
+
 module l1CscTfEmulDigis = CSCTFCandidateProducer
 {
 
@@ -5,7 +7,6 @@ module l1CscTfEmulDigis = CSCTFCandidateProducer
 
    PSet MuonSorter = 
       {
-        include "L1Trigger/CSCCommonTrigger/data/CSCCommonTrigger.cfi"
 	using CSCCommonTrigger
       }
 }
