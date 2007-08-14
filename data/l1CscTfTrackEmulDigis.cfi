@@ -12,6 +12,10 @@ module l1CscTfTrackEmulDigis = CSCTFTrackProducer
 	untracked uint32 CoreLatency = 6
 	untracked bool UseBXA = true 
 	untracked vuint32 EtaWindows = {2, 2, 2, 2, 2, 2}
+
+	untracked vuint32 EtaMin = {11*2, 11*2, 7*2, 7*2, 7*2, 5*2, 5*2, 5*2}
+	untracked vuint32 EtaMax = {127, 127, 127, 127, 127, 12*2, 12*2, 12*2}
+
 	untracked uint32 BXAExtendLength = 1               
 
    	PSet SRLUT = {
