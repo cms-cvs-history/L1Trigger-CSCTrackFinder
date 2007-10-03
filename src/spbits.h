@@ -27,6 +27,11 @@ Verilog++ SP.
 #define BWMBIN (BWFL + BWQB + BWPHI)  // combined mb input (only 3 bits quality)
 #define BWPOUT (BWFR + BWPHIOUT + BWPT + BWSIGN + BWMODE + BWETAOUT) // combined output
 
+#define BWBXABX 3 // BXA original bx number
+#define BWORIGID 3 // original stub id (1-6)
+#define BWBXID (BWBXABX + BWORIGID) // original bx + id, propagates with each track stub
+
+
 #define BWEQ12 2   // extrapolation qualities bit widths
 #define BWEQ13 2
 #define BWEQ12OV 1
@@ -57,11 +62,16 @@ Verilog++ SP.
 #define MUIDME1		3	//Lengths for parts of ID
 #define	MUIDME234	2
 #define MUIDMB12	3
-#define MUIDSIZE	(MUIDME1 + 3 * MUIDME234 + 2 * MUIDMB12)	//Length of muon id bitpattern
+//#define MUIDSIZE	(MUIDME1 + 3 * MUIDME234 + 2 * MUIDMB12)	//Length of muon id bitpattern
+#define MUIDSIZE (6 * BWBXID)
 
 #define NTAU  3 // number of taus for each station
 
 #define BWPTETA BWETAOUT // pt assignment units use only PTETA MSbits of eta
+#define BWRANK 6 // track rank
+// BX correction unit input and output
+#define CORRIN (BWRANK + BWFR + BWPHIOUT + BWPT + BWSIGN + BWMODE + BWETAOUT)
+
 
 #endif
 

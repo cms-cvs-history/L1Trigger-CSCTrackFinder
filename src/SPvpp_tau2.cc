@@ -7,9 +7,7 @@ void SPvpp_tau2::operator()
 	Signal me23,
 	Signal me24,
 	Signal idl, Signal idm, Signal idh,
-	Signal rank,
-	Signal bxa_enable,
-	Signal clk
+	Signal rank
 )	
 {
 initio
@@ -22,8 +20,6 @@ initio
 	idm.output(1,0,"idm",makereg); 
 	idh.output(1,0,"idh",makereg); 
 	rank.output(5,0,"rank",makereg);
-	Input (bxa_enable);
-	clk.input("clk");
 
 beginmodule
 
@@ -39,22 +35,11 @@ beginmodule
 	quality.reg(3,0,"quality");
 
 
-	always (posedge (clk))
+	always (me21 or me23 or me24)
 	begin
 	    (e21[5], e21[4], e21[3], e21[2], e21[1], e21[0]) = me21;
 		e23 = me23;
 		e24 = me24;
-
-#ifdef _BXAON
-		// zero the stubs which were used in previous clock.
-		// this is the part of the BXA algotithm
-		If(quality != 0 && bxa_enable)
-		begin
-			If (idl != 0) e21[idl-1] = 0;
-			If (idm != 0) e23(idm-1) = 0;
-			If (idh != 0) e24(idh-1) = 0;
-		end
-#endif
 
 	    max21 = Max21p(e21[0], e21[1], e21[2], e21[3], e21[4], e21[5]);
 	    max23 = Maxp  (e23);

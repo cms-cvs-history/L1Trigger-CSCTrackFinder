@@ -5,6 +5,7 @@
 #define PHICUTL 128
 #define PHICUTH (4095 - PHICUTL)
 
+
 void SPvpp_ptme::operator()
 (
 	// all etas use only 4 MSBs from the original Eta
@@ -16,13 +17,18 @@ void SPvpp_ptme::operator()
 	
 	Signal rank,
 	Signal id1, Signal id2, Signal id3, Signal id4,
-	
-	Signal pt, 
-	Signal sign, 
-	Signal modeMem, 
-	Signal etaPT,
-	Signal FR, 
-	Signal phi
+	Signal orig_id,
+
+	Signal ptp, 
+	Signal signp, 
+	Signal modeMemp, 
+	Signal etaPTp,
+	Signal FRp, 
+	Signal phip,
+	Signal orig_idrp,
+	Signal rankrp,
+
+	Signal clk
 )
 {	
 	
@@ -52,18 +58,22 @@ initio
 	id2.input(1,0,"id2"); 
 	id3.input(1,0,"id3"); 
 	id4.input(1,0,"id4");
+	Input_(orig_id , MUIDSIZE-1,0);
 
-	pt.output(BWPT-1,0,"pt",makereg); 
-	sign.output("sign",makereg); 
-	modeMem.output(BWMODE-1,0,"modeMem", makereg);
-	etaPT.output(BWPTETA-1,0,"etaPT",makereg); 
-	FR.output("FR", makereg);
-	phi.output(BWPHI-1, 0, "phi", makereg);
+	OutReg_(ptp, BWPT-1,0); 
+	OutReg (signp); 
+	OutReg_(modeMemp, BWMODE-1,0);
+	OutReg_(etaPTp, BWPTETA-1,0); 
+	OutReg (FRp);
+	OutReg_(phip, BWPHI-1, 0);
+	OutReg_(orig_idrp , MUIDSIZE-1,0);
+	OutReg_(rankrp, 5, 0);
 
+	Input (clk);
+	
 beginmodule
 
 	SelectPhisp.init(11,0,"_SelectPhisp");
-//	SelectEtap.init(2,0,"_SelectEtap");
 	Modep.init(3,0,"_Modep");	 
 	DecodeFR.init(0, 0, "_DecodeFR");
 
@@ -74,8 +84,7 @@ beginmodule
 	modenew.reg(3,0,"modenew");
 	si.reg("si"); 
 	d.reg(12,0,"d"); 
- 	c.reg(12,0,"c");
-//	SelEta.reg(3,0,"SelEta"); 
+ 	c.reg(12,0,"c"); 
 	SelPhi.reg(11,0,"SelPhi"); 
 	IdValid.reg(3,0,"IdValid");
 
@@ -96,17 +105,14 @@ beginmodule
 
 	Reg__ (CSCID, BWCSCID-1,0,NSEG1,0);
 
+	Reg_(pt, BWPT-1,0); // current track parameters
+	Reg (sign); 
+	Reg_(modeMem, BWMODE-1,0);
+	Reg_(etaPT, BWPTETA-1,0); 
+	Reg (FR);
+	Reg_(phi, BWPHI-1, 0);
 
-	always 
-	(
-		me1a or me1b or me1c or me1d or me1e or me1f or 
-		me2a or me2b or me2c or 
-		me3a or me3b or me3c or 
-		me4a or me4b or me4c or
-		
-		rank or
-		id1 or id2 or id3 or id4
-	)
+	always (posedge (clk))
 	begin
 
 		me1Eta[0] = 0; 
@@ -158,14 +164,6 @@ beginmodule
         CSCID[5] = me1e(BWCSCID+BWQ+BWETAIN+BWPHI-1, BWQ+BWETAIN+BWPHI);
         CSCID[6] = me1f(BWCSCID+BWQ+BWETAIN+BWPHI-1, BWQ+BWETAIN+BWPHI);
 
-//		me1FR(0) = 0;
-//		me1FR(1) = me1a(BWMEIN-1);
-//		me1FR(2) = me1b(BWMEIN-1);
-//		me1FR(3) = me1c(BWMEIN-1);
-//		me1FR(4) = me1d(BWMEIN-1);
-//		me1FR(5) = me1e(BWMEIN-1);
-//		me1FR(6) = me1f(BWMEIN-1);
-
 		me1FR(0) = 0;
 //DEA
 		me1FR(1) = DecodeFR(me1a(BWCSCID+BWQ+BWETAIN+BWPHI-1, BWQ+BWETAIN+BWPHI), 0); // FR is derived from CSCid
@@ -181,20 +179,7 @@ beginmodule
 		IdValid(2) = ifelse (id2 != 0, 1, 0);
 		IdValid(3) = ifelse (id1 != 0, 1, 0);
 
-//		If (me2Eta[id2] == 0xf)
-//		begin
-//			int c = 0;
-//		end
-
-
-//		SelEta = SelectEtap(IdValid);
-//		etaPT = 
-//			ifelse (SelEta(2) == 1, me1Eta[id1], 
-//			ifelse (SelEta(1) == 1, me2Eta[id2], 
-//			ifelse (SelEta(0) == 1, me3Eta[id3], 0)));
-			 
 		etaPT = 
-//			ifelse (IdValid(3) == 1, me1Eta[id1], 
 			ifelse (IdValid(2) == 1, me2Eta[id2], 
 			ifelse (IdValid(1) == 1, me3Eta[id3], 0));
 
@@ -204,11 +189,6 @@ beginmodule
         etaPT = 
             ifelse (CSCID[id1] > 3 && etaPT >= 14, 13, 
             ifelse (CSCID[id1] < 4 && CSCID[id1] > 0 && etaPT < 14, 14, etaPT));
-
-//		phi = 
-//			ifelse (SelEta(2) == 1, me1Phi[id1],
-//			ifelse (SelEta(1) == 1, me2Phi[id2],
-//			ifelse (SelEta(0) == 1, me3Phi[id3], 0)));
 
 		// phi is taken only from key stations
 		phi = 
@@ -244,10 +224,6 @@ beginmodule
 		c(12) = ((phiB >= phiA) || (phiB >= phiC)) && ((phiA >= phiB) || (phiC >= phiB));
 
 		mode = Modep(rank);
-//		modeout = 
-//		  ifelse (((etaPT>>1) < 3) && ((mode == 2) || (mode == 3)), 6,  
-//			  ifelse (((etaPT>>1) < 3) && (mode == 4), 7, 
-//				  ifelse (((etaPT>>1) < 3) && (mode == 5), 8, mode)));
 
 		modeout = 
 		  ifelse ((etaPT(BWPTETA-1,1) < 3) && ((mode == 2) || (mode == 3)), 6,  
@@ -271,9 +247,16 @@ beginmodule
 	
 		modeMem = ifelse (si == 0, modeout, 1);
 	
-//		sign = (phiA >= phiB) && (si == 0);
 		sign = (phiA >= phiB);
 
+		ptp		  = pt		; 
+		signp	  = sign	;
+		modeMemp  = modeMem ;
+		etaPTp	  = etaPT	;
+		FRp		  = FR		;
+		phip	  = phi	    ;
+		orig_idrp = orig_id ;
+		rankrp    = rank    ;
 	end
 endmodule
 }
@@ -310,22 +293,7 @@ Signal SPvpp_SelectPhis::operator()(Signal IdValid)
 		end
 	endfunction
 }
-/*	
-Signal SPvpp_SelectEta::operator()(Signal IdValid)
-{
-	initio
-		IdValid.input(3,0,"IdValid");
-	beginfunction	
-		begin
-			If (IdValid(3)) result = 4;
-			Else 
-	            If (IdValid(2)) result = 2;
-				Else 
-					If (IdValid(1)) result = 1;
-		end
-	endfunction
-}
-  */
+
 Signal SPvpp_Mode::operator()(Signal rank)
 {
 	initio
@@ -357,16 +325,11 @@ initio
 	stubn.input(2, 0, "stubn");
 beginfunction
 	begin
+		// correct ME11 geometry used according to Darin (4/13/07)
 		If (stubn < 3)
-// old ME11 geometry
-//			result = ifelse (CSCid == 1 || CSCid == 3 || CSCid == 4 || CSCid == 6, 1, 0);
-//		Else
-//			result = ifelse (CSCid == 2 || CSCid == 5, 1, 0);
-// new ME11 geometry
 			result = ifelse (CSCid == 2 || CSCid == 4 || CSCid == 6, 1, 0);
 		Else
 			result = ifelse (CSCid == 1 || CSCid == 3 || CSCid == 5, 1, 0);
-
 	end
 endfunction
 }

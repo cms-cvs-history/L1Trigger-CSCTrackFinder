@@ -15,7 +15,8 @@ public:
 		Signal eq,
 		Signal passX,
 		Signal passY, Signal meY,
-		Signal passZ, Signal meZ
+		Signal passZ, Signal meZ,
+		Signal control
 	);
 
 	Signal qA, qB, etaA, etaB, eta, phiA, phiB, validA, validB;

@@ -37,9 +37,7 @@ public:
 		Signal me32,
 		Signal me34,
 		Signal idl, Signal idm, Signal idh,
-		Signal rank,
-		Signal bxa_enable,
-		Signal clk
+		Signal rank
 	);
 
 	Signal max31, max32, max34, quality;

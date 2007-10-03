@@ -8,7 +8,8 @@ void SPvpp_eu12_ov::operator()
 	Signal eq, 
 	Signal passX,
 	Signal passY, Signal meY,
-	Signal passZ, Signal meZ
+	Signal passZ, Signal meZ,
+	Signal control
 )
 {
 initio
@@ -20,6 +21,7 @@ initio
 	meY.input(BWMEIN-1, 0, "meY");
 	passZ.input("passZ");
 	meZ.input(BWMEIN-1, 0, "meZ");
+	Input_(control, 1, 0); // {"allow q = 4", "allow q = 3"}
 	
 beginmodule
 	qA.reg(BWQ-1,0,"qA");
@@ -37,7 +39,7 @@ beginmodule
 	validA.reg ("validA");
 	validB.reg ("validB");
 
-	always (meA or meB or passX or passY or meY or passZ or meZ)
+	always (meA or meB or passX or passY or meY or passZ or meZ or control)
 	begin
 
 		(validA, CSCidA, qA, /*amA,*/ etaA, phiA) = meA(BWMEIN-1, 2); // do not take 2 LSBs of phi
@@ -57,8 +59,8 @@ beginmodule
 			) &&
 
 			(Dphi(9,7) == 0) &&
-			(qA != 0) && (qA != 3) && (qA != 4) && 
-			(qB != 0) && (qB != 3) && (qB != 4) &&
+			(qA != 0) && (qA != 3 || control(0)) && (qA != 4 || control(1)) && 
+			(qB != 0) && (qB != 3 || control(0)) && (qB != 4 || control(1)) &&
 			validA && validB
 		) 
 		begin

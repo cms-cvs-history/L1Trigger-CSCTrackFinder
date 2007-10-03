@@ -8,7 +8,8 @@ void SPvpp_eu23_24_34::operator()
 	Signal eq,
 	Signal MinEta, 
 	Signal MaxEta, 
-	Signal EtaWindow
+	Signal EtaWindow,
+	Signal control
 )
 {
 initio
@@ -19,6 +20,7 @@ initio
 	MinEta.input(BWETAIN-1,0,"MinEta");
 	MaxEta.input(BWETAIN-1,0,"MaxEta");
 	EtaWindow.input(BWETAIN,0,"EtaWindow");
+	Input_(control, 1, 0); // {"allow q = 4", "allow q = 3"}
 
 beginmodule
 	qA.reg(BWQ-1,0,"qA");
@@ -38,7 +40,7 @@ beginmodule
 	validA.reg ("validA");
 	validB.reg ("validB");
 
-	always (meA or meB or MinEta or MaxEta or EtaWindow)	
+	always (meA or meB or MinEta or MaxEta or EtaWindow or control)	
 	begin
 
 		(validA, CSCidA, qA, /*amA,*/ etaA, phiA) = meA(BWMEIN-1, 2); // do not take 2 LSBs of phi
@@ -53,12 +55,12 @@ beginmodule
 
 		If 
 		(
-		 /*(!amA || !amB) &&*/
+		 	//(!amA || !amB) &&
 			(etaA <= MaxEta) && (etaA >= MinEta) && (etaB <= MaxEta) && (etaB >= MinEta) &&
 			(Deta <= EtaWindow) &&
 			(Dphi(9,7) == 0) &&
-			(qA != 0) && (qA != 3) && (qA != 4) && 
-			(qB != 0) && (qB != 3) && (qB != 4) &&
+			(qA != 0) && (qA != 3 || control(0)) && (qA != 4 || control(1)) && 
+			(qB != 0) && (qB != 3 || control(0)) && (qB != 4 || control(1)) &&
 			validA && validB 
 		) 
 		begin

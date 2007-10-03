@@ -2,47 +2,73 @@
 #define _FSU_H_FILE_
 
 #include <L1Trigger/CSCCommonTrigger/interface/vlib.h>
+#include <L1Trigger/CSCTrackFinder/src/spbits.h>
 
 class SPvpp_CountZeroes : public function
 {
 
 public:
 	Signal operator()(Signal d);
+	Signal s, res;
+	int mb;
 
+	SPvpp_CountZeroes()
+	{
+		mb = 0; // 8-bit by default
+	}
+	
 };
+/*
+class SPvpp_CountZeroes11 : public function
+{
+
+public:
+	Signal operator()(Signal d);
+
+};*/
 
 class SPvpp_fsu: public module
 {
 
+
 public:
 	void operator()
 	(
-		Signal me2aRank, Signal me2aId1, Signal me2aId3, Signal me2aId4,
-		Signal me2bRank, Signal me2bId1, Signal me2bId3, Signal me2bId4,
-		Signal me2cRank, Signal me2cId1, Signal me2cId3, Signal me2cId4,
+		Signal me2aRank, Signal phi2a,
+		Signal me2bRank, Signal phi2b,
+		Signal me2cRank, Signal phi2c,
 
-		Signal me3aRank, Signal me3aId1, Signal me3aId2, Signal me3aId4,
-		Signal me3bRank, Signal me3bId1, Signal me3bId2, Signal me3bId4,
-		Signal me3cRank, Signal me3cId1, Signal me3cId2, Signal me3cId4,
+		Signal me3aRank, Signal phi3a,
+		Signal me3bRank, Signal phi3b,
+		Signal me3cRank, Signal phi3c,
+	
+		Signal mb2aRank, Signal phib2a,
+		Signal mb2bRank, Signal phib2b,
+		Signal mb2cRank, Signal phib2c,
 
-		Signal mb2aRank, Signal mb2aId1, Signal mb2aIdb1, Signal mb2aIdb2,
-		Signal mb2bRank, Signal mb2bId1, Signal mb2bIdb1, Signal mb2bIdb2,
-		Signal mb2cRank, Signal mb2cId1, Signal mb2cIdb1, Signal mb2cIdb2,
+		Signal m0, Signal m1, Signal m2,
 
-		Signal m0, Signal m1, Signal m2
+		Signal phi_watch_en,
+
+		Signal clk
 	);
 
-		memory rank, Id1, Id2, Id3, Id4;
-		Signal CommonStub, Exists;
-		memory Larger;
+		memory rank, phi;
+		Signal Exists, survived;
+		memory Larger, Large;
 		Signal ilgj, larg, larg1;
 
 		Signal i, j, k;
 		Signal s;
+		memory rankr, phir;
+		memory rankrr, phirr;
+		Signal dphi, dphir, dphirr;
+		memory phi_match, phir_match;
+
+		Signal kill, killr, killrr1, killrr2, killrr3;
 
 		SPvpp_CountZeroes CountZ;
 
-		Signal Id1i, Id2i, Id3i, Id4i, Id1j, Id2j, Id3j, Id4j;
 
 };
 

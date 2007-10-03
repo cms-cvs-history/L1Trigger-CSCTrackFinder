@@ -45,7 +45,6 @@ beginmodule
 
 		If 
 		(
-		      //(!amA || !amB) && /* Take out for now in full orca*/
 			(etaA <= MaxEta) && (etaA >= MinEta) && (etaB <= MaxEta) && (etaB >= MinEta) &&
 			(Deta <= EtaWindow)
 		)

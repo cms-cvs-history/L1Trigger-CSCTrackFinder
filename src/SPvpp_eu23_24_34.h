@@ -15,7 +15,8 @@ public:
 		Signal eq,
 		Signal MinEta,
 		Signal MaxEta,
-		Signal EtaWindow
+		Signal EtaWindow,
+		Signal control
 	);
 
 	Signal qA, qB, etaA, etaB, phiA, phiB, amA, amB;

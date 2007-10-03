@@ -20,22 +20,22 @@ public:
 	void operator()
 	(
 		Signal m0, Signal m1, Signal m2,
-		Signal pt0, Signal sign0, Signal modeMem0, Signal etaPT0, Signal FR0, Signal phi0,
-		Signal pt1, Signal sign1, Signal modeMem1, Signal etaPT1, Signal FR1, Signal phi1,
-		Signal pt2, Signal sign2, Signal modeMem2, Signal etaPT2, Signal FR2, Signal phi2,
-		Signal pt3, Signal sign3, Signal modeMem3, Signal etaPT3, Signal FR3, Signal phi3,
-		Signal pt4, Signal sign4, Signal modeMem4, Signal etaPT4, Signal FR4, Signal phi4,
-		Signal pt5, Signal sign5, Signal modeMem5, Signal etaPT5, Signal FR5, Signal phi5,
-		Signal pt6, Signal sign6, Signal modeMem6, Signal etaPT6, Signal FR6, Signal phi6,
-		Signal pt7, Signal sign7, Signal modeMem7, Signal etaPT7, Signal FR7, Signal phi7,
-		Signal pt8, Signal sign8, Signal modeMem8, Signal etaPT8, Signal FR8, Signal phi8,
+		Signal pt0, Signal sign0, Signal modeMem0, Signal etaPT0, Signal FR0, Signal phi0, Signal rank0,
+		Signal pt1, Signal sign1, Signal modeMem1, Signal etaPT1, Signal FR1, Signal phi1, Signal rank1,
+		Signal pt2, Signal sign2, Signal modeMem2, Signal etaPT2, Signal FR2, Signal phi2, Signal rank2,
+		Signal pt3, Signal sign3, Signal modeMem3, Signal etaPT3, Signal FR3, Signal phi3, Signal rank3,
+		Signal pt4, Signal sign4, Signal modeMem4, Signal etaPT4, Signal FR4, Signal phi4, Signal rank4,
+		Signal pt5, Signal sign5, Signal modeMem5, Signal etaPT5, Signal FR5, Signal phi5, Signal rank5,
+		Signal pt6, Signal sign6, Signal modeMem6, Signal etaPT6, Signal FR6, Signal phi6, Signal rank6,
+		Signal pt7, Signal sign7, Signal modeMem7, Signal etaPT7, Signal FR7, Signal phi7, Signal rank7,
+		Signal pt8, Signal sign8, Signal modeMem8, Signal etaPT8, Signal FR8, Signal phi8, Signal rank8,
 
 		Signal id0, Signal id1, Signal id2, Signal id3, Signal id4, Signal id5,
 		Signal id6, Signal id7, Signal id8,
 
-		Signal ptH, Signal signH, Signal modeMemH, Signal etaPTH, Signal FRH, Signal phiH,
-		Signal ptM, Signal signM, Signal modeMemM, Signal etaPTM, Signal FRM, Signal phiM,
-		Signal ptL, Signal signL, Signal modeMemL, Signal etaPTL, Signal FRL, Signal phiL,
+		Signal ptH, Signal signH, Signal modeMemH, Signal etaPTH, Signal FRH, Signal phiH, Signal rankH,
+		Signal ptM, Signal signM, Signal modeMemM, Signal etaPTM, Signal FRM, Signal phiM, Signal rankM,
+		Signal ptL, Signal signL, Signal modeMemL, Signal etaPTL, Signal FRL, Signal phiL, Signal rankL,
 		Signal idH, Signal idM, Signal idL
 	);
 
@@ -49,7 +49,7 @@ public:
 	Signal i;
 	memory id;
 	Signal phiHs, phiMs, phiLs;
-
+	memory rank;
 
 };
 

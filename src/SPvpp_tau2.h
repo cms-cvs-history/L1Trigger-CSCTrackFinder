@@ -30,9 +30,7 @@ public:
 		Signal me23,
 		Signal me24,
 		Signal idl, Signal idm, Signal idh,
-		Signal rank,
-		Signal bxa_enable,
-		Signal clk
+		Signal rank
 	);
 
 	Signal e23, e24;

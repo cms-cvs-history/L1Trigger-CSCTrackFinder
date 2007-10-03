@@ -1,10 +1,10 @@
+
 #ifndef _BXA_H_FILE_
 #define _BXA_H_FILE_
 
 #include <L1Trigger/CSCCommonTrigger/interface/vlib.h>
 #include <L1Trigger/CSCTrackFinder/src/spbits.h>
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_bxame.h>
-#include <L1Trigger/CSCTrackFinder/src/SPvpp_bxamb.h>
 
 class SPvpp_bxa : public module
 {
@@ -25,18 +25,23 @@ public:
 		Signal mb1ar, Signal mb1br, Signal mb1cr, Signal mb1dr,
 		Signal mb2ar, Signal mb2br, Signal mb2cr, Signal mb2dr,
 
-		Signal etaoff1, Signal etaoff2, Signal etaoff3, Signal etaoff4,
-		Signal enable,
+		Signal me1abi, Signal me1bbi, Signal me1cbi, Signal me1dbi, Signal me1ebi, Signal me1fbi,
+		Signal me2abi, Signal me2bbi, Signal me2cbi,
+		Signal me3abi, Signal me3bbi, Signal me3cbi,
+		Signal me4abi, Signal me4bbi, Signal me4cbi,
+		Signal mb1abi, Signal mb1bbi, Signal mb1cbi, Signal mb1dbi,
+		Signal mb2abi, Signal mb2bbi, Signal mb2cbi, Signal mb2dbi,
+
+		Signal depth,
 
 		Signal clkp
 
 	);
 
 
-	SPvpp_bxame bxame1ac, bxame1df, bxame2, bxame3, bxame4;
-	SPvpp_bxamb bxamb1, bxamb2;
+	SPvpp_bxame bxame1ac, bxame1df, bxame2, bxame3, bxame4, bxamb1, bxamb2;
+	Signal med[5], medb[5];
 
-	Signal me1acv, me1dfv, me2v, me3v, me4v, mb1v, mb2v;
 };
 
 #endif

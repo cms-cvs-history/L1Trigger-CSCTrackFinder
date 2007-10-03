@@ -3,6 +3,7 @@
 
 
 
+
 void SPvpp_bxa::operator ()
 (                                                                
 	Signal me1a,  Signal me1b,  Signal me1c,  Signal me1d,  Signal me1e,  Signal me1f, 
@@ -19,8 +20,14 @@ void SPvpp_bxa::operator ()
 	Signal mb1ar, Signal mb1br, Signal mb1cr, Signal mb1dr,
 	Signal mb2ar, Signal mb2br, Signal mb2cr, Signal mb2dr,
 
-	Signal etaoff1, Signal etaoff2, Signal etaoff3, Signal etaoff4,
-	Signal enable,
+	Signal me1abi, Signal me1bbi, Signal me1cbi, Signal me1dbi, Signal me1ebi, Signal me1fbi,
+	Signal me2abi, Signal me2bbi, Signal me2cbi,
+	Signal me3abi, Signal me3bbi, Signal me3cbi,
+	Signal me4abi, Signal me4bbi, Signal me4cbi,
+	Signal mb1abi, Signal mb1bbi, Signal mb1cbi, Signal mb1dbi,
+	Signal mb2abi, Signal mb2bbi, Signal mb2cbi, Signal mb2dbi,
+
+	Signal depth,
 
 	Signal clkp
 
@@ -85,82 +92,112 @@ initio
 	mb2cr.output(BWMBIN-1,0,"mb2cr"); 
 	mb2dr.output(BWMBIN-1,0,"mb2dr"); 
 
-	Input_(etaoff1, BWETAIN-1, 0); 
-	Input_(etaoff2, BWETAIN-1, 0); 
-	Input_(etaoff3, BWETAIN-1, 0); 
-	Input_(etaoff4, BWETAIN-1, 0); 
+	Output_(me1abi, BWBXID-1, 0); // {bx[2:0], orig_id[2:0]}
+	Output_(me1bbi, BWBXID-1, 0);
+	Output_(me1cbi, BWBXID-1, 0);
+	Output_(me1dbi, BWBXID-1, 0);
+	Output_(me1ebi, BWBXID-1, 0);
+	Output_(me1fbi, BWBXID-1, 0);
+				 
+	Output_(me2abi, BWBXID-1, 0);
+	Output_(me2bbi, BWBXID-1, 0);
+	Output_(me2cbi, BWBXID-1, 0);
+				 
+	Output_(me3abi, BWBXID-1, 0);
+	Output_(me3bbi, BWBXID-1, 0);
+	Output_(me3cbi, BWBXID-1, 0);
+				 
+	Output_(me4abi, BWBXID-1, 0);
+	Output_(me4bbi, BWBXID-1, 0);
+	Output_(me4cbi, BWBXID-1, 0);
+					 
+	Output_(mb1abi, BWBXID-1, 0);
+	Output_(mb1bbi, BWBXID-1, 0);
+	Output_(mb1cbi, BWBXID-1, 0);
+	Output_(mb1dbi, BWBXID-1, 0);
+				 
+	Output_(mb2abi, BWBXID-1, 0);
+	Output_(mb2bbi, BWBXID-1, 0);
+	Output_(mb2cbi, BWBXID-1, 0);
+	Output_(mb2dbi, BWBXID-1, 0); 
 
-	Input(enable);
+	Input_(depth, 1, 0);
 
 	clkp.input("clkp");
 
 beginmodule
 
 	bxame1ac.init("bxame", "bxame1ac");
-	bxame1df.init("bxame", "bxame1df"); 
+	bxame1df.init("bxameo", "bxame1df"); 
 	bxame2.init("bxame", "bxame2");
 	bxame3.init("bxame", "bxame3");
 	bxame4.init("bxame", "bxame4");
-
 	bxamb1.init("bxamb", "bxamb1"); 
 	bxamb2.init("bxamb", "bxamb2");                            
 
-	me1acv.wire("me1acv");
-	me1dfv.wire("me1dfv");
-	me2v.wire  ("me2v");
-	me3v.wire  ("me3v");
-	me4v.wire  ("me4v");
-	mb1v.wire  ("mb1v");
-	mb2v.wire  ("mb2v");
+	bxame1ac.idoff = 0;
+	bxame1df.idoff = 1; // stub IDs shifted for me1d-f 
+	bxame2.idoff = 0;
+	bxame3.idoff = 0;
+	bxame4.idoff = 0;
+	bxamb1.idoff = 0;
+	bxamb2.idoff = 0;
+
+	bxame1ac.mb = 0;
+	bxame1df.mb = 0;
+	bxame2.mb = 0;
+	bxame3.mb = 0;
+	bxame4.mb = 0;
+	bxamb1.mb = 1; // these two are for overlap region
+	bxamb2.mb = 1;
+
+	// dummy wires for unused outputs
+	Wire__(med,  BWMEIN-1, 0, 4, 0);
+	Wire__(medb, BWBXID-1, 0, 4, 0);
 
 	bxame1ac
 	(
-		me1a,  me1b,  me1c,
-		me1ar, me1br, me1cr,
-		(me2v | me3v | me4v | mb2v | mb1v) & enable,
-		me1acv,
-		etaoff1,
+		me1a,  me1b,  me1c,  cns(BWMEIN, 0),
+		me1ar,  me1br,  me1cr,  med[1], 
+		me1abi, me1bbi, me1cbi, medb[1],
+		depth,
 		clkp
 	);
 
 
 	bxame1df
 	(
-		me1d,  me1e,  me1f,
-		me1dr, me1er, me1fr,
-		(me2v | me3v | me4v | mb2v | mb1v) & enable,
-		me1dfv,
-		etaoff1,
+		me1d,  me1e,  me1f,  cns(BWMEIN, 0),
+		me1dr,  me1er,  me1fr,  med[2], 
+		me1dbi, me1ebi, me1fbi, medb[2],
+		depth,
 		clkp
 	);
 
 	bxame2
 	(
-		me2a,  me2b,  me2c,
-		me2ar, me2br, me2cr,
-		(me1acv | me1dfv | me3v | me4v | mb1v | mb2v) & enable,
-		me2v,
-		etaoff2,
+		me2a,  me2b,  me2c,  cns(BWMEIN, 0),
+		me2ar,  me2br,  me2cr,  med[3], 
+		me2abi, me2bbi, me2cbi, medb[3],
+		depth,
 		clkp
 	);
 	
 	bxame3
 	(
-		me3a,  me3b,  me3c,
-		me3ar, me3br, me3cr,
-		(me1acv | me1dfv | me2v | me4v) & enable,
-		me3v,
-		etaoff3,
+		me3a,  me3b,  me3c,  cns(BWMEIN, 0),
+		me3ar,  me3br,  me3cr,  med[4], 
+		me3abi, me3bbi, me3cbi, medb[4],
+		depth,
 		clkp
 	);
 
 	bxame4
 	(
-		me4a,  me4b,  me4c,
-		me4ar, me4br, me4cr,
-		(me1acv | me1dfv | me2v | me3v) & enable,
-		me4v,
-		etaoff4,
+		me4a,  me4b,  me4c,  cns(BWMEIN, 0),
+		me4ar,  me4br,  me4cr,  med[0], 
+		me4abi, me4bbi, me4cbi, medb[0],
+		depth,
 		clkp
 	);
 
@@ -168,12 +205,12 @@ beginmodule
 	(
 		mb1a,  mb1b,  mb1c,	 mb1d,
 		mb1ar, mb1br, mb1cr, mb1dr,
-		(me1acv | me1dfv | me2v) & enable,
-		mb1v,
+		mb1abi, mb1bbi, mb1cbi, mb1dbi,
+		depth,
 		clkp
 	);
 
-	bxamb2
+/*	bxamb2
 	(
 		mb2a,  mb2b,  mb2c,	 mb2d,
 		mb2ar, mb2br, mb2cr, mb2dr,
@@ -181,7 +218,7 @@ beginmodule
 		mb2v,
 		clkp
 	);
-
+*/
 
 endmodule
 }

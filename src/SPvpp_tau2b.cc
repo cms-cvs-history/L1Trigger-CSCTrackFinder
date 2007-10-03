@@ -7,9 +7,7 @@ void SPvpp_tau2b::operator()
 	Signal mb22,
 	Signal me21,
 	Signal idl, Signal idm, Signal idh,
-	Signal rank,
-	Signal bxa_enable,
-	Signal clk
+	Signal rank
 )
 {
 initio
@@ -22,8 +20,6 @@ initio
 	idm.output(2,0,"idm",makereg);
 	idh.output(2,0,"idh",makereg);
 	rank.output(5,0,"rank", makereg);
-	Input (bxa_enable);
-	clk.input("clk");
 
 beginmodule
 	
@@ -41,20 +37,11 @@ beginmodule
 	quality.reg(3,0,"quality");
 
 
-	always (posedge (clk))
+	always (mb21 or mb22 or me21)
 	begin
 		(b21[3], b21[2], b21[1], b21[0]) = mb21;
 		b22 = mb22;
 		e21 = me21;
-
-#ifdef _BXAON
-		If(quality != 0 && bxa_enable)
-		begin
-			If (idl != 0) b21[idl-1] = 0;
-			If (idm != 0) b22(idm-1) = 0;
-			If (idh != 0) e21(idh-1) = 0;
-		end
-#endif
 
 	    max21  = Max21bp(e21);
 	    maxb21 = Maxb21p(b21[0], b21[1], b21[2], b21[3]);

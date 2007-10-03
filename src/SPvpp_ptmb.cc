@@ -1,6 +1,7 @@
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_ptmb.h>
 #include <L1Trigger/CSCCommonTrigger/interface/vmac.h>
 
+
 void SPvpp_ptmb::operator()
 (
 	// all etas use only 4 MSBs from the original Eta
@@ -11,13 +12,18 @@ void SPvpp_ptmb::operator()
 	
 	Signal rank,
 	Signal id1, Signal id2, Signal idb1, Signal idb2,
-	
-	Signal pt, 
-	Signal sign, 
-	Signal modeMem, 
-	Signal etaPT,
-	Signal FR, 
-	Signal phi
+	Signal orig_id,
+
+	Signal ptp, 
+	Signal signp, 
+	Signal modeMemp, 
+	Signal etaPTp,
+	Signal FRp, 
+	Signal phip,
+	Signal orig_idrp,
+	Signal rankrp,
+
+	Signal clk
 )
 {
 initio
@@ -49,18 +55,23 @@ initio
 	id2.input(1,0,"id2"); 
 	idb1.input(2,0,"idb1"); 
 	idb2.input(2,0,"idb2");
+	Input_(orig_id , MUIDSIZE-1,0);
 
-	pt.output(BWPT-1,0,"pt",makereg); 
-	sign.output("sign",makereg); 
-	modeMem.output(BWMODE-1,0,"modeMem", makereg);
-	etaPT.output(BWPTETA-1,0,"etaPT",makereg); 
-	FR.output("FR", makereg);
-	phi.output(BWPHI-1, 0, "phi", makereg);
+	OutReg_(ptp, BWPT-1,0); 
+	OutReg (signp); 
+	OutReg_(modeMemp, BWMODE-1,0);
+	OutReg_(etaPTp, BWPTETA-1,0); 
+	OutReg (FRp);
+	OutReg_(phip, BWPHI-1, 0);
+	OutReg_(orig_idrp , MUIDSIZE-1,0);
+	OutReg_(rankrp, 5, 0);
+
+	Input (clk);
+
 
 beginmodule
 	
 	SelectPhisbp.init(11,0,"_SelectPhisbp");
-//	SelectEtabp.init(1,0,"_SelectEtabp");
 	Modebp.init(3,0,"_Modebp");	
 	
 	mode.reg(3,0,"mode"); 
@@ -82,16 +93,14 @@ beginmodule
 	phiB.reg(BWPHI-1,0,"phiB"); 
 	phiC.reg(BWPHI-1,0,"phiC"); 
 
-	always 
-	(
-		me1a or me1b or me1c or me1d or me1e or me1f or 
-		me2a or me2b or me2c or 
-		mb1a or mb1b or mb1c or mb1d or 
-		mb2a or mb2b or mb2c or mb2d or
-		
-		rank or
-		id1 or id2 or idb1 or idb2
-	)
+	Reg_(pt, BWPT-1,0); // current track parameters
+	Reg (sign); 
+	Reg_(modeMem, BWMODE-1,0);
+	Reg_(etaPT, BWPTETA-1,0); 
+	Reg (FR);
+	Reg_(phi, BWPHI-1, 0);
+
+	always (posedge (clk))
 	begin
 		me1Eta[0] = 0; 
 		me1Eta[1] = me1a(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA);  // this complicated bit numbering is made to take the most significant bits of the eta from the Signal values
@@ -135,24 +144,12 @@ beginmodule
 		IdValid(1) = ifelse(id2  != 0, 1, 0);
 		IdValid(2) = ifelse(id1  != 0, 1, 0);
 		IdValid(3) = ifelse(idb1 != 0, 1, 0);
-
-//		SelEta = SelectEtabp(IdValid);
-//		etaPT = 
-//			ifelse (SelEta(1) == 1, me1Eta[id1],
-//			ifelse (SelEta(0) == 1, me2Eta[id2], 0));
-
+		
 		etaPT = 
-//			ifelse (IdValid(2) == 1, me1Eta[id1],
 			ifelse (IdValid(1) == 1, me2Eta[id2], 0);
 
-//		phi = 
-//			ifelse (SelEta(1) == 1, me1Phi[id1],
-//			ifelse (SelEta(0) == 1, me2Phi[id2], 0));
-
 		// phi is taken only from key station 2
-		phi = ifelse (IdValid(1) == 1, me2Phi[id2], 0);
-		
-//		FR = ifelse(id1 != 0, me1FR(id1), 0);
+		phi = ifelse (IdValid(1) == 1, me2Phi[id2], 0);	
 
 		SelPhi = SelectPhisbp(IdValid);
 		phiA = 
@@ -180,14 +177,22 @@ beginmodule
 		mode = Modebp(rank);
 
         pt = d;
-	    
+	   
 		si = ifelse ((d(12,9) != 7 && d(12,9) != 8 && mode > 5), 1, 0);
 	
 		modeMem = ifelse (si == 0, mode, 1);
 	
-//		sign = (phiA >= phiB) && (si == 0);
 		sign = (phiA >= phiB);
 		FR = 0;
+
+		ptp		  = pt		;
+		signp	  = sign	;
+		modeMemp  = modeMem ;
+		etaPTp	  = etaPT	;
+		FRp		  = FR		;
+		phip	  = phi	    ;
+		orig_idrp = orig_id;
+		rankrp    = rank    ;
 	end
 endmodule
 
@@ -225,22 +230,7 @@ Signal SPvpp_SelectPhisb::operator()(Signal IdValid)
 		end
 	endfunction
 }
-/*	
-Signal SPvpp_SelectEtab::operator()(Signal IdValid)
-{
-	initio
-		IdValid.input(3,0,"IdValid");
-	beginfunction	
-		begin
-			If (IdValid(2)) result = 2;
-			Else 
-				If (IdValid(1)) result = 1;
-				Else 
-					result = 0;
-		end
-	endfunction
-}
-  */
+
 Signal SPvpp_Modeb::operator()(Signal rank)
 {
 	initio

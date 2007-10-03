@@ -1,12 +1,13 @@
-#ifndef CSCTrackFinder_SPvpp_h
-#define CSCTrackFinder_SPvpp_h
-
-#include <L1Trigger/CSCCommonTrigger/interface/vlib.h>
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_sp.h>
+
+#ifndef _FILE_SPvpp_FILE
+#define _FILE_SPvpp_FILE
 
 class SPvpp
 {
 public:
+
+
 	void SP                                        
 	(                                                                   
 	unsigned me1aValidp, unsigned me1aQp, unsigned me1aEtap, unsigned me1aPhip,	/*unsigned me1aAmp,*/ unsigned me1aCSCidp, 
@@ -50,12 +51,12 @@ public:
 	unsigned mxeta0p, unsigned mxeta1p, unsigned mxeta2p, unsigned mxeta3p, unsigned mxeta4p, unsigned mxeta5p, unsigned mxeta6p, unsigned mxeta7p, 
 	unsigned etawn0p, unsigned etawn1p, unsigned etawn2p, unsigned etawn3p, unsigned etawn4p, unsigned etawn5p, 
 
-	unsigned etaoff1p, unsigned etaoff2p, unsigned etaoff3p, unsigned etaoff4p, 
+	unsigned etaoff1p, unsigned etaoff2p, unsigned etaoff3p, unsigned etaoff4p,
 	unsigned controlp
 
 	);  
 
-private:
+public:
 	SPvpp_sp spvpp;
 
 	Signal
@@ -117,19 +118,20 @@ private:
 		etawn0,	etawn1,	etawn2,	etawn3,	etawn4,	etawn5,
 
 		date, control,
-		etaoff1, etaoff2, etaoff3, etaoff4, 
+		etaoff1, etaoff2, etaoff3, etaoff4,
 		
 		clkp;
+		
 	
 	Signal idHp, idMp, idLp;
 
 	unsigned
 		mb1aQr, mb1aPhir, 
-		mb1bQr, mb1bPhir;
+		mb1bQr, mb1bPhir, loop;
 		
+	SPvpp():loop(0){}
 
 
 };
-
 
 #endif

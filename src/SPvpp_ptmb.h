@@ -13,15 +13,7 @@ public:
 	Signal EnableIdC;
 	Signal operator()(Signal IdValid);
 };
-/*
-class SPvpp_SelectEtab : public function
-{
 
-public:
-	Signal operator()(Signal IdValid);
-
-};
-  */
 class SPvpp_Modeb : public function
 {
 
@@ -44,13 +36,18 @@ public:
 
 		Signal rank,
 		Signal id1, Signal id2, Signal idb1, Signal idb2,
+		Signal orig_id,
 
-		Signal pt,
-		Signal sign,
-		Signal modeMem,
-		Signal etaPT,
-		Signal FR,
-		Signal phi
+		Signal ptp,
+		Signal signp,
+		Signal modeMemp,
+		Signal etaPTp,
+		Signal FRp,
+		Signal phip,
+		Signal orig_idrp,
+		Signal rankrp,
+
+		Signal clk
 	);
 
 
@@ -58,7 +55,6 @@ public:
 	Signal a, b;
 	Signal si;
 	Signal d;
-//	Signal SelEta;
 	Signal SelPhi;
 	Signal IdValid;
 
@@ -67,8 +63,8 @@ public:
 	Signal phiA, phiB, phiC;
 
 	SPvpp_SelectPhisb SelectPhisbp;
-//	SPvpp_SelectEtab SelectEtabp;
 	SPvpp_Modeb Modebp;
+	Signal pt, sign, modeMem, etaPT, FR, phi;
 };
 
 

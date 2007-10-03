@@ -3,6 +3,7 @@
 #include <time.h>
 
 
+
 void SPvpp_sp::operator()
 (
 	Signal me1ap, Signal me1bp, Signal me1cp, Signal me1dp, Signal me1ep, Signal me1fp,
@@ -16,7 +17,6 @@ void SPvpp_sp::operator()
 	Signal mneta0, Signal mneta1, Signal mneta2, Signal mneta3, Signal mneta4, Signal mneta5, Signal mneta6, Signal mneta7, 
 	Signal mxeta0, Signal mxeta1, Signal mxeta2, Signal mxeta3, Signal mxeta4, Signal mxeta5, Signal mxeta6, Signal mxeta7, 
 	Signal etawn0, Signal etawn1, Signal etawn2, Signal etawn3, Signal etawn4, Signal etawn5, 
-	Signal etaoff1, Signal etaoff2, Signal etaoff3, Signal etaoff4,
 	Signal control,
 	Signal clkp
 )
@@ -80,11 +80,6 @@ initio
 	Input_(etawn4, BWETAIN, 0); 
 	Input_(etawn5, BWETAIN, 0); 
 
-	Input_(etaoff1, BWETAIN-1, 0); // eta offsets (individual for 4 ME stations)
-	Input_(etaoff2, BWETAIN-1, 0); 
-	Input_(etaoff3, BWETAIN-1, 0); 
-	Input_(etaoff4, BWETAIN-1, 0); 
-
 	Input_(control, 15, 0); // control register {reserved[14:0], BXA_enable}
 
 	clkp.input("clkp");
@@ -115,6 +110,7 @@ beginmodule
 	bxa.init("bxa", "bxa_");
 	dtbx[0].init("dtbx", "dtbx_0");
 	dtbx[1].init("dtbx", "dtbx_1");
+	bxcorr.init("bxcorr", "bxcorrect");
 
 // init internal variables------------------------------------------
 	for (mi = 0; mi < NSEG1; mi++) 
@@ -152,6 +148,20 @@ beginmodule
 	Wire__(MinEta, BWETAIN-1, 0, 7, 0); 
 	Wire__(MaxEta, BWETAIN-1, 0, 7, 0); 
 	Wire__(EtaWindow, BWETAIN, 0, 5, 0);
+	
+	Wire__(me1bi, BWBXID-1, 0, NSEG1, 0); // original bx and id of the track 
+	Wire__(me2bi, BWBXID-1, 0, NSEG234, 0); // number of elements for each station is +1 because stub IDs start from 1
+	Wire__(me3bi, BWBXID-1, 0, NSEG234, 0);
+	Wire__(me4bi, BWBXID-1, 0, NSEG234, 0);
+	Wire__(mb1bi, BWBXID-1, 0, NSEG12B, 0);
+	Wire__(mb2bi, BWBXID-1, 0, NSEG12B, 0);
+
+	Reg__(me1bir, BWBXID-1, 0, NSEG1, 0);
+	Reg__(me2bir, BWBXID-1, 0, NSEG234, 0);
+	Reg__(me3bir, BWBXID-1, 0, NSEG234, 0);
+	Reg__(me4bir, BWBXID-1, 0, NSEG234, 0);
+	Reg__(mb1bir, BWBXID-1, 0, NSEG12B, 0);
+	Reg__(mb2bir, BWBXID-1, 0, NSEG12B, 0);
 
 // wires --------------------------------------------------
 
@@ -168,17 +178,18 @@ beginmodule
 	Eq2b1.wire   (BWEQ2B1R-1, 0, "Eq2b1");
 	Eq2b2.wire   (BWEQ2B2R-1, 0, "Eq2b2");
 
-	u2aIdr.reg(MUIDSIZE-1,0,"u2aIdr");
-	u2bIdr.reg(MUIDSIZE-1,0,"u2bIdr");
-	u2cIdr.reg(MUIDSIZE-1,0,"u2cIdr");
+	u2aIdr.reg (MUIDSIZE-1,0,"u2aIdr");  Reg_(u2aIdrr , MUIDSIZE-1,0); Reg_(u2aIdrrr , MUIDSIZE-1,0); Reg_(u2aId , MUIDSIZE-1,0); Wire_(u2aIdt , MUIDSIZE-1,0);
+	u2bIdr.reg (MUIDSIZE-1,0,"u2bIdr");  Reg_(u2bIdrr , MUIDSIZE-1,0); Reg_(u2bIdrrr , MUIDSIZE-1,0); Reg_(u2bId , MUIDSIZE-1,0); Wire_(u2bIdt , MUIDSIZE-1,0);
+	u2cIdr.reg (MUIDSIZE-1,0,"u2cIdr");  Reg_(u2cIdrr , MUIDSIZE-1,0); Reg_(u2cIdrrr , MUIDSIZE-1,0); Reg_(u2cId , MUIDSIZE-1,0); Wire_(u2cIdt , MUIDSIZE-1,0);
+		   	   			  				 	  	   	   		  		   	  	   	   		  		   	  	   	 		  		   	   	 		  		  
+	u3aIdr.reg (MUIDSIZE-1,0,"u3aIdr");  Reg_(u3aIdrr , MUIDSIZE-1,0); Reg_(u3aIdrrr , MUIDSIZE-1,0); Reg_(u3aId , MUIDSIZE-1,0); Wire_(u3aIdt , MUIDSIZE-1,0);
+	u3bIdr.reg (MUIDSIZE-1,0,"u3bIdr");  Reg_(u3bIdrr , MUIDSIZE-1,0); Reg_(u3bIdrrr , MUIDSIZE-1,0); Reg_(u3bId , MUIDSIZE-1,0); Wire_(u3bIdt , MUIDSIZE-1,0);
+	u3cIdr.reg (MUIDSIZE-1,0,"u3cIdr");  Reg_(u3cIdrr , MUIDSIZE-1,0); Reg_(u3cIdrrr , MUIDSIZE-1,0); Reg_(u3cId , MUIDSIZE-1,0); Wire_(u3cIdt , MUIDSIZE-1,0);
+		   	   			  				 	  	   	   		  		   	  	   	   		  		   	  	   	   		  		   	   	   		  		  
+	ub2aIdr.reg(MUIDSIZE-1,0,"ub2aIdr"); Reg_(ub2aIdrr, MUIDSIZE-1,0); Reg_(ub2aIdrrr, MUIDSIZE-1,0); Reg_(ub2aId, MUIDSIZE-1,0); Wire_(ub2aIdt, MUIDSIZE-1,0);
+	ub2bIdr.reg(MUIDSIZE-1,0,"ub2bIdr"); Reg_(ub2bIdrr, MUIDSIZE-1,0); Reg_(ub2bIdrrr, MUIDSIZE-1,0); Reg_(ub2bId, MUIDSIZE-1,0); Wire_(ub2bIdt, MUIDSIZE-1,0);
+	ub2cIdr.reg(MUIDSIZE-1,0,"ub2cIdr"); Reg_(ub2cIdrr, MUIDSIZE-1,0); Reg_(ub2cIdrrr, MUIDSIZE-1,0); Reg_(ub2cId, MUIDSIZE-1,0); Wire_(ub2cIdt, MUIDSIZE-1,0);
 
-	u3aIdr.reg(MUIDSIZE-1,0,"u3aIdr");
-	u3bIdr.reg(MUIDSIZE-1,0,"u3bIdr");
-	u3cIdr.reg(MUIDSIZE-1,0,"u3cIdr");
-
-	ub2aIdr.reg(MUIDSIZE-1,0,"ub2aIdr");
-	ub2bIdr.reg(MUIDSIZE-1,0,"ub2bIdr");
-	ub2cIdr.reg(MUIDSIZE-1,0,"ub2cIdr");
 	
 	idH.wire(MUIDSIZE-1, 0, "idH");
 	idM.wire(MUIDSIZE-1, 0, "idM");
@@ -201,6 +212,28 @@ beginmodule
 		mb2rank[i].wire(5, 0, "mb2rank", i);                 
 	}
 
+	Reg__(me2Id1r ,2, 0, NTAU-1, 0); Reg__(me2Id1rr ,2, 0, NTAU-1, 0);
+	Reg__(me3Id1r ,2, 0, NTAU-1, 0); Reg__(me3Id1rr ,2, 0, NTAU-1, 0);
+	Reg__(mb2idb1r,2, 0, NTAU-1, 0); Reg__(mb2idb1rr,2, 0, NTAU-1, 0);
+	Reg__(me2Id3r ,1, 0, NTAU-1, 0); Reg__(me2Id3rr ,1, 0, NTAU-1, 0);
+	Reg__(me3Id2r ,1, 0, NTAU-1, 0); Reg__(me3Id2rr ,1, 0, NTAU-1, 0);
+	Reg__(mb2idb2r,2, 0, NTAU-1, 0); Reg__(mb2idb2rr,2, 0, NTAU-1, 0);
+	Reg__(me2Id4r ,1, 0, NTAU-1, 0); Reg__(me2Id4rr ,1, 0, NTAU-1, 0);
+	Reg__(me3Id4r ,1, 0, NTAU-1, 0); Reg__(me3Id4rr ,1, 0, NTAU-1, 0);
+	Reg__(mb2id1r ,2, 0, NTAU-1, 0); Reg__(mb2id1rr ,2, 0, NTAU-1, 0);
+
+	Reg__(me2Rankr,5, 0, NTAU-1, 0); Wire__(me2Rankrr,5, 0, NTAU-1, 0);
+	Reg__(me3Rankr,5, 0, NTAU-1, 0); Wire__(me3Rankrr,5, 0, NTAU-1, 0);
+	Reg__(mb2rankr,5, 0, NTAU-1, 0); Wire__(mb2rankrr,5, 0, NTAU-1, 0);
+
+	Reg__(me2Rankrrr,5, 0, NTAU-1, 0); Reg__(me2Rankrrrr,5, 0, NTAU-1, 0); Reg__(me2Rankrrrrr,5, 0, NTAU-1, 0);
+	Reg__(me3Rankrrr,5, 0, NTAU-1, 0); Reg__(me3Rankrrrr,5, 0, NTAU-1, 0); Reg__(me3Rankrrrrr,5, 0, NTAU-1, 0);
+	Reg__(mb2rankrrr,5, 0, NTAU-1, 0); Reg__(mb2rankrrrr,5, 0, NTAU-1, 0); Reg__(mb2rankrrrrr,5, 0, NTAU-1, 0);
+
+	Wire_(rankH, BWRANK-1, 0);
+	Wire_(rankM, BWRANK-1, 0);
+	Wire_(rankL, BWRANK-1, 0);
+	
 	pt2a.wire(BWPT-1,0,"pt2a"); 
 	pt2b.wire(BWPT-1,0,"pt2b"); 
 	pt2c.wire(BWPT-1,0,"pt2c");
@@ -311,82 +344,67 @@ beginmodule
 	Eq2b1r.reg   (BWEQ2B1R-1, 0, "Eq2b1r");
 	Eq2b2r.reg   (BWEQ2B2R-1, 0, "Eq2b2r");
 
-	pt2ar.reg(BWPT-1,0,"pt2ar"); 
-	pt2br.reg(BWPT-1,0,"pt2br"); 
-	pt2cr.reg(BWPT-1,0,"pt2cr");
+	pt2ar.reg (BWPT-1,0,"pt2ar");  Reg_(pt2arr , BWPT-1, 0); Reg_(pt2arrr , BWPT-1, 0); 
+	pt2br.reg (BWPT-1,0,"pt2br");  Reg_(pt2brr , BWPT-1, 0); Reg_(pt2brrr , BWPT-1, 0);
+	pt2cr.reg (BWPT-1,0,"pt2cr");  Reg_(pt2crr , BWPT-1, 0); Reg_(pt2crrr , BWPT-1, 0);
+	pt3ar.reg (BWPT-1,0,"pt3ar");  Reg_(pt3arr , BWPT-1, 0); Reg_(pt3arrr , BWPT-1, 0);
+	pt3br.reg (BWPT-1,0,"pt3br");  Reg_(pt3brr , BWPT-1, 0); Reg_(pt3brrr , BWPT-1, 0);
+	pt3cr.reg (BWPT-1,0,"pt3cr");  Reg_(pt3crr , BWPT-1, 0); Reg_(pt3crrr , BWPT-1, 0);
+	ptb2ar.reg(BWPT-1,0,"ptb2ar"); Reg_(ptb2arr, BWPT-1, 0); Reg_(ptb2arrr, BWPT-1, 0);
+	ptb2br.reg(BWPT-1,0,"ptb2br"); Reg_(ptb2brr, BWPT-1, 0); Reg_(ptb2brrr, BWPT-1, 0);
+	ptb2cr.reg(BWPT-1,0,"ptb2cr"); Reg_(ptb2crr, BWPT-1, 0); Reg_(ptb2crrr, BWPT-1, 0);
 
-	pt3ar.reg(BWPT-1,0,"pt3ar"); 
-	pt3br.reg(BWPT-1,0,"pt3br"); 
-	pt3cr.reg(BWPT-1,0,"pt3cr");
+	sign2ar.reg ("sign2ar");       Reg(sign2arr );           Reg(sign2arrr );
+	sign2br.reg ("sign2br"); 	   Reg(sign2brr );			 Reg(sign2brrr );
+	sign2cr.reg ("sign2cr"); 	   Reg(sign2crr );			 Reg(sign2crrr );
+	sign3ar.reg ("sign3ar"); 	   Reg(sign3arr );			 Reg(sign3arrr );
+	sign3br.reg ("sign3br"); 	   Reg(sign3brr );			 Reg(sign3brrr );
+	sign3cr.reg ("sign3cr");	   Reg(sign3crr );			 Reg(sign3crrr );
+	signb2ar.reg("signb2ar"); 	   Reg(signb2arr);			 Reg(signb2arrr);
+	signb2br.reg("signb2br"); 	   Reg(signb2brr);			 Reg(signb2brrr);
+	signb2cr.reg("signb2cr");	   Reg(signb2crr);			 Reg(signb2crrr);
 
-	ptb2ar.reg(BWPT-1,0,"ptb2ar"); 
-	ptb2br.reg(BWPT-1,0,"ptb2br"); 
-	ptb2cr.reg(BWPT-1,0,"ptb2cr");
+	mode2ar.reg (BWMODE-1,0,"mode2ar");  Reg_(mode2arr , BWMODE-1,0); Reg_(mode2arrr , BWMODE-1,0);
+	mode2br.reg (BWMODE-1,0,"mode2br");  Reg_(mode2brr , BWMODE-1,0); Reg_(mode2brrr , BWMODE-1,0);
+	mode2cr.reg (BWMODE-1,0,"mode2cr");	 Reg_(mode2crr , BWMODE-1,0); Reg_(mode2crrr , BWMODE-1,0);
+	mode3ar.reg (BWMODE-1,0,"mode3ar");  Reg_(mode3arr , BWMODE-1,0); Reg_(mode3arrr , BWMODE-1,0);
+	mode3br.reg (BWMODE-1,0,"mode3br");  Reg_(mode3brr , BWMODE-1,0); Reg_(mode3brrr , BWMODE-1,0);
+	mode3cr.reg (BWMODE-1,0,"mode3cr");	 Reg_(mode3crr , BWMODE-1,0); Reg_(mode3crrr , BWMODE-1,0);
+	modeb2ar.reg(BWMODE-1,0,"modeb2ar"); Reg_(modeb2arr, BWMODE-1,0); Reg_(modeb2arrr, BWMODE-1,0);
+	modeb2br.reg(BWMODE-1,0,"modeb2br"); Reg_(modeb2brr, BWMODE-1,0); Reg_(modeb2brrr, BWMODE-1,0);
+	modeb2cr.reg(BWMODE-1,0,"modeb2cr"); Reg_(modeb2crr, BWMODE-1,0); Reg_(modeb2crrr, BWMODE-1,0);
 
-	sign2ar.reg("sign2ar"); 
-	sign2br.reg("sign2br"); 
-	sign2cr.reg("sign2cr"); 
-
-	sign3ar.reg("sign3ar"); 
-	sign3br.reg("sign3br"); 
-	sign3cr.reg("sign3cr");
-
-	signb2ar.reg("signb2ar"); 
-	signb2br.reg("signb2br"); 
-	signb2cr.reg("signb2cr");
-
-	mode2ar.reg(BWMODE-1,0,"mode2ar"); 
-	mode2br.reg(BWMODE-1,0,"mode2br"); 
-	mode2cr.reg(BWMODE-1,0,"mode2cr");
-
-	mode3ar.reg(BWMODE-1,0,"mode3ar"); 
-	mode3br.reg(BWMODE-1,0,"mode3br"); 
-	mode3cr.reg(BWMODE-1,0,"mode3cr");
-
-	modeb2ar.reg(BWMODE-1,0,"modeb2ar"); 
-	modeb2br.reg(BWMODE-1,0,"modeb2br"); 
-	modeb2cr.reg(BWMODE-1,0,"modeb2cr");
-
-	etaPT2ar.reg(BWETAOUT-1,0,"etaPT2ar"); 
-	etaPT2br.reg(BWETAOUT-1,0,"etaPT2br"); 
-	etaPT2cr.reg(BWETAOUT-1,0,"etaPT2cr"); 
-
-	etaPT3ar.reg(BWETAOUT-1,0,"etaPT3ar"); 
-	etaPT3br.reg(BWETAOUT-1,0,"etaPT3br"); 
-	etaPT3cr.reg(BWETAOUT-1,0,"etaPT3cr"); 
-
-	etaPTb2ar.reg(BWETAOUT-1,0,"etaPTb2ar"); 
-	etaPTb2br.reg(BWETAOUT-1,0,"etaPTb2br"); 
-	etaPTb2cr.reg(BWETAOUT-1,0,"etaPTb2cr"); 
-
-	FR2ar.reg("FR2ar"); 
-	FR2br.reg("FR2br"); 
-	FR2cr.reg("FR2cr");
-
-	FR3ar.reg("FR3ar"); 
-	FR3br.reg("FR3br"); 
-	FR3cr.reg("FR3cr");
-
-	FRb2ar.reg("FRb2ar"); 
-	FRb2br.reg("FRb2br"); 
-	FRb2cr.reg("FRb2cr");
-
-	phi2ar.reg(BWPHI-1,0,"phi2ar"); 
-	phi2br.reg(BWPHI-1,0,"phi2br"); 
-	phi2cr.reg(BWPHI-1,0,"phi2cr");
-
-	phi3ar.reg(BWPHI-1,0,"phi3ar"); 
-	phi3br.reg(BWPHI-1,0,"phi3br"); 
-	phi3cr.reg(BWPHI-1,0,"phi3cr");
-
-	phib2ar.reg(BWPHI-1,0,"phib2ar"); 
-	phib2br.reg(BWPHI-1,0,"phib2br"); 
-	phib2cr.reg(BWPHI-1,0,"phib2cr");
+	etaPT2ar.reg (BWETAOUT-1,0,"etaPT2ar"); Reg_(etaPT2arr , BWETAOUT-1,0); Reg_(etaPT2arrr , BWETAOUT-1,0);
+	etaPT2br.reg (BWETAOUT-1,0,"etaPT2br"); Reg_(etaPT2brr , BWETAOUT-1,0);	Reg_(etaPT2brrr , BWETAOUT-1,0);
+	etaPT2cr.reg (BWETAOUT-1,0,"etaPT2cr"); Reg_(etaPT2crr , BWETAOUT-1,0);	Reg_(etaPT2crrr , BWETAOUT-1,0);
+	etaPT3ar.reg (BWETAOUT-1,0,"etaPT3ar"); Reg_(etaPT3arr , BWETAOUT-1,0);	Reg_(etaPT3arrr , BWETAOUT-1,0);
+	etaPT3br.reg (BWETAOUT-1,0,"etaPT3br"); Reg_(etaPT3brr , BWETAOUT-1,0);	Reg_(etaPT3brrr , BWETAOUT-1,0);
+	etaPT3cr.reg (BWETAOUT-1,0,"etaPT3cr"); Reg_(etaPT3crr , BWETAOUT-1,0);	Reg_(etaPT3crrr , BWETAOUT-1,0);
+	etaPTb2ar.reg(BWETAOUT-1,0,"etaPTb2ar");Reg_(etaPTb2arr, BWETAOUT-1,0); Reg_(etaPTb2arrr, BWETAOUT-1,0);
+	etaPTb2br.reg(BWETAOUT-1,0,"etaPTb2br");Reg_(etaPTb2brr, BWETAOUT-1,0); Reg_(etaPTb2brrr, BWETAOUT-1,0);
+	etaPTb2cr.reg(BWETAOUT-1,0,"etaPTb2cr");Reg_(etaPTb2crr, BWETAOUT-1,0); Reg_(etaPTb2crrr, BWETAOUT-1,0);
 	
-	m0r.reg(8,0,"m0r"); 
-	m1r.reg(8,0,"m1r"); 
-	m2r.reg(8,0,"m2r"); 
+	
+	FR2ar.reg ("FR2ar");   Reg(FR2arr);	    Reg(FR2arrr);	
+	FR2br.reg ("FR2br");   Reg(FR2brr);		Reg(FR2brrr);	
+	FR2cr.reg ("FR2cr");   Reg(FR2crr);		Reg(FR2crrr);	
+	FR3ar.reg ("FR3ar");   Reg(FR3arr);		Reg(FR3arrr);	
+	FR3br.reg ("FR3br");   Reg(FR3brr);		Reg(FR3brrr);	
+	FR3cr.reg ("FR3cr");   Reg(FR3crr);		Reg(FR3crrr);	
+	FRb2ar.reg("FRb2ar");  Reg(FRb2arr);	Reg(FRb2arrr);
+	FRb2br.reg("FRb2br");  Reg(FRb2brr);	Reg(FRb2brrr);
+	FRb2cr.reg("FRb2cr");  Reg(FRb2crr);	Reg(FRb2crrr);
 
+	phi2ar.reg (BWPHI-1,0,"phi2ar");   Reg_(phi2arr , BWPHI-1,0);  Reg_(phi2arrr , BWPHI-1,0);
+	phi2br.reg (BWPHI-1,0,"phi2br");   Reg_(phi2brr , BWPHI-1,0);  Reg_(phi2brrr , BWPHI-1,0);
+	phi2cr.reg (BWPHI-1,0,"phi2cr");   Reg_(phi2crr , BWPHI-1,0);  Reg_(phi2crrr , BWPHI-1,0);
+	phi3ar.reg (BWPHI-1,0,"phi3ar");   Reg_(phi3arr , BWPHI-1,0);  Reg_(phi3arrr , BWPHI-1,0);
+	phi3br.reg (BWPHI-1,0,"phi3br");   Reg_(phi3brr , BWPHI-1,0);  Reg_(phi3brrr , BWPHI-1,0);
+	phi3cr.reg (BWPHI-1,0,"phi3cr");   Reg_(phi3crr , BWPHI-1,0);  Reg_(phi3crrr , BWPHI-1,0);
+	phib2ar.reg(BWPHI-1,0,"phib2ar");  Reg_(phib2arr, BWPHI-1,0);  Reg_(phib2arrr, BWPHI-1,0);
+	phib2br.reg(BWPHI-1,0,"phib2br");  Reg_(phib2brr, BWPHI-1,0);  Reg_(phib2brrr, BWPHI-1,0);
+	phib2cr.reg(BWPHI-1,0,"phib2cr");  Reg_(phib2crr, BWPHI-1,0);  Reg_(phib2crrr, BWPHI-1,0);
+	
 	ir.reg(4, 0, "ir");
 	
 	assign MinEta [0] = mneta0;
@@ -414,36 +432,7 @@ beginmodule
 	assign EtaWindow [4] = etawn4;
 	assign EtaWindow [5] = etawn5;
 
-#ifndef _BXAON
-	assign	me1[a] 	= 	me1ap  ;	
-	assign	me1[b] 	= 	me1bp  ;	
-	assign	me1[c] 	= 	me1cp  ;	
-	assign	me1[d] 	= 	me1dp  ;	
-	assign	me1[e] 	= 	me1ep  ;	
-	assign	me1[f] 	= 	me1fp  ;	
 
-	assign	me2[a] 	= 	me2ap  ;	
-	assign	me2[b] 	= 	me2bp  ;	
-	assign	me2[c] 	= 	me2cp  ;	
-
-	assign	me3[a] 	= 	me3ap  ;	
-	assign	me3[b] 	= 	me3bp  ;	
-	assign	me3[c] 	= 	me3cp  ;	
-
-	assign	me4[a] 	= 	me4ap  ;	
-	assign	me4[b] 	= 	me4bp  ;	
-	assign	me4[c] 	= 	me4cp  ;	
-
-	assign	mb1[a]	=	dmb1[a]; 
-	assign	mb1[b] 	=	dmb1[b]; 
-	assign	mb1[c] 	=	dmb1[c]; 
-	assign	mb1[d] 	=	dmb1[d]; 
-		      	        
-	assign	mb2[a] 	=	0; 
-	assign	mb2[b] 	=	0; 
-	assign	mb2[c] 	=	0; 
-	assign	mb2[d]	=	0; 
-#endif
 
 //#############################################################################
 // Madorsky:
@@ -452,7 +441,6 @@ beginmodule
 	dtbx[0](mb1ap, dmb1[a], dmb1[c], clkp);
 	dtbx[1](mb1bp, dmb1[b], dmb1[d], clkp);
 
-#ifdef _BXAON
 	bxa
 	(
 		me1ap, me1bp, me1cp, me1dp,	me1ep, me1fp,
@@ -469,14 +457,24 @@ beginmodule
 		mb1[a],	mb1[b],	mb1[c],	mb1[d],
 		mb2[a],	mb2[b],	mb2[c],	mb2[d],
 
-		etaoff1, etaoff2, etaoff3, etaoff4,
+		me1bi[1],	me1bi[2],	me1bi[3],	me1bi[4],	me1bi[5],	me1bi[6],
+		me2bi[1],	me2bi[2],	me2bi[3],
+		me3bi[1],	me3bi[2],	me3bi[3],
+		me4bi[1],	me4bi[2],	me4bi[3],
+		mb1bi[1],	mb1bi[2],	mb1bi[3],	mb1bi[4],
+		mb2bi[1],	mb2bi[2],	mb2bi[3],	mb2bi[4],
 
-		control(0), // BXA enable
+		control(2,1), // BXA depth
 
 		clkp
 	);
 
-#endif
+	assign me1bi[0] = 0; // ID = 0 means no track stub
+	assign me2bi[0] = 0;
+	assign me3bi[0] = 0;
+	assign me4bi[0] = 0;
+	assign mb1bi[0] = 0;
+	assign mb2bi[0] = 0;
 
 	
 // ##################################################################################################################################################################
@@ -517,9 +515,9 @@ beginmodule
 			u13  [i][j].init("eu13",    "u13_",   i*10+j);
 			u12ov[i][j].init("eu12_ov", "u12ov_", i*10+j);
 
-			u12  [i][j] (me1[i], me2[j], Eqme12  (l12+BWEQ12-1, l12), pass12(lX12), pass12(lY12), me1[pYi[i]], pass12(lZ12), me1[pZi[i]]);
-			u13  [i][j] (me1[i], me3[j], Eqme13  (l12+BWEQ12-1, l12), pass13(lX12), pass13(lY12), me1[pYi[i]], pass13(lZ12), me1[pZi[i]]);
-			u12ov[i][j] (me1[i], me2[j], Eqme12ov(l12ov),             pass12ov(lX12), pass12ov(lY12), me1[pYi[i]], pass12ov(lZ12), me1[pZi[i]]);
+			u12  [i][j] (me1[i], me2[j], Eqme12  (l12+BWEQ12-1, l12), pass12(lX12), pass12(lY12), me1[pYi[i]], pass12(lZ12), me1[pZi[i]]      , control(5,4));
+			u13  [i][j] (me1[i], me3[j], Eqme13  (l12+BWEQ12-1, l12), pass13(lX12), pass13(lY12), me1[pYi[i]], pass13(lZ12), me1[pZi[i]]      , control(5,4));
+			u12ov[i][j] (me1[i], me2[j], Eqme12ov(l12ov),             pass12ov(lX12), pass12ov(lY12), me1[pYi[i]], pass12ov(lZ12), me1[pZi[i]], control(5,4));
 		}
 	}
 
@@ -533,9 +531,9 @@ beginmodule
 			u24[i][j].init("eu23_24_34", "u24_", i*10+j);
 			u34[i][j].init("eu23_24_34", "u34_", i*10+j);
 
-			u23[i][j] (me2[i], me3[j], Eqme23(l), MinEta[2], MaxEta[2], EtaWindow[2]);
-			u24[i][j] (me2[i], me4[j], Eqme24(l), MinEta[3], MaxEta[3], EtaWindow[3]);
-			u34[i][j] (me3[i], me4[j], Eqme34(l), MinEta[4], MaxEta[4], EtaWindow[4]);
+			u23[i][j] (me2[i], me3[j], Eqme23(l), MinEta[2], MaxEta[2], EtaWindow[2], control(5,4));
+			u24[i][j] (me2[i], me4[j], Eqme24(l), MinEta[3], MaxEta[3], EtaWindow[3], control(5,4));
+			u34[i][j] (me3[i], me4[j], Eqme34(l), MinEta[4], MaxEta[4], EtaWindow[4], control(5,4));
 		}
 	}
 
@@ -572,9 +570,7 @@ beginmodule
 			Eqme12r(l12+BWEQ12P-1, l12),  
 			Eqme23r(l23+BWEQ234P-1, l23),   
 			Eqme24r(l23+BWEQ234P-1, l23),     
-			me2Id1[i], me2Id3[i], me2Id4[i], me2Rank[i],
-			control(0),
-			clkp
+			me2Id1[i], me2Id3[i], me2Id4[i], me2Rank[i]
 		);
 
 		au3 [i] 
@@ -582,18 +578,14 @@ beginmodule
 			Eqme13r(l12+BWEQ12P-1, l12),	//EQ 1->3, taken every 12 bits
 			(Eqme23r(i+BWEQ234P*2), Eqme23r(i+BWEQ234P), Eqme23r(i)),   // unusual case of extrapolation 3 to 2, bit order is such that tau receives 3 to 2 extrapolation results
 			Eqme34r(l23+BWEQ234P-1, l23),     
-			me3Id1[i], me3Id2[i], me3Id4[i], me3Rank[i],
-			control(0),
-			clkp
+			me3Id1[i], me3Id2[i], me3Id4[i], me3Rank[i]
 		);
 		au2b[i] 
 		(
 			Eq2b1r (l2b1+BWEQ2B1P-1, l2b1), 
 			Eq2b2r (l2b2+BWEQ2B2P-1, l2b2), 
 			Eqme12ovr(l12o+BWEQ12OVP-1, l12o), 
-			mb2idb1[i], mb2idb2[i], mb2id1[i], mb2rank[i],
-			control(0),
-			clkp
+			mb2idb1[i], mb2idb2[i], mb2id1[i], mb2rank[i]
 		);
 	}
 
@@ -604,8 +596,9 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		me3rr[0], me3rr[1], me3rr[2],
 		me4rr[0], me4rr[1], me4rr[2],
-		me2Rank[0], me2Id1[0], "2'h1", me2Id3[0], me2Id4[0],
-		pt2a, sign2a, mode2a, etaPT2a, FR2a, phi2a
+		me2Rankr[0], me2Id1r[0], "2'h1", me2Id3r[0], me2Id4r[0], u2aId,
+		pt2a, sign2a, mode2a, etaPT2a, FR2a, phi2a,	u2aIdt, me2Rankrr[0],
+		clkp
 	);
 
 	ptu2b 
@@ -614,8 +607,9 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		me3rr[0], me3rr[1], me3rr[2],
 		me4rr[0], me4rr[1], me4rr[2],
-		me2Rank[1], me2Id1[1], "2'h2", me2Id3[1], me2Id4[1],
-		pt2b, sign2b, mode2b, etaPT2b, FR2b, phi2b
+		me2Rankr[1], me2Id1r[1], "2'h2", me2Id3r[1], me2Id4r[1], u2bId,
+		pt2b, sign2b, mode2b, etaPT2b, FR2b, phi2b, u2bIdt, me2Rankrr[1],
+		clkp
 	);
 
 	ptu2c 
@@ -624,8 +618,9 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		me3rr[0], me3rr[1], me3rr[2],
 		me4rr[0], me4rr[1], me4rr[2],
-		me2Rank[2], me2Id1[2], "2'h3", me2Id3[2], me2Id4[2],
-		pt2c, sign2c, mode2c, etaPT2c, FR2c, phi2c
+		me2Rankr[2], me2Id1r[2], "2'h3", me2Id3r[2], me2Id4r[2], u2cId,
+		pt2c, sign2c, mode2c, etaPT2c, FR2c, phi2c, u2cIdt, me2Rankrr[2], 
+		clkp
 	);
 
 	ptu3a 
@@ -634,8 +629,9 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		me3rr[0], me3rr[1], me3rr[2],
 		me4rr[0], me4rr[1], me4rr[2],
-		me3Rank[0], me3Id1[0], me3Id2[0], "2'h1", me3Id4[0],
-		pt3a, sign3a, mode3a, etaPT3a, FR3a, phi3a
+		me3Rankr[0], me3Id1r[0], me3Id2r[0], "2'h1", me3Id4r[0], u3aId,
+		pt3a, sign3a, mode3a, etaPT3a, FR3a, phi3a, u3aIdt, me3Rankrr[0],
+		clkp
 	);
 
 	ptu3b 
@@ -644,8 +640,9 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		me3rr[0], me3rr[1], me3rr[2],
 		me4rr[0], me4rr[1], me4rr[2],
-		me3Rank[1], me3Id1[1], me3Id2[1], "2'h2", me3Id4[1],
-		pt3b, sign3b, mode3b, etaPT3b, FR3b, phi3b
+		me3Rankr[1], me3Id1r[1], me3Id2r[1], "2'h2", me3Id4r[1], u3bId,
+		pt3b, sign3b, mode3b, etaPT3b, FR3b, phi3b, u3bIdt, me3Rankrr[1],
+		clkp
 	);
 
 	ptu3c 
@@ -654,8 +651,9 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		me3rr[0], me3rr[1], me3rr[2],
 		me4rr[0], me4rr[1], me4rr[2],
-		me3Rank[2], me3Id1[2], me3Id2[2], "2'h3", me3Id4[2],
-		pt3c, sign3c, mode3c, etaPT3c, FR3c, phi3c
+		me3Rankr[2], me3Id1r[2], me3Id2r[2], "2'h3", me3Id4r[2], u3cId,
+		pt3c, sign3c, mode3c, etaPT3c, FR3c, phi3c, u3cIdt, me3Rankrr[2],
+		clkp
 	);
 
 	ptub2a
@@ -664,8 +662,9 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		mb1rr[0], mb1rr[1], mb1rr[2], mb1rr[3], 
 		mb2rr[0], mb2rr[1], mb2rr[2], mb2rr[3], 
-		mb2rank[0], mb2id1[0], "2'h1", mb2idb1[0], mb2idb2[0],
-		ptb2a, signb2a, modeb2a, etaPTb2a, FRb2a, phib2a
+		mb2rankr[0], mb2id1r[0], "2'h1", mb2idb1r[0], mb2idb2r[0], ub2aId,
+		ptb2a, signb2a, modeb2a, etaPTb2a, FRb2a, phib2a, ub2aIdt, mb2rankrr[0],
+		clkp
 	);
 
 	ptub2b
@@ -674,8 +673,9 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		mb1rr[0], mb1rr[1], mb1rr[2], mb1rr[3], 
 		mb2rr[0], mb2rr[1], mb2rr[2], mb2rr[3], 
-		mb2rank[1], mb2id1[1], "2'h2", mb2idb1[1], mb2idb2[1],
-		ptb2b, signb2b, modeb2b, etaPTb2b, FRb2b, phib2b
+		mb2rankr[1], mb2id1r[1], "2'h2", mb2idb1r[1], mb2idb2r[1], ub2bId,
+		ptb2b, signb2b, modeb2b, etaPTb2b, FRb2b, phib2b, ub2bIdt, mb2rankrr[1],
+		clkp
 	);
 
 	ptub2c
@@ -684,37 +684,202 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		mb1rr[0], mb1rr[1], mb1rr[2], mb1rr[3], 
 		mb2rr[0], mb2rr[1], mb2rr[2], mb2rr[3], 
-		mb2rank[2], mb2id1[2], "2'h3", mb2idb1[2], mb2idb2[2],
-		ptb2c, signb2c, modeb2c, etaPTb2c, FRb2c, phib2c
+		mb2rankr[2], mb2id1r[2], "2'h3", mb2idb1r[2], mb2idb2r[2], ub2cId,
+		ptb2c, signb2c, modeb2c, etaPTb2c, FRb2c, phib2c, ub2cIdt, mb2rankrr[2], 
+		clkp
 	);
 
-// select the best muons simultaneously with PT assignment
+
+// select the best muons
 	fsuv
 	(
-		me2Rank[0], me2Id1[0], me2Id3 [0],  me2Id4 [0], 
-		me2Rank[1], me2Id1[1], me2Id3 [1],  me2Id4 [1], 
-		me2Rank[2], me2Id1[2], me2Id3 [2],  me2Id4 [2], 
-		        		   			  	 		    	
-		me3Rank[0], me3Id1[0], me3Id2 [0],  me3Id4 [0], 
-		me3Rank[1], me3Id1[1], me3Id2 [1],  me3Id4 [1], 
-		me3Rank[2], me3Id1[2], me3Id2 [2],  me3Id4 [2], 
-		        		   			   	 			    	
-		mb2rank[0], mb2id1[0], mb2idb1[0],  mb2idb2[0],  
-		mb2rank[1], mb2id1[1], mb2idb1[1],  mb2idb2[1],  
-		mb2rank[2], mb2id1[2], mb2idb1[2],  mb2idb2[2],  
+		me2Rankrr[0],  phi2a, // phi inputs are calculated by PT assignment units within the same clock
+		me2Rankrr[1],  phi2b, 
+		me2Rankrr[2],  phi2c, 
+		        			   
+		me3Rankrr[0],  phi3a, 
+		me3Rankrr[1],  phi3b, 
+		me3Rankrr[2],  phi3c, 
+		        	 	   	
+		mb2rankrr[0],  phib2a, 
+		mb2rankrr[1],  phib2b, 
+		mb2rankrr[2],  phib2c, 
 
-////m's contain ids for best tracks, 0->2
-		m0, m1, m2                            
+//  m's contain ids for best tracks, 0->2
+		m0, m1, m2,
+
+		control(6), // ghost cancellation based on phi proximity
+
+		clkp                            
 	);
 
 
 	// register all intermediary signals
 	always (posedge (clkp))
 	begin
+// fifth clock
+		for (irr = 0; irr < NTAU; irr++)
+		{
+			me2Rankrrrrr[irr] =  me2Rankrrrr[irr];
+			me3Rankrrrrr[irr] =  me3Rankrrrr[irr];
+			mb2rankrrrrr[irr] =  mb2rankrrrr[irr];
+		}
+
+		pt2arrr =   	 pt2arr ;
+		pt2brrr =   	 pt2brr ;
+		pt2crrr =   	 pt2crr ;
+		pt3arrr =   	 pt3arr ; 
+		pt3brrr =   	 pt3brr ; 
+		pt3crrr =   	 pt3crr ; 
+		ptb2arrr =  	 ptb2arr;
+		ptb2brrr =  	 ptb2brr;
+		ptb2crrr =  	 ptb2crr;
+					          
+		etaPT2arrr =  etaPT2arr  ;
+		etaPT2brrr =  etaPT2brr  ;
+		etaPT2crrr =  etaPT2crr  ;
+		etaPT3arrr =  etaPT3arr  ;
+		etaPT3brrr =  etaPT3brr  ;
+		etaPT3crrr =  etaPT3crr  ;
+		etaPTb2arrr = etaPTb2arr ;
+		etaPTb2brrr = etaPTb2brr ;
+		etaPTb2crrr = etaPTb2crr ;
+					          
+		mode2arrr =   mode2arr	  ;
+		mode2brrr =   mode2brr	  ;
+		mode2crrr =   mode2crr	  ;
+		mode3arrr =   mode3arr	  ;
+		mode3brrr =   mode3brr	  ;
+		mode3crrr =   mode3crr	  ;
+		modeb2arrr =  modeb2arr  ;
+		modeb2brrr =  modeb2brr  ;
+		modeb2crrr =  modeb2crr  ;
+					          
+		sign2arrr =   sign2arr	  ;
+		sign2brrr =   sign2brr	  ;
+		sign2crrr =   sign2crr	  ;
+		sign3arrr =   sign3arr	  ;
+		sign3brrr =   sign3brr	  ;
+		sign3crrr =   sign3crr	  ;
+		signb2arrr =  signb2arr  ;
+		signb2brrr =  signb2brr  ;
+		signb2crrr =  signb2crr  ;
+
+		FR2arrr	 = FR2arr   ;
+		FR2brrr	 = FR2brr   ;
+		FR2crrr	 = FR2crr   ;
+		FR3arrr	 = FR3arr   ;
+		FR3brrr	 = FR3brr   ;
+		FR3crrr	 = FR3crr   ;
+		FRb2arrr	 = FRb2arr  ;
+		FRb2brrr	 = FRb2brr  ;
+		FRb2crrr	 = FRb2crr  ;
+		       	         
+		phi2arrr	 = phi2arr  ;
+		phi2brrr	 = phi2brr  ;
+		phi2crrr	 = phi2crr  ;
+		phi3arrr	 = phi3arr  ;
+		phi3brrr	 = phi3brr  ;
+		phi3crrr	 = phi3crr  ;
+		phib2arrr	 = phib2arr ;
+		phib2brrr	 = phib2brr ;
+		phib2crrr	 = phib2crr ;
+
+		u2aIdrrr 	 = u2aIdrr ;
+		u2bIdrrr 	 = u2bIdrr ;
+		u2cIdrrr      = u2cIdrr ;
+		u3aIdrrr 	 = u3aIdrr ;
+		u3bIdrrr 	 = u3bIdrr ;
+		u3cIdrrr 	 = u3cIdrr ;
+		ub2aIdrrr	 = ub2aIdrr;
+		ub2bIdrrr	 = ub2bIdrr;
+		ub2cIdrrr	 = ub2cIdrr;
+
+// fourth clock
+		for (irr = 0; irr < NTAU; irr++)
+		{
+			me2Rankrrrr[irr] =  me2Rankrrr[irr];
+			me3Rankrrrr[irr] =  me3Rankrrr[irr];
+			mb2rankrrrr[irr] =  mb2rankrrr[irr];
+		}
+
+		pt2arr =   	 pt2ar ;
+		pt2brr =   	 pt2br ;
+		pt2crr =   	 pt2cr ;
+		pt3arr =   	 pt3ar ; 
+		pt3brr =   	 pt3br ; 
+		pt3crr =   	 pt3cr ; 
+		ptb2arr =  	 ptb2ar;
+		ptb2brr =  	 ptb2br;
+		ptb2crr =  	 ptb2cr;
+					          
+		etaPT2arr =  etaPT2ar  ;
+		etaPT2brr =  etaPT2br  ;
+		etaPT2crr =  etaPT2cr  ;
+		etaPT3arr =  etaPT3ar  ;
+		etaPT3brr =  etaPT3br  ;
+		etaPT3crr =  etaPT3cr  ;
+		etaPTb2arr = etaPTb2ar ;
+		etaPTb2brr = etaPTb2br ;
+		etaPTb2crr = etaPTb2cr ;
+					          
+		mode2arr =   mode2ar	  ;
+		mode2brr =   mode2br	  ;
+		mode2crr =   mode2cr	  ;
+		mode3arr =   mode3ar	  ;
+		mode3brr =   mode3br	  ;
+		mode3crr =   mode3cr	  ;
+		modeb2arr =  modeb2ar  ;
+		modeb2brr =  modeb2br  ;
+		modeb2crr =  modeb2cr  ;
+					          
+		sign2arr =   sign2ar	  ;
+		sign2brr =   sign2br	  ;
+		sign2crr =   sign2cr	  ;
+		sign3arr =   sign3ar	  ;
+		sign3brr =   sign3br	  ;
+		sign3crr =   sign3cr	  ;
+		signb2arr =  signb2ar  ;
+		signb2brr =  signb2br  ;
+		signb2crr =  signb2cr  ;
+
+		FR2arr	 = FR2ar   ;
+		FR2brr	 = FR2br   ;
+		FR2crr	 = FR2cr   ;
+		FR3arr	 = FR3ar   ;
+		FR3brr	 = FR3br   ;
+		FR3crr	 = FR3cr   ;
+		FRb2arr	 = FRb2ar  ;
+		FRb2brr	 = FRb2br  ;
+		FRb2crr	 = FRb2cr  ;
+		       	         
+		phi2arr	 = phi2ar  ;
+		phi2brr	 = phi2br  ;
+		phi2crr	 = phi2cr  ;
+		phi3arr	 = phi3ar  ;
+		phi3brr	 = phi3br  ;
+		phi3crr	 = phi3cr  ;
+		phib2arr	 = phib2ar ;
+		phib2brr	 = phib2br ;
+		phib2crr	 = phib2cr ;
+
+		u2aIdrr 	 = u2aIdr ;
+		u2bIdrr 	 = u2bIdr ;
+		u2cIdrr      = u2cIdr ;
+		u3aIdrr 	 = u3aIdr ;
+		u3bIdrr 	 = u3bIdr ;
+		u3cIdrr 	 = u3cIdr ;
+		ub2aIdrr	 = ub2aIdr;
+		ub2bIdrr	 = ub2bIdr;
+		ub2cIdrr	 = ub2cIdr;
+
 // third clock
-		m0r =  	 m0;
-		m1r =  	 m1;
-		m2r =	 m2;
+		for (irr = 0; irr < NTAU; irr++)
+		{
+			me2Rankrrr[irr] =  me2Rankrr[irr];
+			me3Rankrrr[irr] =  me3Rankrr[irr];
+			mb2rankrrr[irr] =  mb2rankrr[irr];
+		}
 
 		pt2ar =   	 pt2a ;
 		pt2br =   	 pt2b ;
@@ -776,19 +941,28 @@ beginmodule
 		phib2br	 = phib2b ;
 		phib2cr	 = phib2c ;
 
-		u2aIdr 	 = (me2Id4[0], me2Id3[0], (Signal)"2'h1", me2Id1[0]);
-		u2bIdr 	 = (me2Id4[1], me2Id3[1], (Signal)"2'h2", me2Id1[1]);
-		u2cIdr   = (me2Id4[2], me2Id3[2], (Signal)"2'h3", me2Id1[2]);
-					   
-		u3aIdr 	 = (me3Id4[0], (Signal)"2'h1", me3Id2[0], me3Id1[0]);
-		u3bIdr 	 = (me3Id4[1], (Signal)"2'h2", me3Id2[1], me3Id1[1]);
-		u3cIdr 	 = (me3Id4[2], (Signal)"2'h3", me3Id2[2], me3Id1[2]);
-					   
-		ub2aIdr	 = (mb2idb2[0], mb2idb1[0], (Signal)"2'h0", (Signal)"2'h0", (Signal)"2'h1", mb2id1[0]);
-		ub2bIdr	 = (mb2idb2[1], mb2idb1[1], (Signal)"2'h0", (Signal)"2'h0", (Signal)"2'h2", mb2id1[1]);
-		ub2cIdr	 = (mb2idb2[2], mb2idb1[2], (Signal)"2'h0", (Signal)"2'h0", (Signal)"2'h3", mb2id1[2]);
+		u2aIdr 	 = u2aIdt ;
+		u2bIdr 	 = u2bIdt ;
+		u2cIdr   = u2cIdt ;
+		u3aIdr 	 = u3aIdt ;
+		u3bIdr 	 = u3bIdt ;
+		u3cIdr 	 = u3cIdt ;
+		ub2aIdr	 = ub2aIdt;
+		ub2bIdr	 = ub2bIdt;
+		ub2cIdr	 = ub2cIdt;
 
-
+		for (irr = 0; irr < NTAU; irr++)
+		{
+			me2Id1rr [irr] =  me2Id1r[irr] ;
+			me2Id3rr [irr] =  me2Id3r[irr] ; 
+			me2Id4rr [irr] =  me2Id4r[irr] ; 
+			me3Id1rr [irr] =  me3Id1r[irr] ; 
+			me3Id2rr [irr] =  me3Id2r[irr] ; 
+			me3Id4rr [irr] =  me3Id4r[irr] ; 
+			mb2idb1rr[irr] =  mb2idb1r[irr];
+			mb2idb2rr[irr] =  mb2idb2r[irr];
+			mb2id1rr [irr] =  mb2id1r[irr] ;
+		}
 // second clock
 
 		For (ir = 0, ir < NSEG1, ir++) me1rr[ir] = me1r[ir];	
@@ -806,6 +980,36 @@ beginmodule
 			mb2rr[ir] = mb2r[ir]; 
 		end
 
+		for (irr = 0; irr < NTAU; irr++)
+		{
+			me2Id1r [irr] =  me2Id1[irr] ;
+			me2Id3r [irr] =  me2Id3[irr] ; 
+			me2Id4r [irr] =  me2Id4[irr] ; 
+			me2Rankr[irr] =  me2Rank[irr];
+			me3Id1r [irr] =  me3Id1[irr] ; 
+			me3Id2r [irr] =  me3Id2[irr] ; 
+			me3Id4r [irr] =  me3Id4[irr] ; 
+			me3Rankr[irr] =  me3Rank[irr];
+			mb2idb1r[irr] =  mb2idb1[irr];
+			mb2idb2r[irr] =  mb2idb2[irr];
+			mb2id1r [irr] =  mb2id1[irr] ;
+			mb2rankr[irr] =  mb2rank[irr];
+		}
+
+		// the code below does this:
+		// 1. take stub Id found by assembly unit (me2Id1[0] means station 1 stub that matched key station 2 stub). Stub Id for key station is a fixed number (0,1,2).
+		// 2. look up the original stub Id and BX from me1bir. This needs to be done because BXA sometimes changes stub Id and BX
+		u2aId 	 = ((Signal)"6'h0", (Signal)"6'h0", me4bir[me2Id4[0]], me3bir[me2Id3[0]], me2bir[1], me1bir[me2Id1[0]]);
+		u2bId 	 = ((Signal)"6'h0", (Signal)"6'h0", me4bir[me2Id4[1]], me3bir[me2Id3[1]], me2bir[2], me1bir[me2Id1[1]]);
+		u2cId    = ((Signal)"6'h0", (Signal)"6'h0", me4bir[me2Id4[2]], me3bir[me2Id3[2]], me2bir[3], me1bir[me2Id1[2]]);
+			  	   	   
+		u3aId 	 = ((Signal)"6'h0", (Signal)"6'h0", me4bir[me3Id4[0]], me3bir[1], me2bir[me3Id2[0]], me1bir[me3Id1[0]]);
+		u3bId 	 = ((Signal)"6'h0", (Signal)"6'h0", me4bir[me3Id4[1]], me3bir[2], me2bir[me3Id2[1]], me1bir[me3Id1[1]]);
+		u3cId 	 = ((Signal)"6'h0", (Signal)"6'h0", me4bir[me3Id4[2]], me3bir[3], me2bir[me3Id2[2]], me1bir[me3Id1[2]]);
+			  	   	   
+		ub2aId	 = (mb2bir[mb2idb2[0]], mb1bir[mb2idb1[0]], (Signal)"6'h0", (Signal)"6'h0", me2bir[1], me1bir[mb2id1[0]]);
+		ub2bId	 = (mb2bir[mb2idb2[1]], mb1bir[mb2idb1[1]], (Signal)"6'h0", (Signal)"6'h0", me2bir[2], me1bir[mb2id1[1]]);
+		ub2cId	 = (mb2bir[mb2idb2[2]], mb1bir[mb2idb1[2]], (Signal)"6'h0", (Signal)"6'h0", me2bir[3], me1bir[mb2id1[2]]);
 
 // first clock
 		Eqme12r   =  Eqme12  ; // {2c1f[2], 2c1e[2], 2c1d[2], 2c1c[2], 2c1b[2], 2c1a[2], // [2] means size of field is 2 bits
@@ -856,6 +1060,24 @@ beginmodule
 			mb1r[irr] = mb1[irr]; 
 			mb2r[irr] = mb2[irr]; 
 		}
+
+		for (irr = 0; irr <= NSEG1; irr++) 
+		{
+			me1bir[irr]	= me1bi[irr];	
+		}
+
+		for (irr = 0; irr <= NSEG234; irr++)
+		{
+			me2bir[irr] = me2bi[irr];	
+			me3bir[irr] = me3bi[irr];	
+			me4bir[irr] = me4bi[irr];	
+		}
+
+		for (irr = 0; irr <= NSEG12B; irr++)
+		{
+			mb1bir[irr] = mb1bi[irr]; 
+			mb2bir[irr] = mb2bi[irr]; 
+		}
 	
 		
 	end
@@ -863,35 +1085,55 @@ beginmodule
 // multiplex the best muons to the output
 	mux
 	(
-		m0r, m1r, m2r,
+		m0, m1, m2,
 
-		pt2ar,  sign2ar,  mode2ar,  etaPT2ar,  FR2ar , phi2ar  ,
-		pt2br,  sign2br,  mode2br,  etaPT2br,  FR2br , phi2br  ,
-		pt2cr,  sign2cr,  mode2cr,  etaPT2cr,  FR2cr , phi2cr  ,
-		pt3ar,  sign3ar,  mode3ar,  etaPT3ar,  FR3ar , phi3ar  ,
-		pt3br,  sign3br,  mode3br,  etaPT3br,  FR3br , phi3br  ,
-		pt3cr,  sign3cr,  mode3cr,  etaPT3cr,  FR3cr , phi3cr  ,
-		ptb2ar, signb2ar, modeb2ar, etaPTb2ar, FRb2ar, phib2ar ,
-		ptb2br, signb2br, modeb2br, etaPTb2br, FRb2br, phib2br ,
-		ptb2cr, signb2cr, modeb2cr, etaPTb2cr, FRb2cr, phib2cr ,
+		pt2arrr,  sign2arrr,  mode2arrr,  etaPT2arrr,  FR2arrr , phi2arrr  , me2Rankrrrrr[0], 
+		pt2brrr,  sign2brrr,  mode2brrr,  etaPT2brrr,  FR2brrr , phi2brrr  , me2Rankrrrrr[1],
+		pt2crrr,  sign2crrr,  mode2crrr,  etaPT2crrr,  FR2crrr , phi2crrr  , me2Rankrrrrr[2],
+		pt3arrr,  sign3arrr,  mode3arrr,  etaPT3arrr,  FR3arrr , phi3arrr  , me3Rankrrrrr[0],
+		pt3brrr,  sign3brrr,  mode3brrr,  etaPT3brrr,  FR3brrr , phi3brrr  , me3Rankrrrrr[1],
+		pt3crrr,  sign3crrr,  mode3crrr,  etaPT3crrr,  FR3crrr , phi3crrr  , me3Rankrrrrr[2],
+		ptb2arrr, signb2arrr, modeb2arrr, etaPTb2arrr, FRb2arrr, phib2arrr , mb2rankrrrrr[0],
+		ptb2brrr, signb2brrr, modeb2brrr, etaPTb2brrr, FRb2brrr, phib2brrr , mb2rankrrrrr[1],
+		ptb2crrr, signb2crrr, modeb2crrr, etaPTb2crrr, FRb2crrr, phib2crrr , mb2rankrrrrr[2],
 
-		u2aIdr,  u2bIdr,  u2cIdr,
-		u3aIdr,  u3bIdr,  u3cIdr,
-		ub2aIdr, ub2bIdr, ub2cIdr, 
+		u2aIdrrr,  u2bIdrrr,  u2cIdrrr,
+		u3aIdrrr,  u3bIdrrr,  u3cIdrrr,
+		ub2aIdrrr, ub2bIdrrr, ub2cIdrrr, 
 	
-		ptH, signH, modeMemH, etaPTH, FRH, phiH,
-		ptM, signM, modeMemM, etaPTM, FRM, phiM,
-		ptL, signL, modeMemL, etaPTL, FRL, phiL,
+		ptH, signH, modeMemH, etaPTH, FRH, phiH, rankH,
+		ptM, signM, modeMemM, etaPTM, FRM, phiM, rankM,
+		ptL, signL, modeMemL, etaPTL, FRL, phiL, rankL,
 		idH, idM, idL
+		
+	);
+
+
+	// correct bx assignment according to pretrigger requirement
+	bxcorr
+	(
+		rankH, rankM, rankL, 
+
+		(FRH, phiH, ptH, signH, modeMemH, etaPTH),
+		(FRM, phiM, ptM, signM, modeMemM, etaPTM),
+		(FRL, phiL, ptL, signL, modeMemL, etaPTL),
+
+		idH, idM, idL,
+
+		pHp, pMp, pLp,
+		idHp, idMp, idLp,
+		control(8,7), // pretrig
+
+		clkp
 	);
 
     // assign outputs
-	assign	pHp = (FRH, phiH, ptH, signH, modeMemH, etaPTH);
-	assign	pMp = (FRM, phiM, ptM, signM, modeMemM, etaPTM);
-	assign	pLp = (FRL, phiL, ptL, signL, modeMemL, etaPTL);
-	assign	idHp = idH;
-	assign	idMp = idM;
-	assign	idLp = idL;
+//	assign	pHp = (FRH, phiH, ptH, signH, modeMemH, etaPTH);
+//	assign	pMp = (FRM, phiM, ptM, signM, modeMemM, etaPTM);
+//	assign	pLp = (FRL, phiL, ptL, signL, modeMemL, etaPTL);
+//	assign	idHp = idH;
+//	assign	idMp = idM;
+//	assign	idLp = idL;
 
 // generate date output
 #ifdef VGEN
@@ -906,5 +1148,3 @@ beginmodule
 
 endmodule
 }
-
-

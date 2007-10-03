@@ -7,9 +7,7 @@ void SPvpp_tau3::operator()
 	Signal me32, 
 	Signal me34,
 	Signal idl, Signal idm, Signal idh,
-	Signal rank,
-	Signal bxa_enable,
-	Signal clk
+	Signal rank
 )
 {
 initio	
@@ -23,8 +21,6 @@ initio
 	idh.output(1,0,"idh",makereg);
 
 	rank.output(5,0,"rank", makereg);
-	Input (bxa_enable);
-	clk.input("clk");
 	
 beginmodule
 	
@@ -40,22 +36,11 @@ beginmodule
 	max34.reg(2,0,"max34");
 	quality.reg(3,0,"quality");
 
-	always (posedge (clk))
+	always (me31 or me32 or me34)
 	begin
 	    (e31[5], e31[4], e31[3], e31[2], e31[1], e31[0]) = me31;
 		e32 = me32;
 		e34 = me34;
-
-#ifdef _BXAON
-		// zero the stubs which were used in previous clock.
-		// this is the part of the BXA algotithm
-		If(quality != 0 && bxa_enable)
-		begin
-			If (idl != 0) e31[idl-1] = 0;
-			If (idm != 0) e32(idm-1) = 0;
-			If (idh != 0) e34(idh-1) = 0;
-		end
-#endif
 
 	    max31 = Max31p(e31[0], e31[1], e31[2], e31[3], e31[4], e31[5]);
 	    max32 = Max3p  (e32);

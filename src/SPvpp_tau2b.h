@@ -37,9 +37,7 @@ public:
 		Signal mb22,
 		Signal me21,
 		Signal idl, Signal idm, Signal idh,
-		Signal rank,
-		Signal bxa_enable,
-		Signal clk
+		Signal rank
 	);
 
 	Signal maxb21, max21, maxb22, quality;
