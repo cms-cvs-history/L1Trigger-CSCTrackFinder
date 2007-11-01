@@ -4,7 +4,7 @@ block CSCTrackFinderProducerNames =
 {
    #names of input sources
    untracked InputTag CSCTrackProducer = l1csctracks
-   untracked InputTag SectorReceiverInput = lctproducer:MPCSORTED
+   untracked InputTag SectorReceiverInput = l1CscTpgEmulDigis:MPCSORTED
 }
 
 module l1csctracks = CSCTFTrackProducer
@@ -23,17 +23,17 @@ module l1csctracks = CSCTFTrackProducer
 
 	untracked uint32 BXAExtendLength = 1
 
-#   	PSet SRLUT = {
-#			untracked bool ReadLUTs = false
-#			untracked bool Binary = false
-#			untracked string LUTPath = "./"
-#		     }
-#
-#   	PSet PTLUT = {
-#			untracked bool ReadPtLUT = false
-#			untracked uint32 PtMethod = 1
-#			untracked uint32 LowQualityFlag = 4
-#		     }
+   	PSet SRLUT = {
+			untracked bool ReadLUTs = false
+			untracked bool Binary = false
+			untracked string LUTPath = "./"
+		     }
+
+   	PSet PTLUT = {
+			untracked bool ReadPtLUT = false
+			untracked uint32 PtMethod = 1
+			untracked uint32 LowQualityFlag = 4
+		     }
       }
 }
 
