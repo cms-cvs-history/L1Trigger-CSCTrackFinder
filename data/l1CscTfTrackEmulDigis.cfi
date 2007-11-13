@@ -1,22 +1,22 @@
 include "L1Trigger/CSCCommonTrigger/data/CSCCommonTrigger.cfi"
 
 module l1CscTfTrackEmulDigis = CSCTFTrackProducer
-{   
+{
 
    untracked InputTag SectorReceiverInput = l1CscTpgEmulDigis:MPCSORTED
 
-   PSet SectorProcessor = 
+   PSet SectorProcessor =
       {
         using CSCCommonTrigger
-        
-	untracked uint32 CoreLatency = 6
-	untracked bool UseBXA = true 
+
+	untracked uint32 CoreLatency = 8
+	untracked bool UseBXA = true
 	untracked vuint32 EtaWindows = {2, 2, 2, 2, 2, 2}
 
 	untracked vuint32 EtaMin = {22, 22, 14, 14, 14, 10, 10, 10}
 	untracked vuint32 EtaMax = {127, 127, 127, 127, 127, 24, 24, 24}
 
-	untracked uint32 BXAExtendLength = 1               
+	untracked uint32 BXAExtendLength = 1
 
    	PSet SRLUT = {
 			untracked bool ReadLUTs = false
