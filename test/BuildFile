@@ -24,9 +24,9 @@
      <flags EDM_PLUGIN=1>
 </library>
 
-<library file=analysis/CSCTFEfficiencies.cc name=CSCTFEfficiencies>
-     <flags EDM_PLUGIN=1>
-</library>
+#<library file=analysis/CSCTFEfficiencies.cc name=CSCTFEfficiencies>
+#     <flags EDM_PLUGIN=1>
+#</library>
 
 <library file=analysis/CSCTrackStubAnalysis.cc name=CSCTrackStubAnalysis>
      <flags EDM_PLUGIN=1>
