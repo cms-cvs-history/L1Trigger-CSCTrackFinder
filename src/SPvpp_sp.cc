@@ -17,6 +17,8 @@ void SPvpp_sp::operator()
 	Signal mneta0, Signal mneta1, Signal mneta2, Signal mneta3, Signal mneta4, Signal mneta5, Signal mneta6, Signal mneta7, 
 	Signal mxeta0, Signal mxeta1, Signal mxeta2, Signal mxeta3, Signal mxeta4, Signal mxeta5, Signal mxeta6, Signal mxeta7, 
 	Signal etawn0, Signal etawn1, Signal etawn2, Signal etawn3, Signal etawn4, Signal etawn5, 
+	Signal mindphi,
+	Signal mindeta_acc, Signal maxdeta_acc, Signal maxdphi_acc,
 	Signal control,
 	Signal clkp
 )
@@ -79,6 +81,11 @@ initio
 	Input_(etawn3, BWETAIN, 0); 
 	Input_(etawn4, BWETAIN, 0); 
 	Input_(etawn5, BWETAIN, 0); 
+
+	Input_(mindphi, BWPHI-1, 0);
+	Input_(mindeta_acc, BWETAIN-1,0); // min eta difference for acc tracks
+	Input_(maxdeta_acc, BWETAIN-1,0); // max eta difference for acc tracks
+	Input_(maxdphi_acc, BWPHI-3,0);   // max phi difference for acc tracks (without 2 lower bits)
 
 	Input_(control, 15, 0); // control register {reserved[14:0], BXA_enable}
 
@@ -177,6 +184,8 @@ beginmodule
 	Eqme34.wire  (BWEQ234R-1, 0, "Eqme34"); 
 	Eq2b1.wire   (BWEQ2B1R-1, 0, "Eq2b1");
 	Eq2b2.wire   (BWEQ2B2R-1, 0, "Eq2b2");
+
+	Wire_(Eqme23a, BWEQ234R-1, 0); // accelerator tracks extrapolation results
 
 	u2aIdr.reg (MUIDSIZE-1,0,"u2aIdr");  Reg_(u2aIdrr , MUIDSIZE-1,0); Reg_(u2aIdrrr , MUIDSIZE-1,0); Reg_(u2aId , MUIDSIZE-1,0); Wire_(u2aIdt , MUIDSIZE-1,0);
 	u2bIdr.reg (MUIDSIZE-1,0,"u2bIdr");  Reg_(u2bIdrr , MUIDSIZE-1,0); Reg_(u2bIdrrr , MUIDSIZE-1,0); Reg_(u2bId , MUIDSIZE-1,0); Wire_(u2bIdt , MUIDSIZE-1,0);
@@ -407,6 +416,8 @@ beginmodule
 	
 	ir.reg(4, 0, "ir");
 	
+	Reg_(Eqme23ar, 6, 0); // accelerator tracks extrapolation results delay
+	
 	assign MinEta [0] = mneta0;
 	assign MinEta [1] = mneta1;
 	assign MinEta [2] = mneta2;
@@ -534,6 +545,11 @@ beginmodule
 			u23[i][j] (me2[i], me3[j], Eqme23(l), MinEta[2], MaxEta[2], EtaWindow[2], control(5,4));
 			u24[i][j] (me2[i], me4[j], Eqme24(l), MinEta[3], MaxEta[3], EtaWindow[3], control(5,4));
 			u34[i][j] (me3[i], me4[j], Eqme34(l), MinEta[4], MaxEta[4], EtaWindow[4], control(5,4));
+			
+			// accelerator track extrapolators
+			u23a[i][j].init("eu23a", "u23a_", i*10+j);
+			u23a[i][j] (me2[i], me3[j], Eqme23a(l), mindeta_acc, maxdeta_acc, maxdphi_acc /*, control(5,4)*/, clkp);
+
 		}
 	}
 
@@ -709,6 +725,7 @@ beginmodule
 		m0, m1, m2,
 
 		control(6), // ghost cancellation based on phi proximity
+		mindphi, // min phi difference for ghost cancellation
 
 		clkp                            
 	);
@@ -1079,6 +1096,8 @@ beginmodule
 			mb2bir[irr] = mb2bi[irr]; 
 		}
 	
+		// accelerator extrapolation result delay to match collision timing
+		Eqme23ar = (Eqme23ar(5, 0), ror(Eqme23a));	
 		
 	end
 
@@ -1122,6 +1141,9 @@ beginmodule
 
 		pHp, pMp, pLp,
 		idHp, idMp, idLp,
+		
+		Eqme23ar(6), // acc track found		
+		
 		control(8,7), // pretrig
 
 		clkp

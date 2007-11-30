@@ -51,7 +51,8 @@ public:
 	unsigned mxeta0p, unsigned mxeta1p, unsigned mxeta2p, unsigned mxeta3p, unsigned mxeta4p, unsigned mxeta5p, unsigned mxeta6p, unsigned mxeta7p, 
 	unsigned etawn0p, unsigned etawn1p, unsigned etawn2p, unsigned etawn3p, unsigned etawn4p, unsigned etawn5p, 
 
-	unsigned etaoff1p, unsigned etaoff2p, unsigned etaoff3p, unsigned etaoff4p,
+	unsigned mindphip,
+	unsigned mindeta_accp, unsigned maxdeta_accp, unsigned maxdphi_accp,
 	unsigned controlp
 
 	);  
@@ -117,8 +118,10 @@ public:
 		mxeta0,	mxeta1,	mxeta2,	mxeta3,	mxeta4,	mxeta5,	mxeta6,	mxeta7,
 		etawn0,	etawn1,	etawn2,	etawn3,	etawn4,	etawn5,
 
-		date, control,
-		etaoff1, etaoff2, etaoff3, etaoff4,
+		date, control, 
+		
+		mindphi,
+		mindeta_acc, maxdeta_acc, maxdphi_acc,
 		
 		clkp;
 		

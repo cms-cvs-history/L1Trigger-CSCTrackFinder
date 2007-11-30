@@ -49,6 +49,7 @@ public:
 		Signal m0, Signal m1, Signal m2,
 
 		Signal phi_watch_en,
+		Signal mindphi,
 
 		Signal clk
 	);

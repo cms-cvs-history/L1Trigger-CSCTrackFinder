@@ -10,6 +10,8 @@ void SPvpp_bxcorr::operator()
 	Signal bc1, Signal bc2, Signal bc3,
 	Signal idc1, Signal idc2, Signal idc3,
 	
+	Signal acc,
+	
 	Signal pretrig,
 	Signal clk
 )
@@ -35,6 +37,8 @@ initio
 	OutReg_(idc2, MUIDSIZE-1, 0);
 	OutReg_(idc3, MUIDSIZE-1, 0);
 
+	Input (acc); // accelerator track found
+	
 	Input_(pretrig, 1, 0); // how many stubs required to mark track timing
 	Input (clk);
 
@@ -65,7 +69,8 @@ beginmodule
 	Reg__(del2stubs, 2, 0, 8, 0);
 	Reg__(del1stubs, 2, 0, 8, 0);
 
-	int ii, jj;
+//	int ii, jj;
+	int jj;
 
 	always (posedge (clk))
 	begin
@@ -210,6 +215,13 @@ beginmodule
 			idc2 = idc2 | ifelse(m1(i), id[i], 0);
 			idc3 = idc3 | ifelse(m2(i), id[i], 0);
 		end
+
+		// if output 3 is not occupied, stick acc track in it
+		If (bc3 == 0 && acc) 
+		begin
+			bc3(BWETAOUT+BWMODE-1, BWETAOUT) = MODE_ACC;
+		end
+
 
 	end
 

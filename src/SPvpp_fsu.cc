@@ -21,6 +21,7 @@ void SPvpp_fsu::operator()
 	Signal m0, Signal m1, Signal m2,
 
 	Signal phi_watch_en,
+	Signal mindphi,
 
 	Signal clk
 )
@@ -59,6 +60,7 @@ initio
 	m2.output(8,0,"m2",makereg);
 
 	Input (phi_watch_en); // enable ghost cancellation based on phi proximity
+	Input_(mindphi, BWPHI-1, 0); // min phi difference
 
 	Input (clk);
 

@@ -18,6 +18,7 @@
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_tau3.h>
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_dtbx.h>
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_bxcorr.h>
+#include <L1Trigger/CSCTrackFinder/src/SPvpp_eu23a.h>
 
 #ifndef _FILE_SPvpp_sp_FILE_
 #define _FILE_SPvpp_sp_FILE_
@@ -38,6 +39,8 @@ public:
 		Signal mneta0, Signal mneta1, Signal mneta2, Signal mneta3, Signal mneta4, Signal mneta5, Signal mneta6, Signal mneta7, 
 		Signal mxeta0, Signal mxeta1, Signal mxeta2, Signal mxeta3, Signal mxeta4, Signal mxeta5, Signal mxeta6, Signal mxeta7, 
 		Signal etawn0, Signal etawn1, Signal etawn2, Signal etawn3, Signal etawn4, Signal etawn5, 
+		Signal mindphi,
+		Signal mindeta_acc, Signal maxdeta_acc, Signal maxdphi_acc,
 		Signal control,
 		Signal clkp
 	);                                                               
@@ -69,7 +72,7 @@ public:
 	Signal dmb1[NSEG12B];
 
 	Signal pass12, pass12ov, pass13;
-	Signal Eqme12,  Eqme13,  Eqme12ov,  Eqme23,  Eqme24,  Eqme34,  Eq2b2,  Eq2b1;
+	Signal Eqme12,  Eqme13,  Eqme12ov,  Eqme23,  Eqme24,  Eqme34,  Eq2b2,  Eq2b1, Eqme23a, Eqme23ar;
 	Signal me2Id1[NTAU],  me3Id1[NTAU],  mb2idb1[NTAU],  me2Id3[NTAU],  me3Id2[NTAU],  mb2idb2[NTAU],  me2Id4[NTAU],  me3Id4[NTAU],  mb2id1[NTAU],  me2Rank[NTAU],  me3Rank[NTAU],  mb2rank[NTAU];
 	memory me2Id1r, me3Id1r, mb2idb1r, me2Id3r, me3Id2r, mb2idb2r, me2Id4r, me3Id4r, mb2id1r, me2Rankr, me3Rankr, mb2rankr;
 	memory me2Id1rr, me3Id1rr, mb2idb1rr, me2Id3rr, me3Id2rr, mb2idb2rr, me2Id4rr, me3Id4rr, mb2id1rr;
@@ -180,6 +183,8 @@ public:
 	SPvpp_eu23_24_34 u23[3][3];
 	SPvpp_eu23_24_34 u24[3][3];
 	SPvpp_eu23_24_34 u34[3][3];
+
+	SPvpp_eu23a u23a[3][3];
 
 	SPvpp_eu2b1 u2b1[3][4];
 	SPvpp_eu2b2 u2b2[3][4];

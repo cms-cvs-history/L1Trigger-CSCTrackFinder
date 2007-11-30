@@ -71,7 +71,7 @@ Verilog++ SP.
 #define BWRANK 6 // track rank
 // BX correction unit input and output
 #define CORRIN (BWRANK + BWFR + BWPHIOUT + BWPT + BWSIGN + BWMODE + BWETAOUT)
-
+#define MODE_ACC 15 // mode for accelerator tracks
 
 #endif
 
