@@ -118,22 +118,17 @@ public:
 		mxeta0,	mxeta1,	mxeta2,	mxeta3,	mxeta4,	mxeta5,	mxeta6,	mxeta7,
 		etawn0,	etawn1,	etawn2,	etawn3,	etawn4,	etawn5,
 
-		date, control, 
-		
-		mindphi,
+		date, control, mindphi,
 		mindeta_acc, maxdeta_acc, maxdphi_acc,
 		
 		clkp;
-		
 	
 	Signal idHp, idMp, idLp;
 
 	unsigned
 		mb1aQr, mb1aPhir, 
-		mb1bQr, mb1bPhir, loop;
+		mb1bQr, mb1bPhir;
 		
-	SPvpp():loop(0){}
-
 
 };
 

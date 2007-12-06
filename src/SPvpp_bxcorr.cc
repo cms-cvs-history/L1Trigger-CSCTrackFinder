@@ -69,8 +69,7 @@ beginmodule
 	Reg__(del2stubs, 2, 0, 8, 0);
 	Reg__(del1stubs, 2, 0, 8, 0);
 
-//	int ii, jj;
-	int jj;
+	int ii, jj;
 
 	always (posedge (clk))
 	begin

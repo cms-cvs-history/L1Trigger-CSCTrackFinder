@@ -1,11 +1,8 @@
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_fsu.h>
 #include <L1Trigger/CSCCommonTrigger/interface/vmac.h>
 
-#define MINDPHI 120 // min diff in phi between two different tracks
-
 void SPvpp_fsu::operator()
 ( 
-
 	Signal me2aRank, Signal phi2a, 
 	Signal me2bRank, Signal phi2b, 
 	Signal me2cRank, Signal phi2c, 
@@ -20,7 +17,7 @@ void SPvpp_fsu::operator()
 
 	Signal m0, Signal m1, Signal m2,
 
-	Signal phi_watch_en,
+	Signal phi_watch_en, 
 	Signal mindphi,
 
 	Signal clk
@@ -63,7 +60,6 @@ initio
 	Input_(mindphi, BWPHI-1, 0); // min phi difference
 
 	Input (clk);
-
 
 beginmodule
 
@@ -180,7 +176,7 @@ beginmodule
 						// compare and possibly cancel tracks in the same clock 
 						dphirr = ifelse(phirr[i] > phirr[j], phirr[i] - phirr[j], phirr[j] - phirr[i]); 
 		
-						If (dphirr < MINDPHI) // if they are close in phi
+						If (dphirr < mindphi) // if they are close in phi
 						begin
 							If (Larger[i](j)) killrr1(j) = 1; // kill j if i is better
 							Else              killrr1(i) = 1; // kill i if j is better
@@ -195,7 +191,7 @@ beginmodule
 						// compare -2bx tracks with -1bx, cancel delayed if there is a better current one close in phi
 						dphir = ifelse(phirr[i] > phir[j], phirr[i] - phir[j], phir[j] - phirr[i]);
 	
-						If (dphir < MINDPHI) // phi is close
+						If (dphir < mindphi) // phi is close
 						begin
 							If (rankrr[i] >= rankr[j]) killr(j) = 1; // -1bx is ghost (same or worse quality)
 							Else                       killrr2(i) = 1; // delayed one is pre-ghost (not all stubs have come up yet)
@@ -210,7 +206,7 @@ beginmodule
 						// compare -2bx tracks with current ones, cancel delayed if there is a better current one close in phi
 						dphi = ifelse(phirr[i] > phi[j], phirr[i] - phi[j], phi[j] - phirr[i]);
 	
-						If (dphi < MINDPHI) // phi is close
+						If (dphi < mindphi) // phi is close
 						begin
 							If (rankrr[i] >= rank[j]) kill(j) = 1; // -0bx is ghost (same or worse quality)
 							Else                      killrr3(i) = 1; // delayed one is pre-ghost (not all stubs have come up yet)
@@ -278,6 +274,30 @@ Signal SPvpp_CountZeroes::operator()(Signal d)
 	endfunction
 }
 
+/*
+Signal SPvpp_CountZeroes11::operator()(Signal d)
+{
+	initio
+		d.input(10,0,"d");
+	beginfunction
+
+		Reg_(s, 3, 0);
+		Reg_(res, 3, 0);
+
+		begin
+			s = 0;
+			res = 0;
+			for (int i = 0; i < 11; i++)
+			{
+				If (!d(i)) s++;
+			}
+			If (s < 4) res(s) = 1;
+			result = res;
+		end
+
+	endfunction
+}
+*/
 
 
 

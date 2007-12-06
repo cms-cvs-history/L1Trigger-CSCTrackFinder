@@ -45,6 +45,7 @@ beginmodule
 
 		If 
 		(
+//			(!amA || !amB) &&
 			(etaA <= MaxEta) && (etaA >= MinEta) && (etaB <= MaxEta) && (etaB >= MinEta) &&
 			(Deta <= EtaWindow)
 		)
