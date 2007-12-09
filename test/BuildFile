@@ -40,6 +40,6 @@
      <flags EDM_PLUGIN=1>
 </library>
 
-#<library file=analysis/CSCCompareLUTs.cc name=CSCCompareLUTs>
-#     <flags EDM_PLUGIN=1>
-#</library>
+<library file=analysis/CSCCompareLUTs.cc name=CSCCompareLUTs>
+     <flags EDM_PLUGIN=1>
+</library>
