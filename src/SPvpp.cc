@@ -344,7 +344,7 @@ if( me2aQp != 0 || me2bQp != 0 || me2cQp != 0 || me3aQp != 0 || me3bQp != 0 || m
 if(zeroEvent == 13)
 {
 	blanks++;
-	cout << " Incomplete Track: " << blanks << endl;
+	//cout << " Incomplete Track: " << blanks << endl;
 }
 
 stubCount = 0;
