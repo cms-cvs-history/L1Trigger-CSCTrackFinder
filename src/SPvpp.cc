@@ -10,6 +10,7 @@ Runs Verilog++ model of Sector Processor
 #include <L1Trigger/CSCTrackFinder/src/spbits.h>
 #include <L1Trigger/CSCCommonTrigger/interface/vmac.h>
 
+#define DTBXDEBUG
 #ifdef MYDEBUG
 #include <math.h>
 #include <iostream>
@@ -17,12 +18,12 @@ Runs Verilog++ model of Sector Processor
 
 void SPvpp::SP
 (
-	unsigned me1aValidp, unsigned me1aQp, unsigned me1aEtap, unsigned me1aPhip,	unsigned me1aCSCidp,
-	unsigned me1bValidp, unsigned me1bQp, unsigned me1bEtap, unsigned me1bPhip,	unsigned me1bCSCidp,
-	unsigned me1cValidp, unsigned me1cQp, unsigned me1cEtap, unsigned me1cPhip,	unsigned me1cCSCidp,
-	unsigned me1dValidp, unsigned me1dQp, unsigned me1dEtap, unsigned me1dPhip,	unsigned me1dCSCidp,
-	unsigned me1eValidp, unsigned me1eQp, unsigned me1eEtap, unsigned me1ePhip,	unsigned me1eCSCidp,
-	unsigned me1fValidp, unsigned me1fQp, unsigned me1fEtap, unsigned me1fPhip,	unsigned me1fCSCidp,
+	unsigned me1aValidp, unsigned me1aQp, unsigned me1aEtap, unsigned me1aPhip, unsigned me1aCSCidp,
+	unsigned me1bValidp, unsigned me1bQp, unsigned me1bEtap, unsigned me1bPhip, unsigned me1bCSCidp,
+	unsigned me1cValidp, unsigned me1cQp, unsigned me1cEtap, unsigned me1cPhip, unsigned me1cCSCidp,
+	unsigned me1dValidp, unsigned me1dQp, unsigned me1dEtap, unsigned me1dPhip, unsigned me1dCSCidp,
+	unsigned me1eValidp, unsigned me1eQp, unsigned me1eEtap, unsigned me1ePhip, unsigned me1eCSCidp,
+	unsigned me1fValidp, unsigned me1fQp, unsigned me1fEtap, unsigned me1fPhip, unsigned me1fCSCidp,
 
 	unsigned me2aValidp, unsigned me2aQp, unsigned me2aEtap, unsigned me2aPhip,
 	unsigned me2bValidp, unsigned me2bQp, unsigned me2bEtap, unsigned me2bPhip,
@@ -58,8 +59,7 @@ void SPvpp::SP
 	unsigned mxeta0p, unsigned mxeta1p, unsigned mxeta2p, unsigned mxeta3p, unsigned mxeta4p, unsigned mxeta5p, unsigned mxeta6p, unsigned mxeta7p, 
 	unsigned etawn0p, unsigned etawn1p, unsigned etawn2p, unsigned etawn3p, unsigned etawn4p, unsigned etawn5p, 
 
-	unsigned mindphip,
-	unsigned mindeta_accp, unsigned maxdeta_accp, unsigned maxdphi_accp,
+	unsigned etaoff1p, unsigned etaoff2p, unsigned etaoff3p, unsigned etaoff4p,
 	unsigned controlp
 
 )
@@ -69,6 +69,12 @@ void SPvpp::SP
 	int bq   = beta + BWQ;
 	int bcscid = bq + BWCSCID;
 	int bvalid = bcscid + BWVALID;
+	static int zeroEvent = 0;
+	static int blanks = 0;
+	static bool isItOutput = 0;
+	static bool DTB = 0;
+	loop ++;
+	static int stubCount;
 
 // create delay of one clock for endcap data
 	me1ar = me1ap; me1br = me1bp; me1cr = me1cp; me1dr = me1dp; me1er = me1ep; me1fr = me1fp;
@@ -132,14 +138,10 @@ void SPvpp::SP
 	etawn5  = etawn5p; 
 
 	control = controlp;
-	mindphi = mindphip;
-
-	mindeta_acc = mindeta_accp;
-	maxdeta_acc = maxdeta_accp;
-	maxdphi_acc = maxdphi_accp;
-
-	for (int i = 1; i >= 0; i--)
-	{
+	
+	
+for (int i = 1; i >= 0; i--)
+{
 		clkp = i;
 		beginsystem
 			me1ap.wire(BWMEIN-1,0,"me1ap"); // {FR, q[3:0], am, eta[6:0], phi[11:0]}
@@ -217,10 +219,6 @@ void SPvpp::SP
 		Wire_(etawn4, BWETAIN, 0); 
 		Wire_(etawn5, BWETAIN, 0); 
 
-		Wire_(mindphi, BWPHI-1, 0);
-		Wire_(mindeta_acc, BWETAIN-1,0); // min eta difference for acc tracks
-		Wire_(maxdeta_acc, BWETAIN-1,0); // max eta difference for acc tracks
-		Wire_(maxdphi_acc, BWPHI-3,0);   // max phi difference for acc tracks (without 2 lower bits)
 		Wire_(control, 15, 0);
 		clkp.wire("clkp");
 
@@ -241,10 +239,6 @@ void SPvpp::SP
 			mxeta0,	mxeta1,	mxeta2,	mxeta3,	mxeta4,	mxeta5,	mxeta6,	mxeta7,
 			etawn0,	etawn1,	etawn2,	etawn3,	etawn4,	etawn5,
 
-			mindphi,
-
-			mindeta_acc, maxdeta_acc, maxdphi_acc,
-			
 			control,
 
 			clkp
@@ -325,43 +319,71 @@ void SPvpp::SP
 		mb2idL = idLp(bp + BWBXID - 1, bp).getint();
 
 		endsystem
-
-	}
+}
 #ifdef DTBXDEBUG
-	cout << hex << "dtbx " << endl <<
-		spvpp.me1[0] << " " <<
-		spvpp.me1[1] << " " <<
-		spvpp.me1[2] << " " <<
-		spvpp.me1[3] << " " <<
-		spvpp.me1[4] << " " <<
-		spvpp.me1[5] << " " << endl <<
-		spvpp.me2[0] << " " <<
-		spvpp.me2[1] << " " <<
-		spvpp.me2[2] << " " << endl <<
-		spvpp.me3[0] << " " <<
-		spvpp.me3[1] << " " <<
-		spvpp.me3[2] << " " << endl <<
-		spvpp.me4[0] << " " <<
-		spvpp.me4[1] << " " <<
-		spvpp.me4[2] << " " << endl <<
-		spvpp.mb1[0] << " " <<
-		spvpp.mb1[1] << " " <<
-		spvpp.mb1[2] << " " <<
-		spvpp.mb1[3] << " " << endl <<
-//	 spvpp.Eqme12  << " " << spvpp.Eqme13 	 << " " << spvpp.Eqme12ov  << " " << spvpp.Eqme23   << " " << spvpp.Eqme24   << " " << spvpp.Eqme34   << " " << spvpp.Eq2b1   << " " << spvpp.Eq2b2  << endl << 
-//	 spvpp.Eqme12r << " " << spvpp.Eqme13r	 << " " << spvpp.Eqme12ovr << " " << spvpp.Eqme23r  << " " << spvpp.Eqme24r  << " " << spvpp.Eqme34r  << " " << spvpp.Eq2b1r  << " " << spvpp.Eq2b2r << endl << 
-//	 spvpp.u2aIdr <<" "<< spvpp.u2bIdr  <<" "<< spvpp.u2cIdr  <<" "<< spvpp.u3aIdr  <<" "<< spvpp.u3bIdr  <<" "<< spvpp.u3cIdr  <<" "<< spvpp.ub2aIdr  <<" "<< spvpp.ub2bIdr  <<" "<< spvpp.ub2cIdr << endl << 	 
-		pHp << " " << pMp << " " << pLp << endl << 
-		spvpp.bxa.me1acv << " " <<  spvpp.bxa.me1dfv << " " << spvpp.bxa.me2v << " " << spvpp.bxa.me3v << " " << spvpp.bxa.me4v << " " << spvpp.bxa.mb1v << " " << spvpp.bxa.mb2v << endl << 
-		spvpp.bxa.bxame2.validABC << 
-		endl;
+
+
+if( etaPTHp == 0 && etaPTMp == 0 && etaPTLp == 0)
+{
+	isItOutput = 0;
+}
+
+if( me2aQp != 0 || me2bQp != 0 || me2cQp != 0 || me3aQp != 0 || me3bQp != 0 || me3cQp != 0 || etaPTHp != 0 || etaPTMp != 0 || etaPTLp != 0) 
+{	
+	zeroEvent = 0;
+	if(etaPTMp != 0 || etaPTHp != 0 || etaPTLp != 0)
+	{
+		isItOutput = 1;
+	} else {
+		isItOutput = 0;
+	}
+} else {
+	zeroEvent++;
+//	cout << "Count :" << zeroEvent << endl;
+}
+if(zeroEvent == 13)
+{
+	blanks++;
+	//cout << " Incomplete Track: " << blanks << endl;
+}
+
+stubCount = 0;
+if( me1aQp != 0 )  	stubCount++;
+if( me1bQp != 0 )  	stubCount++;
+if( me1cQp != 0 )  	stubCount++;
+if( me1dQp != 0 )  	stubCount++;
+if( me1eQp != 0 )  	stubCount++;
+if( me1fQp != 0 )  	stubCount++;
+if( me2aQp != 0 )  	stubCount++;
+if( me2bQp != 0 )  	stubCount++;
+if( me2cQp != 0 ) 	stubCount++;
+if( me3aQp != 0 )  	stubCount++;
+if( me3bQp != 0 )  	stubCount++;
+if( me3cQp != 0 )  	stubCount++;
+if( me4aQp != 0 )  	stubCount++;
+if( me4bQp != 0 ) 	stubCount++; 
+if( me4cQp != 0 ) 	stubCount++;
+
+
+
+if((mb1aQp != 0 || mb1bQp != 0 || mb1cQp != 0 || mb1dQp != 0 || mb2aQp != 0 || mb2bQp != 0 || mb2cQp != 0 || mb2dQp != 0 ) || (DTB == 1 && isItOutput == 1) )
+{
+		if(DTB == 0)
+		{
+			DTB = 1;
+		} else {
+			DTB = 0;
+		}
+	
+}
+
 #endif
 
 #ifdef BXADEBUG
-	cout << "bxa" << endl << 
-		mb1ap << " " <<
-		spvpp.dmb1[0] << " " <<
-		spvpp.mb1[0] << " " << endl;
+ cout << "bxa" << endl << 
+	 mb1ap << " " <<
+	 spvpp.dmb1[0] << " " <<
+	 spvpp.mb1[0] << " " << endl;
 #endif
 }
 
