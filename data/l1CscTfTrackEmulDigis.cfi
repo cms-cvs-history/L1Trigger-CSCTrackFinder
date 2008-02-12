@@ -18,6 +18,18 @@ module l1CscTfTrackEmulDigis = CSCTFTrackProducer
 
 	untracked uint32 BXAExtendLength = 1
 
+       untracked bool run_core             = true
+       untracked bool trigger_on_ME1a      = true
+       untracked bool trigger_on_ME1b      = true
+       untracked bool trigger_on_ME2       = true
+       untracked bool trigger_on_ME3       = true
+       untracked bool trigger_on_ME4       = true
+       untracked bool trigger_on_MB1a      = true # Doesn't work yet
+       untracked bool trigger_on_MB1d      = true # Doesn't work yet
+       untracked uint32 singlesTrackRank   = 0xFF
+       untracked uint32 singlesTrackOutput = 3
+
+
    	PSet SRLUT = {
 			untracked bool ReadLUTs = false
 			untracked bool Binary = false
