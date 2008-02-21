@@ -95,11 +95,19 @@ void SPvpp::SP
 	me4bp(bvalid-1) = me4bValidp; me4bp(BWPHI-1, 0) = me4bPhip; me4bp(beta-1, BWPHI) = me4bEtap; me4bp(bq-1, beta) = me4bQp;
 	me4cp(bvalid-1) = me4cValidp; me4cp(BWPHI-1, 0) = me4cPhip; me4cp(beta-1, BWPHI) = me4cEtap; me4cp(bq-1, beta) = me4cQp;
 
-	if      (mb1aQp != 0) {mb1ap(BWPHI+BWQB) = 0; mb1ap(BWPHI-1, 0) = mb1aPhip; mb1ap(BWPHI+BWQB-1, BWPHI) = mb1aQp; if(mb1aQr != 0) cout<<"killing a\n";}
+	if      (mb1aQp != 0) {mb1ap(BWPHI+BWQB) = 0; mb1ap(BWPHI-1, 0) = mb1aPhip; mb1ap(BWPHI+BWQB-1, BWPHI) = mb1aQp; 
+#ifdef MYDEBUG
+if(mb1aQr != 0) cout<<"killing a\n";
+#endif
+}
 	else if (mb1aQr != 0) {mb1ap(BWPHI+BWQB) = 1; mb1ap(BWPHI-1, 0) = mb1aPhir; mb1ap(BWPHI+BWQB-1, BWPHI) = mb1aQr;}
 	else mb1ap = 0;
 
-	if      (mb1bQp != 0) {mb1bp(BWPHI+BWQB) = 0; mb1bp(BWPHI-1, 0) = mb1bPhip; mb1bp(BWPHI+BWQB-1, BWPHI) = mb1bQp; if(mb1bQr != 0) cout<<"killing b\n";}
+	if      (mb1bQp != 0) {mb1bp(BWPHI+BWQB) = 0; mb1bp(BWPHI-1, 0) = mb1bPhip; mb1bp(BWPHI+BWQB-1, BWPHI) = mb1bQp;
+#ifdef MYDEBUG
+if(mb1bQr != 0) cout<<"killing b\n";
+#endif
+}
 	else if (mb1bQr != 0) {mb1bp(BWPHI+BWQB) = 1; mb1bp(BWPHI-1, 0) = mb1bPhir; mb1bp(BWPHI+BWQB-1, BWPHI) = mb1bQr;}
 	else mb1bp = 0;
 
