@@ -35,13 +35,13 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
   endcap = conf.getUntrackedParameter<int>("Endcap",-1);
   lutParam1 = conf.getParameter<edm::ParameterSet>("lutParam1");
   lutParam2 = conf.getParameter<edm::ParameterSet>("lutParam2");
-
+  outFileName = conf.getUntrackedParameter<std::string>("OutFileName", "LUT_compare.root");
+  
   lut1name = lutParam1.getUntrackedParameter<std::string>("lutName", "LUT 1");
   lut2name = lutParam2.getUntrackedParameter<std::string>("lutName", "LUT 2");
-
-
-  fCompare = new TFile("LUT_compare.root", "RECREATE");
-
+  
+  fCompare = new TFile(TString(outFileName), "RECREATE");
+  
   compareLocalPhi = new TH2I("compareLocalPhi", "Local Phi Data Field Comparison",
 			     1<<int((CSCBitWidths::kLocalPhiDataBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth)/2),
 			     0, 1<<(CSCBitWidths::kLocalPhiDataBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth),
@@ -49,7 +49,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 			     0, 1<<(CSCBitWidths::kLocalPhiDataBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth) );
   compareLocalPhi->GetXaxis()->SetTitle(TString(lut1name));
   compareLocalPhi->GetYaxis()->SetTitle(TString(lut2name));
-
+  
   compareLocalPhi_phiLocal = new TH2I("compareLocalPhi_phiLocal", "Local Phi Data Field Comparison (Phi Local Word)",
 				      1<<CSCBitWidths::kLocalPhiDataBitWidth,
 				      0, 1<<CSCBitWidths::kLocalPhiDataBitWidth,
@@ -57,7 +57,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 				      0, 1<<CSCBitWidths::kLocalPhiDataBitWidth );
   compareLocalPhi_phiLocal->GetXaxis()->SetTitle(TString(lut1name));
   compareLocalPhi_phiLocal->GetYaxis()->SetTitle(TString(lut2name));
-
+  
   compareLocalPhi_phiBend = new TH2I("compareLocalPhi_phiBend", "Local Phi Data Field Comparison (Phi Bend Word)",
 				     1<<CSCBitWidths::kLocalPhiBendDataBitWidth,
 				     0, 1<<CSCBitWidths::kLocalPhiBendDataBitWidth,
@@ -65,8 +65,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 				     0, 1<<CSCBitWidths::kLocalPhiBendDataBitWidth );
   compareLocalPhi_phiBend->GetXaxis()->SetTitle(TString(lut1name));
   compareLocalPhi_phiBend->GetYaxis()->SetTitle(TString(lut2name));
-
-
+  
   compareGlobalEta = new TH2I("compareGlobalEta", "Global Eta Data Field Comparison",
 			      1<<(CSCBitWidths::kGlobalEtaBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth - 1),
 			      0, 1<<(CSCBitWidths::kGlobalEtaBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth - 1),
@@ -74,7 +73,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 			      0, 1<<(CSCBitWidths::kGlobalEtaBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth - 1) ); 
   compareGlobalEta->GetXaxis()->SetTitle(TString(lut1name));
   compareGlobalEta->GetYaxis()->SetTitle(TString(lut2name));
-
+  
   compareGlobalEta_etaGlobal = new TH2I("compareGlobalEta_etaGlobal", "Global Eta Data Field Comparison (Eta Global Word)",
 					1<<CSCBitWidths::kGlobalEtaBitWidth,
 					0, 1<<CSCBitWidths::kGlobalEtaBitWidth,
@@ -82,7 +81,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 					0, 1<<CSCBitWidths::kGlobalEtaBitWidth ); 
   compareGlobalEta_etaGlobal->GetXaxis()->SetTitle(TString(lut1name));
   compareGlobalEta_etaGlobal->GetYaxis()->SetTitle(TString(lut2name));
-
+  
   compareGlobalEta_phiBend = new TH2I("compareGlobalEta_phiBend", "Global Eta Data Field Comparison (Phi Bend Word)",
 				      1<<(CSCBitWidths::kLocalPhiBendDataBitWidth - 1),
 				      0, 1<<(CSCBitWidths::kLocalPhiBendDataBitWidth - 1),
@@ -90,8 +89,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 				      0, 1<<(CSCBitWidths::kLocalPhiBendDataBitWidth - 1) ); 
   compareGlobalEta_phiBend->GetXaxis()->SetTitle(TString(lut1name));
   compareGlobalEta_phiBend->GetYaxis()->SetTitle(TString(lut2name));
-
-
+  
   compareGlobalPhiME = new TH2I("compareGlobalPhiME", "Global Phi ME Data Field Comparison",
 				1<<CSCBitWidths::kGlobalPhiDataBitWidth,
 				0, 1<<CSCBitWidths::kGlobalPhiDataBitWidth,
@@ -99,7 +97,6 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 				0, 1<<CSCBitWidths::kGlobalPhiDataBitWidth );
   compareGlobalPhiME->GetXaxis()->SetTitle(TString(lut1name));
   compareGlobalPhiME->GetYaxis()->SetTitle(TString(lut2name));
-
   
   compareGlobalPhiMB = new TH2I("compareGlobalPhiMB", "Global Phi MB Data Field Comparison",
 				1<<CSCBitWidths::kGlobalPhiDataBitWidth,
@@ -108,8 +105,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 				0, 1<<CSCBitWidths::kGlobalPhiDataBitWidth );
   compareGlobalPhiMB->GetXaxis()->SetTitle(TString(lut1name));
   compareGlobalPhiMB->GetYaxis()->SetTitle(TString(lut2name));
-
-
+  
   comparePt = new TH2I("comparePt", "Pt Data Field Comparison",
 		       1<<int(16/2),
 		       0, 1<<16,
@@ -117,7 +113,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 		       0, 1<<16 );
   comparePt->GetXaxis()->SetTitle(TString(lut1name));
   comparePt->GetYaxis()->SetTitle(TString(lut2name));
-
+  
   comparePt_front = new TH2I("comparePt_front", "Pt Data Field Comparison (Front)",
 			     1<<8,
 			     0, 1<<8,
@@ -133,8 +129,8 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 			    0, 1<<8 );
   comparePt_rear->GetXaxis()->SetTitle(TString(lut1name));
   comparePt_rear->GetYaxis()->SetTitle(TString(lut2name));
-
-
+  
+  
   compareLocalPhiOffDiagonal = new TH2I("compareLocalPhiOffDiagonal", "Local Phi Data Field Comparison: Off Diagonal",
 					1<<int((CSCBitWidths::kLocalPhiDataBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth)/2),
 					0, 1<<(CSCBitWidths::kLocalPhiDataBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth),
@@ -142,7 +138,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 					0, 1<<(CSCBitWidths::kLocalPhiDataBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth) );
   compareLocalPhiOffDiagonal->GetXaxis()->SetTitle(TString(lut1name));
   compareLocalPhiOffDiagonal->GetYaxis()->SetTitle(TString(lut2name));
-
+  
   compareLocalPhiOffDiagonal_phiLocal = new TH2I("compareLocalPhiOffDiagonal_phiLocal", "Local Phi Data Field Comparison: Off Diagonal (Local Phi Word)",
 						 1<<CSCBitWidths::kLocalPhiDataBitWidth,
 						 0, 1<<CSCBitWidths::kLocalPhiDataBitWidth,
@@ -150,7 +146,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 						 0, 1<<CSCBitWidths::kLocalPhiDataBitWidth );
   compareLocalPhiOffDiagonal_phiLocal->GetXaxis()->SetTitle(TString(lut1name));
   compareLocalPhiOffDiagonal_phiLocal->GetYaxis()->SetTitle(TString(lut2name));
-
+  
   compareLocalPhiOffDiagonal_phiBend = new TH2I("compareLocalPhiOffDiagonal_phiBend", "Local Phi Data Field Comparison: Off Diagonal (Phi Bend Word)",
 						1<<CSCBitWidths::kLocalPhiBendDataBitWidth,
 						0, 1<<CSCBitWidths::kLocalPhiBendDataBitWidth,
@@ -158,8 +154,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 						0, 1<<CSCBitWidths::kLocalPhiBendDataBitWidth );
   compareLocalPhiOffDiagonal_phiBend->GetXaxis()->SetTitle(TString(lut1name));
   compareLocalPhiOffDiagonal_phiBend->GetYaxis()->SetTitle(TString(lut2name));
-
-
+  
   compareGlobalEtaOffDiagonal = new TH2I("compareGlobalEtaOffDiagonal", "Global Eta Data Field Comparison: Off Diagonal",
 					 1<<(CSCBitWidths::kGlobalEtaBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth - 1),
 					 0, 1<<(CSCBitWidths::kGlobalEtaBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth - 1),
@@ -167,7 +162,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 					 0, 1<<(CSCBitWidths::kGlobalEtaBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth - 1) ); 
   compareGlobalEtaOffDiagonal->GetXaxis()->SetTitle(TString(lut1name));
   compareGlobalEtaOffDiagonal->GetYaxis()->SetTitle(TString(lut2name));
-
+  
   compareGlobalEtaOffDiagonal_etaGlobal = new TH2I("compareGlobalEtaOffDiagonal_etaGlobal", "Global Eta Data Field Comparison: Off Diagonal (Eta Global Word)",
 						   1<<CSCBitWidths::kGlobalEtaBitWidth,
 						   0, 1<<CSCBitWidths::kGlobalEtaBitWidth,
@@ -175,7 +170,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 						   0, 1<<CSCBitWidths::kGlobalEtaBitWidth ); 
   compareGlobalEtaOffDiagonal_etaGlobal->GetXaxis()->SetTitle(TString(lut1name));
   compareGlobalEtaOffDiagonal_etaGlobal->GetYaxis()->SetTitle(TString(lut2name));
-
+  
   compareGlobalEtaOffDiagonal_phiBend = new TH2I("compareGlobalEtaOffDiagonal_phiBend", "Global Eta Data Field Comparison: Off Diagonal (Phi Bend Word)",
 						 1<<(CSCBitWidths::kLocalPhiBendDataBitWidth - 1),
 						 0, 1<<(CSCBitWidths::kLocalPhiBendDataBitWidth - 1),
@@ -183,8 +178,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 						 0, 1<<(CSCBitWidths::kLocalPhiBendDataBitWidth - 1) ); 
   compareGlobalEtaOffDiagonal_phiBend->GetXaxis()->SetTitle(TString(lut1name));
   compareGlobalEtaOffDiagonal_phiBend->GetYaxis()->SetTitle(TString(lut2name));
-
-
+  
   compareGlobalPhiMEOffDiagonal = new TH2I("compareGlobalPhiMEOffDiagonal", "Global Phi ME Data Field Comparison: Off Diagonal",
 					   1<<int((CSCBitWidths::kGlobalPhiDataBitWidth)),
 					   0, 1<<(CSCBitWidths::kGlobalPhiDataBitWidth),
@@ -192,7 +186,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 					   0, 1<<(CSCBitWidths::kGlobalPhiDataBitWidth) );
   compareGlobalPhiMEOffDiagonal->GetXaxis()->SetTitle(TString(lut1name));
   compareGlobalPhiMEOffDiagonal->GetYaxis()->SetTitle(TString(lut2name));
-
+  
   compareGlobalPhiMBOffDiagonal = new TH2I("compareGlobalPhiMBOffDiagonal", "Global Phi MB Data Field Comparison: Off Diagonal",
 					   1<<int((CSCBitWidths::kGlobalPhiDataBitWidth)),
 					   0, 1<<(CSCBitWidths::kGlobalPhiDataBitWidth),
@@ -200,7 +194,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 					   0, 1<<(CSCBitWidths::kGlobalPhiDataBitWidth) );
   compareGlobalPhiMBOffDiagonal->GetXaxis()->SetTitle(TString(lut1name));
   compareGlobalPhiMBOffDiagonal->GetYaxis()->SetTitle(TString(lut2name));
-
+  
   comparePtOffDiagonal = new TH2I("comparePtOffDiagonal", "Pt Data Field Comparison: Off Diagonal",
 				  1<<int(16/2),
 				  0, 1<<16,
@@ -208,7 +202,7 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 				  0, 1<<16 );
   comparePtOffDiagonal->GetXaxis()->SetTitle(TString(lut1name));
   comparePtOffDiagonal->GetYaxis()->SetTitle(TString(lut2name));
-
+  
   comparePtOffDiagonal_front = new TH2I("comparePtOffDiagonal_front", "Pt Data Field Comparison: Off Diagonal (Front)",
 					1<<8,
 					0, 1<<8,
@@ -224,145 +218,80 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 				       0, 1<<8 );
   comparePtOffDiagonal_rear->GetXaxis()->SetTitle(TString(lut1name));
   comparePtOffDiagonal_rear->GetYaxis()->SetTitle(TString(lut2name));
-
-
+  
+  
   differenceLocalPhi = new TH1I("differenceLocalPhi", "Local Phi: Difference in Data Field",
 				1<<(CSCBitWidths::kLocalPhiDataBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth),
 				0, 1<<(CSCBitWidths::kLocalPhiDataBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth));
-  
   differenceLocalPhi_phiLocal = new TH1I("differenceLocalPhi_phiLocal", "Local Phi: Difference in Data Field (Phi Local Word)",
 					 1<<CSCBitWidths::kLocalPhiDataBitWidth,
 					 0, 1<<CSCBitWidths::kLocalPhiDataBitWidth);
-
   differenceLocalPhi_phiBend = new TH1I("differenceLocalPhi_phiBend", "Local Phi: Difference in Data Field (Phi Bend Word)",
 					1<<CSCBitWidths::kLocalPhiBendDataBitWidth,
 					0, 1<<CSCBitWidths::kLocalPhiBendDataBitWidth);
-
-
   differenceGlobalEta = new TH1I("differenceGlobalEta", "Global Eta: Difference in Data Field",
 				 1<<(CSCBitWidths::kGlobalEtaBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth - 1),
 				 0, 1<<(CSCBitWidths::kGlobalEtaBitWidth + CSCBitWidths::kLocalPhiBendDataBitWidth - 1));
-
   differenceGlobalEta_etaGlobal = new TH1I("differenceGlobalEta_etaGlobal", "Global Eta: Difference in Data Field (Eta Global Word)",
 					   1<<CSCBitWidths::kGlobalEtaBitWidth,
 					   0, 1<<CSCBitWidths::kGlobalEtaBitWidth);
-
   differenceGlobalEta_phiBend = new TH1I("differenceGlobalEta_phiBend", "Global Eta: Difference in Data Field (Phi Bend Word)",
 					 1<<(CSCBitWidths::kLocalPhiBendDataBitWidth - 1),
 					 0, 1<<(CSCBitWidths::kLocalPhiBendDataBitWidth - 1));
-
-
   differenceGlobalPhiME = new TH1I("differenceGlobalPhiME", "Global Phi ME: Difference in Data Field",
 				   1<<CSCBitWidths::kGlobalPhiDataBitWidth,
 				   0, 1<<CSCBitWidths::kGlobalPhiDataBitWidth);
-
-  
   differenceGlobalPhiMB = new TH1I("differenceGlobalPhiMB", "Global Phi MB: Difference in Data Field",
 				   1<<CSCBitWidths::kGlobalPhiDataBitWidth,
 				   0, 1<<CSCBitWidths::kGlobalPhiDataBitWidth);
-
-
   differencePt = new TH1I("differencePt", "Pt: Difference in Data Field",
 			  1<<16,
 			  0, 1<<16);
-
   differencePt_front = new TH1I("differencePt_front", "Pt: Difference in Data Field (Front)",
 				1<<8,
 				0, 1<<8);
-  
   differencePt_rear = new TH1I("differencePt_rear", "Pt: Difference in Data Field (Rear)",
 			       1<<8,
 			       0, 1<<8);
-
-
+  
   mismatchLocalPhiAddress = new TH1I("mismatchLocalPhiAddress", "Local Phi Address (data fields do not match)",
 				     1<<int(CSCBitWidths::kLocalPhiAddressWidth/2),
 				     0, 1<<CSCBitWidths::kLocalPhiAddressWidth);
-
-  mismatchLocalPhiAddress_patternId = new TH1I("mismatchLocalPhiAddress_patternId", "Local Phi Address - Pattern ID Word (data fields do not match)",
-					       1<<8, 0, 1<<8);
-  
-  mismatchLocalPhiAddress_patternNumber = new TH1I("mismatchLocalPhiAddress_patternNumber", "Local Phi Address (Legal Addresses Only) - Pattern Number Word (data fields do not match)",
-						   1<<4, 0, 1<<4);
-
-  mismatchLocalPhiAddress_quality = new TH1I("mismatchLocalPhiAddress_quality", "Local Phi Address (Legal Addresses Only) - Quality Word (data fields do not match)",
-					     1<<4, 0, 1<<4);
-  
-  mismatchLocalPhiAddress_leftRight = new TH1I("mismatchLocalPhiAddress_leftRight", "Local Phi Address (Legal Addresses Only) - Left/Right Word (data fields do not match)",
-					       1<<1, 0, 1<<1);
-  
-  mismatchLocalPhiAddress_spare = new TH1I("mismatchLocalPhiAddress_spare", "Local Phi Address (Legal Addresses Only) - Spare Word (data fields do not match)",
-					   1<<2, 0, 1<<2);
-
-  
+  mismatchLocalPhiAddress_patternId = new TH1I("mismatchLocalPhiAddress_patternId", "Local Phi Address - Pattern ID Word (data fields do not match)", 1<<8, 0, 1<<8);
+  mismatchLocalPhiAddress_patternNumber = new TH1I("mismatchLocalPhiAddress_patternNumber", "Local Phi Address (Legal Addresses Only) - Pattern Number Word (data fields do not match)", 1<<4, 0, 1<<4);
+  mismatchLocalPhiAddress_quality = new TH1I("mismatchLocalPhiAddress_quality", "Local Phi Address (Legal Addresses Only) - Quality Word (data fields do not match)", 1<<4, 0, 1<<4);
+  mismatchLocalPhiAddress_leftRight = new TH1I("mismatchLocalPhiAddress_leftRight", "Local Phi Address (Legal Addresses Only) - Left/Right Word (data fields do not match)", 1<<1, 0, 1<<1);
+  mismatchLocalPhiAddress_spare = new TH1I("mismatchLocalPhiAddress_spare", "Local Phi Address (Legal Addresses Only) - Spare Word (data fields do not match)", 1<<2, 0, 1<<2);
   mismatchGlobalEtaAddress = new TH1I("mismatchGlobalEtaAddress", "Global Eta Address (data fields do not match)",
 				      1<<int(CSCBitWidths::kGlobalEtaAddressWidth/2),
 				      0,1<<CSCBitWidths::kGlobalEtaAddressWidth);
-
-  mismatchGlobalEtaAddress_phiBendLocal = new TH1I("mismatchGlobalEtaAddress_phiBendLocal", "Global Eta Address (Legal Addresses Only) - Phi Bend Local Word (data fields do not match)",
-						   1<<6, 0, 1<<6);
-
-  mismatchGlobalEtaAddress_phiLocal = new TH1I("mismatchGlobalEtaAddress_phiLocal", "Global Eta Address (Legal Addresses Only) - Phi Local Word (data fields do not match)",
-					       1<<2, 0, 1<<2);
-  
-  mismatchGlobalEtaAddress_wireGroup = new TH1I("mismatchGlobalEtaAddress_wireGroup", "Global Eta Address (Legal Addresses Only) - Wire Group Word (data fields do not match)",
-						1<<7, 0, 1<<7);
-
-  mismatchGlobalEtaAddress_cscId = new TH1I("mismatchGlobalEtaAddress_cscId", "Global Eta Address (Legal Addresses Only) - CSC ID Word (data fields do not match)",
-					    1<<4, 0, 1<<4);
-  
-
+  mismatchGlobalEtaAddress_phiBendLocal = new TH1I("mismatchGlobalEtaAddress_phiBendLocal", "Global Eta Address (Legal Addresses Only) - Phi Bend Local Word (data fields do not match)", 1<<6, 0, 1<<6);
+  mismatchGlobalEtaAddress_phiLocal = new TH1I("mismatchGlobalEtaAddress_phiLocal", "Global Eta Address (Legal Addresses Only) - Phi Local Word (data fields do not match)", 1<<2, 0, 1<<2);
+  mismatchGlobalEtaAddress_wireGroup = new TH1I("mismatchGlobalEtaAddress_wireGroup", "Global Eta Address (Legal Addresses Only) - Wire Group Word (data fields do not match)", 1<<7, 0, 1<<7);
+  mismatchGlobalEtaAddress_cscId = new TH1I("mismatchGlobalEtaAddress_cscId", "Global Eta Address (Legal Addresses Only) - CSC ID Word (data fields do not match)", 1<<4, 0, 1<<4);
   mismatchGlobalPhiMEAddress = new TH1I("mismatchGlobalPhiMEAddress", "Global Phi ME Address (data fields do not match)",
 					1<<int(CSCBitWidths::kGlobalPhiAddressWidth/2),
 					0, 1<<CSCBitWidths::kGlobalPhiAddressWidth);
-
-  mismatchGlobalPhiMEAddress_phiLocal = new TH1I("mismatchGlobalPhiMEAddress_phiLocal", "Global Phi ME Address (Legal Addresses Only) - Phi Local Word (data fields do not match)",
-						 1<<10, 0, 1<<10);
-
-  mismatchGlobalPhiMEAddress_wireGroup = new TH1I("mismatchGlobalPhiMEAddress_wireGroup", "Global Phi ME Address (Legal Addresses Only) - Wire Group Word (data fields do not match)",
-						  1<<5, 0, 1<<5);
-						  
-  mismatchGlobalPhiMEAddress_cscId = new TH1I("mismatchGlobalPhiMEAddress_cscId", "Global Phi ME Address (Legal Addresses Only) - CSC ID Word (data fields do not match)",
-					      1<<4, 0, 1<<4);
-
-
+  mismatchGlobalPhiMEAddress_phiLocal = new TH1I("mismatchGlobalPhiMEAddress_phiLocal", "Global Phi ME Address (Legal Addresses Only) - Phi Local Word (data fields do not match)", 1<<10, 0, 1<<10);
+  mismatchGlobalPhiMEAddress_wireGroup = new TH1I("mismatchGlobalPhiMEAddress_wireGroup", "Global Phi ME Address (Legal Addresses Only) - Wire Group Word (data fields do not match)", 1<<5, 0, 1<<5);
+  mismatchGlobalPhiMEAddress_cscId = new TH1I("mismatchGlobalPhiMEAddress_cscId", "Global Phi ME Address (Legal Addresses Only) - CSC ID Word (data fields do not match)", 1<<4, 0, 1<<4);
   mismatchGlobalPhiMBAddress = new TH1I("mismatchGlobalPhiMBAddress", "Global Phi MB Address (data fields do not match)",
 					1<<int(CSCBitWidths::kGlobalPhiAddressWidth/2),
 					0, 1<<CSCBitWidths::kGlobalPhiAddressWidth);
-
-  mismatchGlobalPhiMBAddress_phiLocal = new TH1I("mismatchGlobalPhiMBAddress_phiLocal", "Global Phi MB Address (Legal Addresses Only) - Phi Local Word (data fields do not match)",
-						 1<<10, 0, 1<<10);
-  
-  mismatchGlobalPhiMBAddress_wireGroup = new TH1I("mismatchGlobalPhiMBAddress_wireGroup", "Global Phi MB Address  (Legal Addresses Only)- Wire Group Word (data fields do not match)",
-						  1<<5, 0, 1<<5);
-  
-  mismatchGlobalPhiMBAddress_cscId = new TH1I("mismatchGlobalPhiMBAddress_cscId", "Global Phi MB Address (Legal Addresses Only) - CSC ID Word (data fields do not match)",
-					      1<<4, 0, 1<<4);
-
-
+  mismatchGlobalPhiMBAddress_phiLocal = new TH1I("mismatchGlobalPhiMBAddress_phiLocal", "Global Phi MB Address (Legal Addresses Only) - Phi Local Word (data fields do not match)", 1<<10, 0, 1<<10);
+  mismatchGlobalPhiMBAddress_wireGroup = new TH1I("mismatchGlobalPhiMBAddress_wireGroup", "Global Phi MB Address  (Legal Addresses Only)- Wire Group Word (data fields do not match)", 1<<5, 0, 1<<5);
+  mismatchGlobalPhiMBAddress_cscId = new TH1I("mismatchGlobalPhiMBAddress_cscId", "Global Phi MB Address (Legal Addresses Only) - CSC ID Word (data fields do not match)", 1<<4, 0, 1<<4);
   mismatchPtAddress = new TH1I("mismatchPtAddress", "Pt Address (data fields do not match)",
 			       1<<int(CSCBitWidths::kPtAddressWidth/2),
 			       0, 1<<CSCBitWidths::kPtAddressWidth);
+  mismatchPtAddress_delta12phi = new TH1I("mismatchPtAddress_delta12phi", "Pt Address (Legal Addresses Only) - Delta 12 Phi Word When Only 2 Stations (data fields do not match)", 1<<8, 0, 1<<8);
+  mismatchPtAddress_delta23phi = new TH1I("mismatchPtAddress_delta23phi", "Pt Address (Legal Addresses Only) - Delta 23 Phi Word When Only 2 Stations Ot No Track (data fields do not match)", 1<<4, 0, 1<<4);
+  mismatchPtAddress_deltaPhi = new TH1I("mismatchPtAddress_deltaPhi", "Pt Address (Legal Addresses Only) - Delta Phi Word When 3 Stations (data fields do not match)", 1<<12, 0, 1<<12);
+  mismatchPtAddress_eta = new TH1I("mismatchPtAddress_eta", "Pt Address (Legal Addresses Only) - Eta Word (data fields do not match)", 1<<4, 0, 1<<4);
+  mismatchPtAddress_mode = new TH1I("mismatchPtAddress_mode", "Pt Address (Legal Addresses Only) - Mode Word (data fields do not match)", 1<<4, 0, 1<<4);
+  mismatchPtAddress_sign = new TH1I("mismatchPtAddress_sign", "Pt Address (Legal Addresses Only) - Sign Word (data fields do not match)", 1<<1, 0, 1<<1);
   
-  mismatchPtAddress_delta12phi = new TH1I("mismatchPtAddress_delta12phi", "Pt Address (Legal Addresses Only) - Delta 12 Phi Word When Only 2 Stations (data fields do not match)",
-					  1<<8, 0, 1<<8);
 
-  mismatchPtAddress_delta23phi = new TH1I("mismatchPtAddress_delta23phi", "Pt Address (Legal Addresses Only) - Delta 23 Phi Word When Only 2 Stations Ot No Track (data fields do not match)",
-					  1<<4, 0, 1<<4);
-
-  mismatchPtAddress_deltaPhi = new TH1I("mismatchPtAddress_deltaPhi", "Pt Address (Legal Addresses Only) - Delta Phi Word When 3 Stations (data fields do not match)",
-					1<<12, 0, 1<<12);
-
-  mismatchPtAddress_eta = new TH1I("mismatchPtAddress_eta", "Pt Address (Legal Addresses Only) - Eta Word (data fields do not match)",
-				   1<<4, 0, 1<<4);
-
-  mismatchPtAddress_mode = new TH1I("mismatchPtAddress_mode", "Pt Address (Legal Addresses Only) - Mode Word (data fields do not match)",
-				    1<<4, 0, 1<<4);
-
-  mismatchPtAddress_sign = new TH1I("mismatchPtAddress_sign", "Pt Address (Legal Addresses Only) - Sign Word (data fields do not match)",
-				    1<<1, 0, 1<<1);
-
-  
   InputVsOutputLocalPhi_1 = new TH2I("InputVsOutputLocalPhi_1", "Data Field vs Address - " + TString(lut1name) + ": Local Phi",
 				     1<<int((CSCBitWidths::kLocalPhiAddressWidth)/2),
 				     0, 1<<CSCBitWidths::kLocalPhiAddressWidth,
@@ -407,7 +336,6 @@ CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 			       0, 1<<16 );
   InputVsOutputPt_1->GetXaxis()->SetTitle("Address");
   InputVsOutputPt_1->GetYaxis()->SetTitle("Data Field");
-    
 
   InputVsOutputLocalPhi_2 = new TH2I("InputVsOutputLocalPhi_2", "Data Field vs Address - " + TString(lut2name) + ": Local Phi",
 				     1<<int((CSCBitWidths::kLocalPhiAddressWidth)/2),
@@ -458,224 +386,146 @@ CSCCompareLUTs::~CSCCompareLUTs()
 {
   delete compareLocalPhi;
   compareLocalPhi = NULL;
-
   delete compareLocalPhi_phiLocal;
   compareLocalPhi_phiLocal = NULL;
-
   delete compareLocalPhi_phiBend;
   compareLocalPhi_phiBend = NULL;
-
   delete compareGlobalEta;
   compareGlobalEta = NULL;
-
   delete compareGlobalEta_etaGlobal;
   compareGlobalEta_etaGlobal = NULL;
-
   delete compareGlobalEta_phiBend;
   compareGlobalEta_phiBend = NULL;
-
   delete compareGlobalPhiME;
   compareGlobalPhiME = NULL;
-
   delete compareGlobalPhiMB;
   compareGlobalPhiMB = NULL;
-
   delete comparePt;
   comparePt = NULL;
-  
   delete comparePt_front;
   comparePt_front = NULL;
-  
   delete comparePt_rear;
   comparePt_rear = NULL;
   
-  
   delete compareLocalPhiOffDiagonal;
   compareLocalPhiOffDiagonal = NULL;
-
   delete compareLocalPhiOffDiagonal_phiLocal;
   compareLocalPhiOffDiagonal_phiLocal = NULL;
-
   delete compareLocalPhiOffDiagonal_phiBend;
   compareLocalPhiOffDiagonal_phiBend = NULL;
-
-
   delete compareGlobalEtaOffDiagonal;
   compareGlobalEtaOffDiagonal = NULL;
-
   delete compareGlobalEtaOffDiagonal_etaGlobal;
   compareGlobalEtaOffDiagonal_etaGlobal = NULL;
-
   delete compareGlobalEtaOffDiagonal_phiBend;
   compareGlobalEtaOffDiagonal_phiBend = NULL;
-
-
   delete compareGlobalPhiMEOffDiagonal;
   compareGlobalPhiMEOffDiagonal = NULL;
-
-
   delete compareGlobalPhiMBOffDiagonal;
   compareGlobalPhiMBOffDiagonal = NULL;
-
-
   delete comparePtOffDiagonal;
   comparePtOffDiagonal = NULL;
-  
   delete comparePtOffDiagonal_front;
   comparePtOffDiagonal_front = NULL;
-  
   delete comparePtOffDiagonal_rear;
   comparePtOffDiagonal_rear = NULL;
   
-  
   delete differenceLocalPhi;
   differenceLocalPhi = NULL;
-
   delete differenceLocalPhi_phiLocal;
   differenceLocalPhi_phiLocal = NULL;
-
   delete differenceLocalPhi_phiBend;
   differenceLocalPhi_phiBend = NULL;
-
   delete differenceGlobalEta;
   differenceGlobalEta = NULL;
-
   delete differenceGlobalEta_etaGlobal;
   differenceGlobalEta_etaGlobal = NULL;
-
   delete differenceGlobalEta_phiBend;
   differenceGlobalEta_phiBend = NULL;
-
   delete differenceGlobalPhiME;
   differenceGlobalPhiME = NULL;
-
   delete differenceGlobalPhiMB;
   differenceGlobalPhiMB = NULL;
-
   delete differencePt;
   differencePt = NULL;
-  
   delete differencePt_front;
   differencePt_front = NULL;
-  
   delete differencePt_rear;
   differencePt_rear = NULL;
   
-  
   delete mismatchLocalPhiAddress;
   mismatchLocalPhiAddress = NULL;
-
   delete mismatchLocalPhiAddress_patternId;
   mismatchLocalPhiAddress_patternId = NULL;
-
   delete mismatchLocalPhiAddress_patternNumber;
   mismatchLocalPhiAddress_patternNumber = NULL;
-
   delete mismatchLocalPhiAddress_quality;
   mismatchLocalPhiAddress_quality = NULL;
-
   delete mismatchLocalPhiAddress_leftRight;
   mismatchLocalPhiAddress_leftRight = NULL;
-
   delete mismatchLocalPhiAddress_spare;
   mismatchLocalPhiAddress_spare = NULL;
-
-
   delete mismatchGlobalEtaAddress;
   mismatchGlobalEtaAddress = NULL;
-
   delete mismatchGlobalEtaAddress_phiBendLocal;
   mismatchGlobalEtaAddress_phiBendLocal = NULL;
-
   delete mismatchGlobalEtaAddress_phiLocal;
   mismatchGlobalEtaAddress_phiLocal = NULL;
-
   delete mismatchGlobalEtaAddress_wireGroup;
   mismatchGlobalEtaAddress_wireGroup = NULL;
-
   delete mismatchGlobalEtaAddress_cscId;
   mismatchGlobalEtaAddress_cscId = NULL;
-
-
   delete mismatchGlobalPhiMEAddress;
   mismatchGlobalPhiMEAddress = NULL;
-
   delete mismatchGlobalPhiMEAddress_phiLocal;
   mismatchGlobalPhiMEAddress_phiLocal = NULL;
-
   delete mismatchGlobalPhiMEAddress_wireGroup;
   mismatchGlobalPhiMEAddress_wireGroup = NULL;
-
   delete mismatchGlobalPhiMEAddress_cscId;
   mismatchGlobalPhiMEAddress_cscId = NULL;
-
-
   delete mismatchGlobalPhiMBAddress;
   mismatchGlobalPhiMBAddress = NULL;
-
   delete mismatchGlobalPhiMBAddress_phiLocal;
   mismatchGlobalPhiMBAddress_phiLocal = NULL;
-
   delete mismatchGlobalPhiMBAddress_wireGroup;
   mismatchGlobalPhiMBAddress_wireGroup = NULL;
-
   delete mismatchGlobalPhiMBAddress_cscId;
   mismatchGlobalPhiMBAddress_cscId = NULL;
-
-
   delete mismatchPtAddress;
   mismatchPtAddress = NULL;
-
   delete mismatchPtAddress_delta12phi;
   mismatchPtAddress_delta12phi = NULL;
-
   delete mismatchPtAddress_delta23phi;
   mismatchPtAddress_delta23phi = NULL;
-
   delete mismatchPtAddress_deltaPhi;
   mismatchPtAddress_deltaPhi = NULL;
-
- delete mismatchPtAddress_eta;
+  delete mismatchPtAddress_eta;
   mismatchPtAddress_eta = NULL;
-
   delete mismatchPtAddress_mode;
   mismatchPtAddress_mode = NULL;
-
   delete mismatchPtAddress_sign;
   mismatchPtAddress_sign = NULL;
 
-
   delete InputVsOutputLocalPhi_1;
   InputVsOutputLocalPhi_1 = NULL;
-
   delete InputVsOutputGlobalEta_1;
   InputVsOutputGlobalEta_1 = NULL;
-
   delete InputVsOutputGlobalPhiME_1;
   InputVsOutputGlobalPhiME_1 = NULL;
-
   delete InputVsOutputGlobalPhiMB_1;
   InputVsOutputGlobalPhiMB_1 = NULL;
-
   delete InputVsOutputPt_1;
   InputVsOutputPt_1 = NULL;
-
- 
   delete InputVsOutputLocalPhi_2;
   InputVsOutputLocalPhi_2 = NULL;
-
   delete InputVsOutputGlobalEta_2;
   InputVsOutputGlobalEta_2 = NULL;
-
   delete InputVsOutputGlobalPhiME_2;
   InputVsOutputGlobalPhiME_2 = NULL;
-
   delete InputVsOutputGlobalPhiMB_2;
   InputVsOutputGlobalPhiMB_2 = NULL;
-
   delete InputVsOutputPt_2;
   InputVsOutputPt_2 = NULL;
-
 
   delete fCompare;
   fCompare = NULL;
@@ -685,61 +535,49 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 {
   //  compareLUTs(SRLUT_Base_1, SRLUT_Base_2, PtLUT_Base_1, PtLUT_Base_2, true, true, true, true, true);
 
-  
   // set geometry pointer
   edm::ESHandle<CSCGeometry> pDD;
 
   iSetup.get<MuonGeometryRecord>().get( pDD );
   CSCTriggerGeometry::setGeometry(pDD);
 
+  // Storing flags to be passed to the SR LUT objects.  This is done because when reading a file,
+  // the file name for each LUT must be passed to the SR LUT object.  This is a way to read all the
+  // LUT files within a given release by running this program once
   std::string LUTPath_1 = lutParam1.getUntrackedParameter<std::string>("LUTPath", std::string("L1Trigger/CSCTrackFinder/LUTs"));
   std::string LUTPath_2 = lutParam2.getUntrackedParameter<std::string>("LUTPath", std::string("L1Trigger/CSCTrackFinder/LUTs"));
 
   bool readSRLUTs_1 = lutParam1.getUntrackedParameter<bool>("ReadLUTs",false);
   bool readSRLUTs_2 = lutParam2.getUntrackedParameter<bool>("ReadLUTs",false);
-
   bool readPtLUTs_1 = lutParam1.getUntrackedParameter<bool>("ReadPtLUT",false);
   bool readPtLUTs_2 = lutParam2.getUntrackedParameter<bool>("ReadPtLUT",false);
-
   bool isSRBinary_1 = lutParam1.getUntrackedParameter<bool>("Binary",false);
   bool isSRBinary_2 = lutParam2.getUntrackedParameter<bool>("Binary",false);
-
   bool isPtBinary_1 = lutParam1.getUntrackedParameter<bool>("isBinary",false);
   bool isPtBinary_2 = lutParam2.getUntrackedParameter<bool>("isBinary",false);
+  bool isTMB07_1 = lutParam1.getUntrackedParameter<bool>("isTMB07",false);
+  bool isTMB07_2 = lutParam2.getUntrackedParameter<bool>("isTMB07",false);
 
   edm::FileInPath me_lcl_phi_file_1;
   edm::FileInPath me_lcl_phi_file_2;
-  
   edm::FileInPath me_gbl_phi_file_1;
   edm::FileInPath me_gbl_phi_file_2;
-
   edm::FileInPath mb_gbl_phi_file_1;
   edm::FileInPath mb_gbl_phi_file_2;
-
   edm::FileInPath me_gbl_eta_file_1;
   edm::FileInPath me_gbl_eta_file_2;
-
   edm::FileInPath pt_lut_file_1;  
   edm::FileInPath pt_lut_file_2;  
-    
+  
   if(readSRLUTs_1)
-    {
-      me_lcl_phi_file_1 = edm::FileInPath(LUTPath_1 + std::string("/LocalPhiLUT") + (isSRBinary_1 ? std::string(".bin") : std::string(".dat")));
-    }
+    me_lcl_phi_file_1 = edm::FileInPath(LUTPath_1 + std::string("/LocalPhiLUT") + (isSRBinary_1 ? std::string(".bin") : std::string(".dat")));
   if(readSRLUTs_2)
-    {
     me_lcl_phi_file_2 = edm::FileInPath(LUTPath_2 + std::string("/LocalPhiLUT") + (isSRBinary_2 ? std::string(".bin") : std::string(".dat")));
-    }
-
   if(readPtLUTs_1)
-    {
-      pt_lut_file_1 = edm::FileInPath(LUTPath_1 + std::string("/L1CSCPtLUT") + (isPtBinary_1 ? std::string(".bin") : std::string(".dat")));
-    }
+    pt_lut_file_1 = edm::FileInPath(LUTPath_1 + std::string("/L1CSCPtLUT") + (isPtBinary_1 ? std::string(".bin") : std::string(".dat")));
   if(readPtLUTs_2)
-    {
-      pt_lut_file_2 = edm::FileInPath(LUTPath_2 + std::string("/L1CSCPtLUT") + (isPtBinary_2 ? std::string(".bin") : std::string(".dat")));
-    }
-
+    pt_lut_file_2 = edm::FileInPath(LUTPath_2 + std::string("/L1CSCPtLUT") + (isPtBinary_2 ? std::string(".bin") : std::string(".dat")));
+  
   for(int endcapItr=1;endcapItr<=2;endcapItr++)
     if(endcapItr==endcap || endcap==-1)
       for(int sectorItr=1;sectorItr<=6;sectorItr++)
@@ -765,7 +603,6 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 								    encodeFileIndex(endcapItr,sectorItr,stationItr,subsectorItr) + 
 								    (isSRBinary_1 ? std::string(".bin") : std::string(".dat")));
 			      }
-			    
 			    if(readSRLUTs_2)
 			      {
 				me_gbl_phi_file_2 = edm::FileInPath(LUTPath_2 + std::string("/GlobalPhiME") + 
@@ -784,45 +621,35 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 			    
 			    _lutParam_1.addUntrackedParameter("ReadLUTs", readSRLUTs_1);
 			    _lutParam_2.addUntrackedParameter("ReadLUTs", readSRLUTs_2);
-
-			    //_lutParam_1.addUntrackedParameter("ReadPtLUTs", readPtLUTs_1);
-			    //_lutParam_2.addUntrackedParameter("ReadPtLUTs", readPtLUTs_2);
-
 			    _lutParam_1.addUntrackedParameter("ReadPtLUT", false);
 			    _lutParam_2.addUntrackedParameter("ReadPtLUT", false);
-
+			    _lutParam_1.addUntrackedParameter("isTMB07", isTMB07_1);
+			    _lutParam_2.addUntrackedParameter("isTMB07", isTMB07_2);
 
 			    if(readSRLUTs_1)
 			      {
 				_lutParam_1.addUntrackedParameter<bool>("Binary", isSRBinary_1);
-				
 				_lutParam_1.addUntrackedParameter("LocalPhiLUT", me_lcl_phi_file_1);
 				_lutParam_1.addUntrackedParameter("GlobalPhiLUTME", me_gbl_phi_file_1);
 				_lutParam_1.addUntrackedParameter("GlobalPhiLUTMB", mb_gbl_phi_file_1);
 				_lutParam_1.addUntrackedParameter("GlobalEtaLUTME", me_gbl_eta_file_1);
 			      }
-
 			    if(readPtLUTs_1)
 			      {
 				_lutParam_1.addUntrackedParameter("isBinary", isPtBinary_1);
-				
 				_lutParam_1.addUntrackedParameter("PtLUTFile", pt_lut_file_1);
 			      }
-
 			    if(readSRLUTs_2)
 			      {
 				_lutParam_2.addUntrackedParameter<bool>("Binary", isSRBinary_2);
-				
 				_lutParam_2.addUntrackedParameter("LocalPhiLUT", me_lcl_phi_file_2);
 				_lutParam_2.addUntrackedParameter("GlobalPhiLUTME", me_gbl_phi_file_2);
 				_lutParam_2.addUntrackedParameter("GlobalPhiLUTMB", mb_gbl_phi_file_2);
 				_lutParam_2.addUntrackedParameter("GlobalEtaLUTME", me_gbl_eta_file_2);
 			      }
-			    
 			    if(readPtLUTs_2)
 			      {
 				_lutParam_2.addUntrackedParameter("isBinary", isPtBinary_2);
-				
 				_lutParam_2.addUntrackedParameter("PtLUTFile", pt_lut_file_2);
 			      }
 			    
@@ -831,8 +658,7 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 			    CSCTFPtLUT PtLUT_1(_lutParam_1);
 			    CSCTFPtLUT PtLUT_2(_lutParam_2);
 			    
-			    compareLUTs(&SRLUT_1, &SRLUT_2, &PtLUT_1, &PtLUT_2, false, true, true, true, false, 
-					endcapItr, sectorItr, subsectorItr, stationItr);
+			    compareLUTs(&SRLUT_1, &SRLUT_2, &PtLUT_1, &PtLUT_2, false, true, true, true, false, endcapItr, sectorItr, subsectorItr, stationItr);
 			  }
 		      }
 		  }
@@ -850,7 +676,6 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 							    encodeFileIndex(endcapItr,sectorItr,stationItr) + 
 							    (isSRBinary_1 ? std::string(".bin") : std::string(".dat")));
 		      }
-
 		    if(readSRLUTs_2)
 		      {
 			me_gbl_phi_file_2 = edm::FileInPath(LUTPath_2 + std::string("/GlobalPhiME") + 
@@ -869,44 +694,35 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 		    
 		    _lutParam_1.addUntrackedParameter("ReadLUTs", readSRLUTs_1);
 		    _lutParam_2.addUntrackedParameter("ReadLUTs", readSRLUTs_2);
-		    
-		    //_lutParam_1.addUntrackedParameter("ReadPtLUT", readPtLUTs_1);
-		    //_lutParam_2.addUntrackedParameter("ReadPtLUT", readPtLUTs_2);
-		    
 		    _lutParam_1.addUntrackedParameter("ReadPtLUT", false);
 		    _lutParam_2.addUntrackedParameter("ReadPtLUT", false);
+		    _lutParam_1.addUntrackedParameter("isTMB07", isTMB07_1);
+		    _lutParam_2.addUntrackedParameter("isTMB07", isTMB07_2);
 		    
 		    if(readSRLUTs_1)
 		      {
 			_lutParam_1.addUntrackedParameter("Binary", isSRBinary_1);
-			
 			_lutParam_1.addUntrackedParameter("LocalPhiLUT", me_lcl_phi_file_1);
 			_lutParam_1.addUntrackedParameter("GlobalPhiLUTME", me_gbl_phi_file_1);
 			_lutParam_1.addUntrackedParameter("GlobalPhiLUTMB", mb_gbl_phi_file_1);
 			_lutParam_1.addUntrackedParameter("GlobalEtaLUTME", me_gbl_eta_file_1);
 		      }
-		    
 		    if(readPtLUTs_1)
 		      {
 			_lutParam_1.addUntrackedParameter("isBinary", isPtBinary_1);
-			
 			_lutParam_1.addUntrackedParameter("PtLUTFile", pt_lut_file_1);
 		      }
-		    
 		    if(readSRLUTs_2)
 		      {
 			_lutParam_2.addUntrackedParameter("Binary", isSRBinary_2);
-			
 			_lutParam_2.addUntrackedParameter("LocalPhiLUT", me_lcl_phi_file_2);
 			_lutParam_2.addUntrackedParameter("GlobalPhiLUTME", me_gbl_phi_file_2);
 			_lutParam_2.addUntrackedParameter("GlobalPhiLUTMB", mb_gbl_phi_file_2);
 			_lutParam_2.addUntrackedParameter("GlobalEtaLUTME", me_gbl_eta_file_2);
 		      }
-		    
 		    if(readPtLUTs_2)
 		      {
 			_lutParam_2.addUntrackedParameter("isBinary", isPtBinary_2);
-			
 			_lutParam_2.addUntrackedParameter("PtLUTFile", pt_lut_file_2);
 		      }
 		    
@@ -915,64 +731,53 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 		    CSCTFPtLUT PtLUT_1(_lutParam_1);
 		    CSCTFPtLUT PtLUT_2(_lutParam_2);
 
-
-		    compareLUTs(&SRLUT_1, &SRLUT_2, &PtLUT_1, &PtLUT_2, false, true, true, false, false,
-				endcapItr, sectorItr, 1, stationItr);
+		    compareLUTs(&SRLUT_1, &SRLUT_2, &PtLUT_1, &PtLUT_2, false, true, true, false, false, endcapItr, sectorItr, 1, stationItr);
 		  }
 	      }
+  
   edm::ParameterSet _lutParam_1;
   edm::ParameterSet _lutParam_2;
   
   _lutParam_1.addUntrackedParameter<bool>("ReadLUTs", readSRLUTs_1);
   _lutParam_2.addUntrackedParameter<bool>("ReadLUTs", readSRLUTs_2);
-  
   _lutParam_1.addUntrackedParameter<bool>("ReadPtLUT", readPtLUTs_1);
   _lutParam_2.addUntrackedParameter<bool>("ReadPtLUT", readPtLUTs_2);
+  _lutParam_1.addUntrackedParameter("isTMB07", isTMB07_1);
+  _lutParam_2.addUntrackedParameter("isTMB07", isTMB07_2);
   
   if(readSRLUTs_1)
     {
       _lutParam_1.addUntrackedParameter<bool>("Binary", isSRBinary_1);
-      
       _lutParam_1.addUntrackedParameter<edm::FileInPath>("LocalPhiLUT", me_lcl_phi_file_1);
       _lutParam_1.addUntrackedParameter("GlobalPhiLUTME", me_gbl_phi_file_1);
       _lutParam_1.addUntrackedParameter("GlobalPhiLUTMB", mb_gbl_phi_file_1);
       _lutParam_1.addUntrackedParameter("GlobalEtaLUTME", me_gbl_eta_file_1);
     }
-  
   if(readPtLUTs_1)
     {
       _lutParam_1.addUntrackedParameter<bool>("isBinary", isPtBinary_1);
-      
       _lutParam_1.addUntrackedParameter<edm::FileInPath>("PtLUTFile", pt_lut_file_1);
     }
-  
   if(readSRLUTs_2)
     {
       _lutParam_2.addUntrackedParameter<bool>("Binary", isSRBinary_2);
-      
       _lutParam_2.addUntrackedParameter<edm::FileInPath>("LocalPhiLUT", me_lcl_phi_file_2);
       _lutParam_2.addUntrackedParameter("GlobalPhiLUTME", me_gbl_phi_file_2);
       _lutParam_2.addUntrackedParameter("GlobalPhiLUTMB", mb_gbl_phi_file_2);
       _lutParam_2.addUntrackedParameter("GlobalEtaLUTME", me_gbl_eta_file_2);
     }
-  
   if(readPtLUTs_2)
     {
       _lutParam_2.addUntrackedParameter<bool>("isBinary", isPtBinary_2);
-      
       _lutParam_2.addUntrackedParameter<edm::FileInPath>("PtLUTFile", pt_lut_file_2);
     }
   
-  
   CSCSectorReceiverLUT SRLUT_1(1, 1, 1, 1, _lutParam_1);
   CSCSectorReceiverLUT SRLUT_2(1, 1, 1, 1, _lutParam_2);
-
   CSCTFPtLUT PtLUT_1(_lutParam_1);
   CSCTFPtLUT PtLUT_2(_lutParam_2);
-
-  compareLUTs(&SRLUT_1, &SRLUT_2, &PtLUT_1, &PtLUT_2, true, false, false, false, true,
-	      1, 1, 1, 1);
-
+  
+  compareLUTs(&SRLUT_1, &SRLUT_2, &PtLUT_1, &PtLUT_2, true, false, false, false, true, 1, 1, 1, 1);
 }
 
 

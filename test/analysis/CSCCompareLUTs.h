@@ -2,7 +2,7 @@
 #define CSCTrackFinder_CompareLUTs_h
 
 /**
- * \author L. Gray 2/26/06
+ * \author B. Jackson 2/24/08
  *
  */
 
@@ -59,7 +59,7 @@ class CSCCompareLUTs : public edm::EDAnalyzer {
   
   TFile* fCompare;
 
-  std::string lut1name, lut2name;
+  std::string outFileName, lut1name, lut2name;
 
   // 2d plots that compare the output words for all addresses
   TH2I* compareLocalPhi;
