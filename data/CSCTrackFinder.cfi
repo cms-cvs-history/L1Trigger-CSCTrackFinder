@@ -7,35 +7,50 @@ block CSCTrackFinderProducerNames =
    untracked InputTag SectorReceiverInput = lctproducer:MPCSORTED
 }
 
-module l1csctracks = CSCTFTrackProducer
-{
+module l1csctracks = CSCTFTrackProducer {
    using CSCTrackFinderProducerNames
 
-   PSet SectorProcessor =
-      {
+   bool useDT = false
+
+   PSet SectorProcessor = {
         using CSCCommonTrigger
 
-	untracked uint32 CoreLatency = 8
-	untracked bool UseBXA = true
-	untracked vuint32 EtaWindows = {4, 4, 4, 4, 4, 4}
-        untracked vuint32 EtaMin = {22, 22, 14, 14, 14, 10, 10, 10}
-        untracked vuint32 EtaMax = {127, 127, 127, 127, 127, 24, 24, 24}
+        uint32  CoreLatency = 8
+        bool    UseBXA      = true
+        uint32  BXAExtendLength = 1
+        vuint32 EtaMin      = {22, 22, 14, 14, 14, 10, 10, 10}
+        vuint32 EtaMax      = {127, 127, 127, 127, 127, 24, 24, 24}
+        vuint32 EtaWindows  = {2, 2, 2, 2, 2, 2}
 
-	untracked uint32 BXAExtendLength = 1
+        bool run_core             = true
+        bool trigger_on_ME1a      = true
+        bool trigger_on_ME1b      = true
+        bool trigger_on_ME2       = true
+        bool trigger_on_ME3       = true
+        bool trigger_on_ME4       = true
+        bool trigger_on_MB1a      = false
+        bool trigger_on_MB1d      = false
+        uint32 singlesTrackPt     = 0xFF
+        uint32 singlesTrackOutput = 1
+
+        uint32 mindphip     = 70
+        uint32 mindeta_accp = 4
+        uint32 maxdeta_accp = 16
+        uint32 maxdphi_accp = 128
 
    	PSet SRLUT = {
-			untracked bool ReadLUTs = false
-			untracked bool Binary = false
-			untracked string LUTPath = "./"
-			untracked bool isTMB07 = false
-		     }
+            untracked bool ReadLUTs = false
+            untracked bool Binary = false
+            untracked string LUTPath = "./"
+            untracked bool isTMB07 = false
+        }
 
    	PSet PTLUT = {
-			untracked bool ReadPtLUT = false
-			untracked uint32 PtMethod = 1
-			untracked uint32 LowQualityFlag = 4
-		     }
-      }
+            untracked bool ReadPtLUT = false
+            untracked uint32 PtMethod = 1
+            untracked uint32 LowQualityFlag = 4
+        }
+   }
 }
 
 module csctfmuonsorter = CSCTFCandidateProducer

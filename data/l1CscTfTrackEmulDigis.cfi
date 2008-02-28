@@ -22,8 +22,8 @@ module l1CscTfTrackEmulDigis = CSCTFTrackProducer {
         bool trigger_on_ME2       = true
         bool trigger_on_ME3       = true
         bool trigger_on_ME4       = true
-        bool trigger_on_MB1a      = true # Doesn't work yet
-        bool trigger_on_MB1d      = true # Doesn't work yet
+        bool trigger_on_MB1a      = true
+        bool trigger_on_MB1d      = true
         uint32 singlesTrackPt     = 0xFF
         uint32 singlesTrackOutput = 3
 
