@@ -54,7 +54,7 @@ class CSCCompareLUTs : public edm::EDAnalyzer {
   //
   CSCSectorReceiverLUT *SRLUT_Base_1, *SRLUT_Base_2; // [Endcap][Sector][Subsector][Station]
   CSCTFPtLUT *PtLUT_Base_1, *PtLUT_Base_2;
-  int endcap, sector, station, subsector;
+  int endcap, sector, station, subsector, isTMB07;
   edm::ParameterSet lutParam1, lutParam2;
   
   TFile* fCompare;

@@ -32,7 +32,7 @@ class CSCCompareSRLUTs : public edm::EDAnalyzer {
   // variables persistent across events should be declared here.
   //
   CSCSectorReceiverLUT* myLUT, *testLUT; // [Endcap][Sector][Subsector][Station]
-  bool binary;
+  bool binary, isTMB07;
   int endcap, sector, station, subsector;
   edm::ParameterSet LUTparam;
 };

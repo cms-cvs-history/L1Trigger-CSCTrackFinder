@@ -35,10 +35,11 @@ CSCCompareSRLUTs::CSCCompareSRLUTs(edm::ParameterSet const& conf)
   subsector = conf.getUntrackedParameter<int>("SubSector",1);
   endcap = conf.getUntrackedParameter<int>("Endcap",1);
   binary = conf.getUntrackedParameter<bool>("BinaryInput",false);
+  isTMB07 = conf.getUntrackedParameter<bool>("isTMB07",false);
   LUTparam = conf.getParameter<edm::ParameterSet>("lutParam");
 
-  myLUT = new CSCSectorReceiverLUT(endcap, sector, subsector, station, edm::ParameterSet());
-  testLUT = new CSCSectorReceiverLUT(endcap, sector, subsector, station, LUTparam);
+  myLUT = new CSCSectorReceiverLUT(endcap, sector, subsector, station, edm::ParameterSet(), isTMB07);
+  testLUT = new CSCSectorReceiverLUT(endcap, sector, subsector, station, LUTparam, isTMB07);
 }
 
 CSCCompareSRLUTs::~CSCCompareSRLUTs()

@@ -43,7 +43,6 @@ module l1csctracks = CSCTFTrackProducer {
             untracked bool ReadLUTs = false
             untracked bool Binary = false
             untracked string LUTPath = "./"
-            untracked bool isTMB07 = false
         }
 
    	PSet PTLUT = {

@@ -653,8 +653,8 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 				_lutParam_2.addUntrackedParameter("PtLUTFile", pt_lut_file_2);
 			      }
 			    
-			    CSCSectorReceiverLUT SRLUT_1(endcapItr, sectorItr, subsectorItr, stationItr, _lutParam_1);
-			    CSCSectorReceiverLUT SRLUT_2(endcapItr, sectorItr, subsectorItr, stationItr, _lutParam_2);
+			    CSCSectorReceiverLUT SRLUT_1(endcapItr, sectorItr, subsectorItr, stationItr, _lutParam_1, isTMB07_1);
+			    CSCSectorReceiverLUT SRLUT_2(endcapItr, sectorItr, subsectorItr, stationItr, _lutParam_2, isTMB07_2);
 			    CSCTFPtLUT PtLUT_1(_lutParam_1);
 			    CSCTFPtLUT PtLUT_2(_lutParam_2);
 			    
@@ -726,8 +726,8 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 			_lutParam_2.addUntrackedParameter("PtLUTFile", pt_lut_file_2);
 		      }
 		    
-		    CSCSectorReceiverLUT SRLUT_1(endcapItr, sectorItr, 1, stationItr, _lutParam_1);
-		    CSCSectorReceiverLUT SRLUT_2(endcapItr, sectorItr, 1, stationItr, _lutParam_2);
+		    CSCSectorReceiverLUT SRLUT_1(endcapItr, sectorItr, 1, stationItr, _lutParam_1, isTMB07_1);
+		    CSCSectorReceiverLUT SRLUT_2(endcapItr, sectorItr, 1, stationItr, _lutParam_2, isTMB07_2);
 		    CSCTFPtLUT PtLUT_1(_lutParam_1);
 		    CSCTFPtLUT PtLUT_2(_lutParam_2);
 
@@ -772,8 +772,8 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
       _lutParam_2.addUntrackedParameter<edm::FileInPath>("PtLUTFile", pt_lut_file_2);
     }
   
-  CSCSectorReceiverLUT SRLUT_1(1, 1, 1, 1, _lutParam_1);
-  CSCSectorReceiverLUT SRLUT_2(1, 1, 1, 1, _lutParam_2);
+  CSCSectorReceiverLUT SRLUT_1(1, 1, 1, 1, _lutParam_1,isTMB07_1);
+  CSCSectorReceiverLUT SRLUT_2(1, 1, 1, 1, _lutParam_2,isTMB07_2);
   CSCTFPtLUT PtLUT_1(_lutParam_1);
   CSCTFPtLUT PtLUT_2(_lutParam_2);
   
