@@ -10,7 +10,8 @@ block CSCTrackFinderProducerNames =
 module l1csctracks = CSCTFTrackProducer {
    using CSCTrackFinderProducerNames
 
-   bool useDT = false
+   bool useDT   = false
+   bool isTMB07 = true
 
    PSet SectorProcessor = {
         using CSCCommonTrigger

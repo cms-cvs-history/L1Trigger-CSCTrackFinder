@@ -4,7 +4,8 @@ module l1CscTfTrackEmulDigis = CSCTFTrackProducer {
 
    untracked InputTag SectorReceiverInput = l1CscTpgEmulDigis:MPCSORTED
 
-   bool useDT = true
+   bool useDT   = true
+   bool isTMB07 = true
 
    PSet SectorProcessor = {
         using CSCCommonTrigger
