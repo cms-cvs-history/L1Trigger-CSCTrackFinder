@@ -1,3 +1,5 @@
+#ifndef _FILE_SPvpp_sp_FILE_
+#define _FILE_SPvpp_sp_FILE_
 #include <L1Trigger/CSCCommonTrigger/interface/vlib.h>
 
 #include <L1Trigger/CSCTrackFinder/src/spbits.h>
@@ -19,9 +21,6 @@
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_dtbx.h>
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_bxcorr.h>
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_eu23a.h>
-
-#ifndef _FILE_SPvpp_sp_FILE_
-#define _FILE_SPvpp_sp_FILE_
 
 class SPvpp_sp : public module
 {
@@ -104,7 +103,6 @@ public:
 	Signal MinEta[8], MaxEta[8], EtaWindow[6];
 
 	// regs ----------------------------------------------------------------
-
 
 
 	Signal Eqme12r, Eqme13r, Eqme12ovr, Eqme23r, Eqme24r, Eqme34r, Eq2b1r, Eq2b2r;
@@ -196,7 +194,6 @@ public:
 	SPvpp_bxa bxa;
 	SPvpp_dtbx dtbx[2];
 	SPvpp_bxcorr bxcorr;
-
 
 };
 

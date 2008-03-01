@@ -1,7 +1,6 @@
+#ifndef _FILE_SPvpp_FILE_
+#define _FILE_SPvpp_FILE_
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_sp.h>
-
-#ifndef _FILE_SPvpp_FILE
-#define _FILE_SPvpp_FILE
 
 class SPvpp
 {
@@ -130,6 +129,8 @@ public:
 		mb1bQr, mb1bPhir;
 		
 
+
 };
+
 
 #endif

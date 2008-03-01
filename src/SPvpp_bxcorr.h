@@ -15,7 +15,7 @@ class SPvpp_bxcorr : public module
 		Signal id1, Signal id2, Signal id3,
 		Signal bc1, Signal bc2, Signal bc3,
 		Signal idc1, Signal idc2, Signal idc3,
-		Signal acc,		
+		Signal acc,
 		Signal pretrig,
 		Signal clk
 	);
@@ -45,6 +45,7 @@ class SPvpp_bxcorr : public module
 	memory del2stubs;
 	memory del1stubs;
 
+	Signal tid, del1t, del2t;
 
 };
 

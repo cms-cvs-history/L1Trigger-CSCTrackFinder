@@ -1,6 +1,5 @@
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_eu2b2.h>
 #include <L1Trigger/CSCCommonTrigger/interface/vmac.h>
-
 void SPvpp_eu2b2::operator()
 (
 	Signal meA,
@@ -29,6 +28,8 @@ beginmodule
 	CSCidA.reg(BWCSCID-1, 0, "CSCidA");
 	validA.reg ("validA");
 	validB.reg ("validB");
+
+modulebody
 
 	always (meA or mbB or MinEta or MaxEta or eta)	
 	begin

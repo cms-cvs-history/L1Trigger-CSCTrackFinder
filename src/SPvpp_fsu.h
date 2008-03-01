@@ -16,20 +16,11 @@ public:
 	{
 		mb = 0; // 8-bit by default
 	}
-	
+
 };
-/*
-class SPvpp_CountZeroes11 : public function
-{
-
-public:
-	Signal operator()(Signal d);
-
-};*/
 
 class SPvpp_fsu: public module
 {
-
 
 public:
 	void operator()
@@ -66,7 +57,7 @@ public:
 		Signal dphi, dphir, dphirr;
 		memory phi_match, phir_match;
 
-		Signal kill, killr, killrr1, killrr2, killrr3;
+		Signal kill, killr, killrr1, killrr2, killrr3, dlm, rilgrj;
 
 		SPvpp_CountZeroes CountZ;
 

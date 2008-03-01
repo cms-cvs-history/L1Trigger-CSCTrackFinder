@@ -36,6 +36,8 @@ beginmodule
 	max34.reg(2,0,"max34");
 	quality.reg(3,0,"quality");
 
+modulebody
+
 	always (me31 or me32 or me34)
 	begin
 	    (e31[5], e31[4], e31[3], e31[2], e31[1], e31[0]) = me31;
@@ -50,21 +52,21 @@ beginmodule
 	    idm = max32(2,1);
 	    idh = max34(2,1);
   		begincase (quality)
-		    case1("4'b0001") rank = 1;
-		    case1("4'b0010") rank = 3; //  
-		    case1("4'b0011") rank = 4; //
-		    case1("4'b0100") rank = 5;
-		    case1("4'b1000") rank = "6'ha";
-		    case1("4'b1100") rank = "6'hd";
-		    case1("4'b0101") rank = "6'h10";
-		    case1("4'b0110") rank = "6'h12"; //
-		    case1("4'b1001") rank = "6'h15";
-		    case1("4'b1010") rank = "6'h17"; //
-		    case1("4'b1101") rank = "6'h1a";
-		    case1("4'b1110") rank = "6'h1c"; //
-		    case1("4'b0111") rank = "6'h1f"; //
-		    case1("4'b1011") rank = "6'h21"; //
-		    case1("4'b1111") rank = "6'h23"; //
+		    case1(Signal(4, 1)) rank = 1;
+		    case1(Signal(4, 2)) rank = 3; //  
+		    case1(Signal(4, 3)) rank = 4; //
+		    case1(Signal(4, 4)) rank = 5;
+		    case1(Signal(4, 8)) rank = Signal(6, 0xa);
+		    case1(Signal(4,12)) rank = Signal(6, 0xd);
+		    case1(Signal(4, 5)) rank = Signal(6, 0x10);
+		    case1(Signal(4, 6)) rank = Signal(6, 0x12); //
+		    case1(Signal(4, 9)) rank = Signal(6, 0x15);
+		    case1(Signal(4,10)) rank = Signal(6, 0x17); //
+		    case1(Signal(4,13)) rank = Signal(6, 0x1a);
+		    case1(Signal(4,14)) rank = Signal(6, 0x1c); //
+		    case1(Signal(4, 7)) rank = Signal(6, 0x1f); //
+		    case1(Signal(4,11)) rank = Signal(6, 0x21); //
+		    case1(Signal(4,15)) rank = Signal(6, 0x23); //
 		    Default rank = 0;
 	  	endcase
 	end

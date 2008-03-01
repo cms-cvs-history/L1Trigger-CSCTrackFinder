@@ -3,7 +3,6 @@
 
 
 
-
 void SPvpp_bxa::operator ()
 (                                                                
 	Signal me1a,  Signal me1b,  Signal me1c,  Signal me1d,  Signal me1e,  Signal me1f, 
@@ -69,24 +68,24 @@ initio
 	me1dr.output(BWMEIN-1,0,"me1dr"); 
 	me1er.output(BWMEIN-1,0,"me1er"); 
 	me1fr.output(BWMEIN-1,0,"me1fr"); 
-							   
+		 					   
 	me2ar.output(BWMEIN-1,0,"me2ar"); 
 	me2br.output(BWMEIN-1,0,"me2br"); 
 	me2cr.output(BWMEIN-1,0,"me2cr"); 
-							   
+		 					   
 	me3ar.output(BWMEIN-1,0,"me3ar"); 
 	me3br.output(BWMEIN-1,0,"me3br"); 
 	me3cr.output(BWMEIN-1,0,"me3cr"); 
-							   
+		 					   
 	me4ar.output(BWMEIN-1,0,"me4ar"); 
 	me4br.output(BWMEIN-1,0,"me4br"); 
 	me4cr.output(BWMEIN-1,0,"me4cr"); 
-
+			 
 	mb1ar.output(BWMBIN-1,0,"mb1ar"); // {FL, q[2:0], phi[11:0]}
 	mb1br.output(BWMBIN-1,0,"mb1br"); 
 	mb1cr.output(BWMBIN-1,0,"mb1cr"); 
 	mb1dr.output(BWMBIN-1,0,"mb1dr"); 
-							   
+		 					   
 	mb2ar.output(BWMBIN-1,0,"mb2ar"); 
 	mb2br.output(BWMBIN-1,0,"mb2br"); 
 	mb2cr.output(BWMBIN-1,0,"mb2cr"); 
@@ -119,7 +118,7 @@ initio
 	Output_(mb2abi, BWBXID-1, 0);
 	Output_(mb2bbi, BWBXID-1, 0);
 	Output_(mb2cbi, BWBXID-1, 0);
-	Output_(mb2dbi, BWBXID-1, 0); 
+	Output_(mb2dbi, BWBXID-1, 0);
 
 	Input_(depth, 1, 0);
 
@@ -155,9 +154,12 @@ beginmodule
 	Wire__(med,  BWMEIN-1, 0, 4, 0);
 	Wire__(medb, BWBXID-1, 0, 4, 0);
 
+modulebody
+
+
 	bxame1ac
 	(
-		me1a,  me1b,  me1c,  cns(BWMEIN, 0),
+		me1a,  me1b,  me1c,  Signal(BWMEIN, 0),
 		me1ar,  me1br,  me1cr,  med[1], 
 		me1abi, me1bbi, me1cbi, medb[1],
 		depth,
@@ -167,7 +169,7 @@ beginmodule
 
 	bxame1df
 	(
-		me1d,  me1e,  me1f,  cns(BWMEIN, 0),
+		me1d,  me1e,  me1f,  Signal(BWMEIN, 0),
 		me1dr,  me1er,  me1fr,  med[2], 
 		me1dbi, me1ebi, me1fbi, medb[2],
 		depth,
@@ -176,7 +178,7 @@ beginmodule
 
 	bxame2
 	(
-		me2a,  me2b,  me2c,  cns(BWMEIN, 0),
+		me2a,  me2b,  me2c,  Signal(BWMEIN, 0),
 		me2ar,  me2br,  me2cr,  med[3], 
 		me2abi, me2bbi, me2cbi, medb[3],
 		depth,
@@ -185,7 +187,7 @@ beginmodule
 	
 	bxame3
 	(
-		me3a,  me3b,  me3c,  cns(BWMEIN, 0),
+		me3a,  me3b,  me3c,  Signal(BWMEIN, 0),
 		me3ar,  me3br,  me3cr,  med[4], 
 		me3abi, me3bbi, me3cbi, medb[4],
 		depth,
@@ -194,7 +196,7 @@ beginmodule
 
 	bxame4
 	(
-		me4a,  me4b,  me4c,  cns(BWMEIN, 0),
+		me4a,  me4b,  me4c,  Signal(BWMEIN, 0),
 		me4ar,  me4br,  me4cr,  med[0], 
 		me4abi, me4bbi, me4cbi, medb[0],
 		depth,
@@ -214,8 +216,8 @@ beginmodule
 	(
 		mb2a,  mb2b,  mb2c,	 mb2d,
 		mb2ar, mb2br, mb2cr, mb2dr,
-		(me1acv | me1dfv | me2v) & enable,
-		mb2v,
+		mb2abi, mb2bbi, mb2cbi, mb2dbi,
+		depth,
 		clkp
 	);
 */

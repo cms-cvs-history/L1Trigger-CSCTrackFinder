@@ -1,7 +1,6 @@
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_bxame.h>
 #include <L1Trigger/CSCCommonTrigger/interface/vmac.h>
 
-
 void SPvpp_bxame::operator()
 (
 	Signal inA,  Signal inB,  Signal inC,  Signal inD,  
@@ -39,8 +38,8 @@ initio
 
 beginmodule
 
-//	if (mb) CountZ11.init(2, 0, "_CountZ11");
-// 	else    CountZ.init(2, 0, "_CountZ");
+//	if (mb) CountZ11.init(3, 0, "_CountZ11");
+ //	else    CountZ.init(2, 0, "_CountZ");
 
 	CountZ.init(mb ? 3 : 2, 0, mb ? "_CountZ11" : "_CountZ");
 	CountZ.mb = mb;
@@ -73,13 +72,16 @@ beginmodule
 	Reg_(larg1, tstub-1, 0);
 
 	Reg_(s, mb ? 3 : 2, 0);
+	Reg_(tin, bwin-1, 0);
+
+modulebody
 
 	int ii;
 
 	// assign stub IDs	
 	for (ii = 0; ii < tstub; ii++)
 	{
-		assign id[ii] = ((Signal)cns(3, ii/ninp), cns(3, ii%ninp + 1 + idoff*3));
+		assign id[ii] = (Signal(3, ii/ninp), Signal(3, ii%ninp + 1 + idoff*3));
 	}
 
 	always (posedge (clk))
@@ -104,20 +106,22 @@ beginmodule
 		begin
 			if (mb)	
 			{
-				q[i] = in[i](BWQB + BWPHI-1, BWPHI);
+				tin = in[i];
+				q[i] = tin(BWQB + BWPHI-1, BWPHI);
 				Exists(i) = q[i] != 0;
 			}
 			else 
 			{
-				q[i] = in[i](BWQ+BWETAIN+BWPHI-1, BWETAIN+BWPHI);
-				Exists(i) = in[i] (bwin-1);
+				tin = in[i];
+				q[i] = tin(BWQ+BWETAIN+BWPHI-1, BWETAIN+BWPHI);
+				Exists(i) = tin(bwin-1);
 			}
 		end
 
 		m0 = 0;
 		m1 = 0;
 		m2 = 0;
-		if (mb) m3 = 0;		
+		if (mb) m3 = 0;
 
 		outA = 0;
 		outB = 0;
@@ -162,32 +166,32 @@ beginmodule
 			if (mb)
 			{
 				begincase(i)
-					case1("4'h0") s = CountZ (larg1(11,1));
-					case1("4'h1") s = CountZ ((larg1(11,2) , larg1(0)));
-					case1("4'h2") s = CountZ ((larg1(11,3) , larg1(1,0)));
-					case1("4'h3") s = CountZ ((larg1(11,4) , larg1(2,0)));
-					case1("4'h4") s = CountZ ((larg1(11,5) , larg1(3,0)));
-					case1("4'h5") s = CountZ ((larg1(11,6) , larg1(4,0)));
-					case1("4'h6") s = CountZ ((larg1(11,7) , larg1(5,0)));
-					case1("4'h7") s = CountZ ((larg1(11,8) , larg1(6,0)));
-					case1("4'h8") s = CountZ ((larg1(11,9) , larg1(7,0)));
-					case1("4'h9") s = CountZ ((larg1(11,10), larg1(8,0)));
-					case1("4'ha") s = CountZ ((larg1(11)   , larg1(9,0)));
-					case1("4'hb") s = CountZ (larg1(10,0));
+					case1(Signal(4, 0x0)) s = CountZ (larg1(11,1));
+					case1(Signal(4, 0x1)) s = CountZ ((larg1(11,2) , larg1(0)));
+					case1(Signal(4, 0x2)) s = CountZ ((larg1(11,3) , larg1(1,0)));
+					case1(Signal(4, 0x3)) s = CountZ ((larg1(11,4) , larg1(2,0)));
+					case1(Signal(4, 0x4)) s = CountZ ((larg1(11,5) , larg1(3,0)));
+					case1(Signal(4, 0x5)) s = CountZ ((larg1(11,6) , larg1(4,0)));
+					case1(Signal(4, 0x6)) s = CountZ ((larg1(11,7) , larg1(5,0)));
+					case1(Signal(4, 0x7)) s = CountZ ((larg1(11,8) , larg1(6,0)));
+					case1(Signal(4, 0x8)) s = CountZ ((larg1(11,9) , larg1(7,0)));
+					case1(Signal(4, 0x9)) s = CountZ ((larg1(11,10), larg1(8,0)));
+					case1(Signal(4, 0xa)) s = CountZ ((larg1(11)   , larg1(9,0)));
+					case1(Signal(4, 0xb)) s = CountZ (larg1(10,0));
 				endcase
 			}
 			else
 			{
 				begincase(i)
-					case1("4'h0") s = CountZ (larg1(8,1));
-					case1("4'h1") s = CountZ ((larg1(8,2), larg1(0)));
-					case1("4'h2") s = CountZ ((larg1(8,3), larg1(1,0)));
-					case1("4'h3") s = CountZ ((larg1(8,4), larg1(2,0)));
-					case1("4'h4") s = CountZ ((larg1(8,5), larg1(3,0)));
-					case1("4'h5") s = CountZ ((larg1(8,6), larg1(4,0)));
-					case1("4'h6") s = CountZ ((larg1(8,7), larg1(5,0)));
-					case1("4'h7") s = CountZ ((larg1(8)  , larg1(6,0)));
-					case1("4'h8") s = CountZ (larg1(7,0));
+					case1(Signal(4, 0x0)) s = CountZ (larg1(8,1));
+					case1(Signal(4, 0x1)) s = CountZ ((larg1(8,2), larg1(0)));
+					case1(Signal(4, 0x2)) s = CountZ ((larg1(8,3), larg1(1,0)));
+					case1(Signal(4, 0x3)) s = CountZ ((larg1(8,4), larg1(2,0)));
+					case1(Signal(4, 0x4)) s = CountZ ((larg1(8,5), larg1(3,0)));
+					case1(Signal(4, 0x5)) s = CountZ ((larg1(8,6), larg1(4,0)));
+					case1(Signal(4, 0x6)) s = CountZ ((larg1(8,7), larg1(5,0)));
+					case1(Signal(4, 0x7)) s = CountZ ((larg1(8)  , larg1(6,0)));
+					case1(Signal(4, 0x8)) s = CountZ (larg1(7,0));
 				endcase
 			}
 
@@ -243,7 +247,6 @@ beginmodule
 		end
 	end
 
-		
 endmodule
 }
 

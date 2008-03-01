@@ -47,6 +47,8 @@ beginmodule
 	Reg(eqold);
 	Reg(eqnew);
 
+modulebody
+
 	always (posedge(clk))	
 	begin
 
@@ -56,7 +58,7 @@ beginmodule
 		amA = ifelse((qA < 3), 1, 0);
 		amB = ifelse((qB < 3), 1, 0);
 
-		Deta = ifelse(etaA > etaB, cns(BWETAIN, 0), etaB - etaA); // etaB must be larger than etaA always
+		Deta = ifelse(etaA > etaB, Signal(BWETAIN, 0), etaB - etaA); // etaB must be larger than etaA always
 		Dphi = ifelse(phiA > phiB, phiA - phiB, phiB - phiA);
 
 		eqold = eqnew;

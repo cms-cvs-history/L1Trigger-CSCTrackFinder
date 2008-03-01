@@ -13,10 +13,10 @@ void SPvpp_MuonMux::operator()
 	Signal pt6, Signal sign6, Signal modeMem6, Signal etaPT6, Signal FR6, Signal phi6, Signal rank6,
 	Signal pt7, Signal sign7, Signal modeMem7, Signal etaPT7, Signal FR7, Signal phi7, Signal rank7,
 	Signal pt8, Signal sign8, Signal modeMem8, Signal etaPT8, Signal FR8, Signal phi8, Signal rank8,
-
-	Signal id0, Signal id1, Signal id2, Signal id3, Signal id4, Signal id5,
-	Signal id6, Signal id7, Signal id8,
-	
+																					  		  		
+	Signal id0, Signal id1, Signal id2, Signal id3, Signal id4, Signal id5,			  		  		
+	Signal id6, Signal id7, Signal id8,												  		  		
+																					  		  		
 	Signal ptH, Signal signH, Signal modeMemH, Signal etaPTH, Signal FRH, Signal phiH, Signal rankH, 
 	Signal ptM, Signal signM, Signal modeMemM, Signal etaPTM, Signal FRM, Signal phiM, Signal rankM,
 	Signal ptL, Signal signL, Signal modeMemL, Signal etaPTL, Signal FRL, Signal phiL, Signal rankL,
@@ -75,6 +75,8 @@ beginmodule
 
 	i.reg(3, 0, "i");
 	
+modulebody
+
 	always 
 	(
 		m0 or m1 or m2 or
@@ -111,15 +113,15 @@ beginmodule
 		rank[6] = rank6;
 		rank[7] = rank7;
 		rank[8] = rank8;
-		
+
 		id[0] = id0; id[1] = id1; id[2] = id2;
 		id[3] = id3; id[4] = id4; id[5] = id5;
 		id[6] = id6; id[7] = id7; id[8] = id8;
-				
+		
 		rankH		 = 0;			
 		rankM		 = 0;
 		rankL		 = 0;
-		
+
 		ptH		 = 0;			
 		ptM		 = 0;
 		ptL		 = 0;
@@ -151,11 +153,11 @@ beginmodule
 		//Loop over params and mux out best ones according to mx's
 		For (i = 0, i < 9, i++)
 		begin
-					
+			
 			rankH	 = rankH	| ifelse(m0(i) == 1, rank[i], 0);
 			rankM	 = rankM	| ifelse(m1(i) == 1, rank[i], 0);
 			rankL	 = rankL	| ifelse(m2(i) == 1, rank[i], 0);
-			
+
 			ptH		 = ptH		| ifelse(m0(i) == 1, pt[i], 0);
 			ptM		 = ptM		| ifelse(m1(i) == 1, pt[i], 0);
 			ptL		 = ptL		| ifelse(m2(i) == 1, pt[i], 0);

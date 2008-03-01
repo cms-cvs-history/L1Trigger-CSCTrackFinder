@@ -20,12 +20,11 @@ public:
 	Signal inArr, inBrr, inCrr, inDrr, inAr, inBr, inCr, inDr;
 	Signal id[12];
 	memory in, q, Larger;
-	Signal Exists, m0, m1, m2, m3, i, j, ilgj, larg1, s;
+	Signal Exists, m0, m1, m2, m3, i, j, ilgj, larg1, s, tin;
 
 	SPvpp_CountZeroes CountZ;
 
 	int idoff, mb;
-	
 
 };
 

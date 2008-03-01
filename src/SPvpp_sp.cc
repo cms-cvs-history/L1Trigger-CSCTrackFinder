@@ -3,7 +3,6 @@
 #include <time.h>
 
 
-
 void SPvpp_sp::operator()
 (
 	Signal me1ap, Signal me1bp, Signal me1cp, Signal me1dp, Signal me1ep, Signal me1fp,
@@ -82,12 +81,12 @@ initio
 	Input_(etawn4, BWETAIN, 0); 
 	Input_(etawn5, BWETAIN, 0); 
 
-	Input_(mindphi, BWPHI-1, 0);
+	Input_(mindphi, BWPHIFSU-1, 0);
 	Input_(mindeta_acc, BWETAIN-1,0); // min eta difference for acc tracks
 	Input_(maxdeta_acc, BWETAIN-1,0); // max eta difference for acc tracks
 	Input_(maxdphi_acc, BWPHI-3,0);   // max phi difference for acc tracks (without 2 lower bits)
 
-	Input_(control, 15, 0); // control register {reserved[14:0], BXA_enable}
+	Input_(control, 15, 0); // control register {reserved[6:0], pretrig[1:0], phi_watch_en, "allow q=4", "allow q=3", BXA_depth[2:0], reserved[0]}
 
 	clkp.input("clkp");
 
@@ -155,7 +154,7 @@ beginmodule
 	Wire__(MinEta, BWETAIN-1, 0, 7, 0); 
 	Wire__(MaxEta, BWETAIN-1, 0, 7, 0); 
 	Wire__(EtaWindow, BWETAIN, 0, 5, 0);
-	
+
 	Wire__(me1bi, BWBXID-1, 0, NSEG1, 0); // original bx and id of the track 
 	Wire__(me2bi, BWBXID-1, 0, NSEG234, 0); // number of elements for each station is +1 because stub IDs start from 1
 	Wire__(me3bi, BWBXID-1, 0, NSEG234, 0);
@@ -169,6 +168,7 @@ beginmodule
 	Reg__(me4bir, BWBXID-1, 0, NSEG234, 0);
 	Reg__(mb1bir, BWBXID-1, 0, NSEG12B, 0);
 	Reg__(mb2bir, BWBXID-1, 0, NSEG12B, 0);
+
 
 // wires --------------------------------------------------
 
@@ -206,19 +206,19 @@ beginmodule
 
 	for (i = 0; i < NTAU; i++)
 	{
-		me2Id1[i].wire (2, 0, "me2Id1", i);  
+		me2Id1[i].wire (2, 0, "me2Id1", i);    
 		me3Id1[i].wire (2, 0, "me3Id1", i);  
-		mb2idb1[i].wire(2, 0, "mb2idb1", i);
+		mb2idb1[i].wire(2, 0, "mb2idb1", i); 
 		me2Id3[i].wire (1, 0, "me2Id3", i);  
 		me3Id2[i].wire (1, 0, "me3Id2", i);  
-		mb2idb2[i].wire(2, 0, "mb2idb2", i);
-		me2Id4[i].wire (1, 0, "me2Id4", i); 
-		me3Id4[i].wire (1, 0, "me3Id4", i);                   
-		mb2id1[i].wire (2, 0, "mb2id1", i); 
-		
-		me2Rank[i].wire(5, 0, "me2Rank", i);
-		me3Rank[i].wire(5, 0, "me3Rank", i);
-		mb2rank[i].wire(5, 0, "mb2rank", i);                 
+		mb2idb2[i].wire(2, 0, "mb2idb2", i); 
+		me2Id4[i].wire (1, 0, "me2Id4", i);  
+		me3Id4[i].wire (1, 0, "me3Id4", i);            
+		mb2id1[i].wire (2, 0, "mb2id1", i);  
+				  							 
+		me2Rank[i].wire(5, 0, "me2Rank", i); 
+		me3Rank[i].wire(5, 0, "me3Rank", i); 
+		mb2rank[i].wire(5, 0, "mb2rank", i);          
 	}
 
 	Reg__(me2Id1r ,2, 0, NTAU-1, 0); Reg__(me2Id1rr ,2, 0, NTAU-1, 0);
@@ -242,7 +242,7 @@ beginmodule
 	Wire_(rankH, BWRANK-1, 0);
 	Wire_(rankM, BWRANK-1, 0);
 	Wire_(rankL, BWRANK-1, 0);
-	
+
 	pt2a.wire(BWPT-1,0,"pt2a"); 
 	pt2b.wire(BWPT-1,0,"pt2b"); 
 	pt2c.wire(BWPT-1,0,"pt2c");
@@ -344,7 +344,7 @@ beginmodule
 	phiL.wire(BWPHIOUT-1, 0, "phiL");
 
 // regs ------------------------------------------------------------------
-	Eqme12r.reg  (BWEQ12R-1, 0, "Eqme12r");
+	Eqme12r.reg  (BWEQ12R-1, 0, "Eqme12r");     
 	Eqme13r.reg  (BWEQ12R-1, 0, "Eqme13r");	
 	Eqme12ovr.reg(BWEQ12OVR-1, 0, "Eqme12ovr");
 	Eqme23r.reg  (BWEQ234R-1, 0, "Eqme23r");
@@ -392,8 +392,7 @@ beginmodule
 	etaPTb2ar.reg(BWETAOUT-1,0,"etaPTb2ar");Reg_(etaPTb2arr, BWETAOUT-1,0); Reg_(etaPTb2arrr, BWETAOUT-1,0);
 	etaPTb2br.reg(BWETAOUT-1,0,"etaPTb2br");Reg_(etaPTb2brr, BWETAOUT-1,0); Reg_(etaPTb2brrr, BWETAOUT-1,0);
 	etaPTb2cr.reg(BWETAOUT-1,0,"etaPTb2cr");Reg_(etaPTb2crr, BWETAOUT-1,0); Reg_(etaPTb2crrr, BWETAOUT-1,0);
-	
-	
+
 	FR2ar.reg ("FR2ar");   Reg(FR2arr);	    Reg(FR2arrr);	
 	FR2br.reg ("FR2br");   Reg(FR2brr);		Reg(FR2brrr);	
 	FR2cr.reg ("FR2cr");   Reg(FR2crr);		Reg(FR2crrr);	
@@ -415,8 +414,10 @@ beginmodule
 	phib2cr.reg(BWPHI-1,0,"phib2cr");  Reg_(phib2crr, BWPHI-1,0);  Reg_(phib2crrr, BWPHI-1,0);
 	
 	ir.reg(4, 0, "ir");
-	
+
 	Reg_(Eqme23ar, 6, 0); // accelerator tracks extrapolation results delay
+
+modulebody
 	
 	assign MinEta [0] = mneta0;
 	assign MinEta [1] = mneta1;
@@ -444,7 +445,6 @@ beginmodule
 	assign EtaWindow [5] = etawn5;
 
 
-
 //#############################################################################
 // Madorsky:
 // Drift tubes send second trackstub (if available) on the next BX
@@ -459,7 +459,7 @@ beginmodule
 		me3ap, me3bp, me3cp,
 		me4ap, me4bp, me4cp,
 		dmb1[a], dmb1[b], dmb1[c], dmb1[d],
-		"16'd0", "16'd0", "16'd0", "16'd0",
+		Signal(16, 0), Signal(16, 0), Signal(16, 0), Signal(16, 0),
 
 		me1[a],	me1[b],	me1[c],	me1[d],	me1[e],	me1[f],
 		me2[a],	me2[b],	me2[c],
@@ -542,10 +542,11 @@ beginmodule
 			u24[i][j].init("eu23_24_34", "u24_", i*10+j);
 			u34[i][j].init("eu23_24_34", "u34_", i*10+j);
 
+
 			u23[i][j] (me2[i], me3[j], Eqme23(l), MinEta[2], MaxEta[2], EtaWindow[2], control(5,4));
 			u24[i][j] (me2[i], me4[j], Eqme24(l), MinEta[3], MaxEta[3], EtaWindow[3], control(5,4));
 			u34[i][j] (me3[i], me4[j], Eqme34(l), MinEta[4], MaxEta[4], EtaWindow[4], control(5,4));
-			
+
 			// accelerator track extrapolators
 			u23a[i][j].init("eu23a", "u23a_", i*10+j);
 			u23a[i][j] (me2[i], me3[j], Eqme23a(l), mindeta_acc, maxdeta_acc, maxdphi_acc /*, control(5,4)*/, clkp);
@@ -605,6 +606,7 @@ beginmodule
 		);
 	}
 
+
 // assign pt to all 9 muons 
 	ptu2a 
 	(
@@ -612,7 +614,7 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		me3rr[0], me3rr[1], me3rr[2],
 		me4rr[0], me4rr[1], me4rr[2],
-		me2Rankr[0], me2Id1r[0], "2'h1", me2Id3r[0], me2Id4r[0], u2aId,
+		me2Rankr[0], me2Id1r[0], Signal(2, 0x1), me2Id3r[0], me2Id4r[0], u2aId,
 		pt2a, sign2a, mode2a, etaPT2a, FR2a, phi2a,	u2aIdt, me2Rankrr[0],
 		clkp
 	);
@@ -623,7 +625,7 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		me3rr[0], me3rr[1], me3rr[2],
 		me4rr[0], me4rr[1], me4rr[2],
-		me2Rankr[1], me2Id1r[1], "2'h2", me2Id3r[1], me2Id4r[1], u2bId,
+		me2Rankr[1], me2Id1r[1], Signal(2, 0x2), me2Id3r[1], me2Id4r[1], u2bId,
 		pt2b, sign2b, mode2b, etaPT2b, FR2b, phi2b, u2bIdt, me2Rankrr[1],
 		clkp
 	);
@@ -634,7 +636,7 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		me3rr[0], me3rr[1], me3rr[2],
 		me4rr[0], me4rr[1], me4rr[2],
-		me2Rankr[2], me2Id1r[2], "2'h3", me2Id3r[2], me2Id4r[2], u2cId,
+		me2Rankr[2], me2Id1r[2], Signal(2, 0x3), me2Id3r[2], me2Id4r[2], u2cId,
 		pt2c, sign2c, mode2c, etaPT2c, FR2c, phi2c, u2cIdt, me2Rankrr[2], 
 		clkp
 	);
@@ -645,7 +647,7 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		me3rr[0], me3rr[1], me3rr[2],
 		me4rr[0], me4rr[1], me4rr[2],
-		me3Rankr[0], me3Id1r[0], me3Id2r[0], "2'h1", me3Id4r[0], u3aId,
+		me3Rankr[0], me3Id1r[0], me3Id2r[0], Signal(2, 0x1), me3Id4r[0], u3aId,
 		pt3a, sign3a, mode3a, etaPT3a, FR3a, phi3a, u3aIdt, me3Rankrr[0],
 		clkp
 	);
@@ -656,7 +658,7 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		me3rr[0], me3rr[1], me3rr[2],
 		me4rr[0], me4rr[1], me4rr[2],
-		me3Rankr[1], me3Id1r[1], me3Id2r[1], "2'h2", me3Id4r[1], u3bId,
+		me3Rankr[1], me3Id1r[1], me3Id2r[1], Signal(2, 0x2), me3Id4r[1], u3bId,
 		pt3b, sign3b, mode3b, etaPT3b, FR3b, phi3b, u3bIdt, me3Rankrr[1],
 		clkp
 	);
@@ -667,7 +669,7 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		me3rr[0], me3rr[1], me3rr[2],
 		me4rr[0], me4rr[1], me4rr[2],
-		me3Rankr[2], me3Id1r[2], me3Id2r[2], "2'h3", me3Id4r[2], u3cId,
+		me3Rankr[2], me3Id1r[2], me3Id2r[2], Signal(2, 0x3), me3Id4r[2], u3cId,
 		pt3c, sign3c, mode3c, etaPT3c, FR3c, phi3c, u3cIdt, me3Rankrr[2],
 		clkp
 	);
@@ -678,7 +680,7 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		mb1rr[0], mb1rr[1], mb1rr[2], mb1rr[3], 
 		mb2rr[0], mb2rr[1], mb2rr[2], mb2rr[3], 
-		mb2rankr[0], mb2id1r[0], "2'h1", mb2idb1r[0], mb2idb2r[0], ub2aId,
+		mb2rankr[0], mb2id1r[0], Signal(2, 0x1), mb2idb1r[0], mb2idb2r[0], ub2aId,
 		ptb2a, signb2a, modeb2a, etaPTb2a, FRb2a, phib2a, ub2aIdt, mb2rankrr[0],
 		clkp
 	);
@@ -689,7 +691,7 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		mb1rr[0], mb1rr[1], mb1rr[2], mb1rr[3], 
 		mb2rr[0], mb2rr[1], mb2rr[2], mb2rr[3], 
-		mb2rankr[1], mb2id1r[1], "2'h2", mb2idb1r[1], mb2idb2r[1], ub2bId,
+		mb2rankr[1], mb2id1r[1], Signal(2, 0x2), mb2idb1r[1], mb2idb2r[1], ub2bId,
 		ptb2b, signb2b, modeb2b, etaPTb2b, FRb2b, phib2b, ub2bIdt, mb2rankrr[1],
 		clkp
 	);
@@ -700,7 +702,7 @@ beginmodule
 		me2rr[0], me2rr[1], me2rr[2],
 		mb1rr[0], mb1rr[1], mb1rr[2], mb1rr[3], 
 		mb2rr[0], mb2rr[1], mb2rr[2], mb2rr[3], 
-		mb2rankr[2], mb2id1r[2], "2'h3", mb2idb1r[2], mb2idb2r[2], ub2cId,
+		mb2rankr[2], mb2id1r[2], Signal(2, 0x3), mb2idb1r[2], mb2idb2r[2], ub2cId,
 		ptb2c, signb2c, modeb2c, etaPTb2c, FRb2c, phib2c, ub2cIdt, mb2rankrr[2], 
 		clkp
 	);
@@ -709,21 +711,21 @@ beginmodule
 // select the best muons
 	fsuv
 	(
-		me2Rankrr[0],  phi2a, // phi inputs are calculated by PT assignment units within the same clock
-		me2Rankrr[1],  phi2b, 
-		me2Rankrr[2],  phi2c, 
+		me2Rankrr[0],  phi2a(BWPHI-1, BWPHI-BWPHIFSU), // fsu takes 6 MSBits of phi
+		me2Rankrr[1],  phi2b(BWPHI-1, BWPHI-BWPHIFSU), 
+		me2Rankrr[2],  phi2c(BWPHI-1, BWPHI-BWPHIFSU), 
 		        			   
-		me3Rankrr[0],  phi3a, 
-		me3Rankrr[1],  phi3b, 
-		me3Rankrr[2],  phi3c, 
+		me3Rankrr[0],  phi3a(BWPHI-1, BWPHI-BWPHIFSU), 
+		me3Rankrr[1],  phi3b(BWPHI-1, BWPHI-BWPHIFSU), 
+		me3Rankrr[2],  phi3c(BWPHI-1, BWPHI-BWPHIFSU), 
 		        	 	   	
-		mb2rankrr[0],  phib2a, 
-		mb2rankrr[1],  phib2b, 
-		mb2rankrr[2],  phib2c, 
+		mb2rankrr[0],  phib2a(BWPHI-1, BWPHI-BWPHIFSU), 
+		mb2rankrr[1],  phib2b(BWPHI-1, BWPHI-BWPHIFSU), 
+		mb2rankrr[2],  phib2c(BWPHI-1, BWPHI-BWPHIFSU), 
 
 //  m's contain ids for best tracks, 0->2
 		m0, m1, m2,
-
+		
 		control(6), // ghost cancellation based on phi proximity
 		mindphi, // min phi difference for ghost cancellation
 
@@ -812,6 +814,7 @@ beginmodule
 		ub2bIdrrr	 = ub2bIdrr;
 		ub2cIdrrr	 = ub2cIdrr;
 
+
 // fourth clock
 		for (irr = 0; irr < NTAU; irr++)
 		{
@@ -889,6 +892,7 @@ beginmodule
 		ub2aIdrr	 = ub2aIdr;
 		ub2bIdrr	 = ub2bIdr;
 		ub2cIdrr	 = ub2cIdr;
+
 
 // third clock
 		for (irr = 0; irr < NTAU; irr++)
@@ -980,6 +984,8 @@ beginmodule
 			mb2idb2rr[irr] =  mb2idb2r[irr];
 			mb2id1rr [irr] =  mb2id1r[irr] ;
 		}
+
+
 // second clock
 
 		For (ir = 0, ir < NSEG1, ir++) me1rr[ir] = me1r[ir];	
@@ -1016,17 +1022,18 @@ beginmodule
 		// the code below does this:
 		// 1. take stub Id found by assembly unit (me2Id1[0] means station 1 stub that matched key station 2 stub). Stub Id for key station is a fixed number (0,1,2).
 		// 2. look up the original stub Id and BX from me1bir. This needs to be done because BXA sometimes changes stub Id and BX
-		u2aId 	 = ((Signal)"6'h0", (Signal)"6'h0", me4bir[me2Id4[0]], me3bir[me2Id3[0]], me2bir[1], me1bir[me2Id1[0]]);
-		u2bId 	 = ((Signal)"6'h0", (Signal)"6'h0", me4bir[me2Id4[1]], me3bir[me2Id3[1]], me2bir[2], me1bir[me2Id1[1]]);
-		u2cId    = ((Signal)"6'h0", (Signal)"6'h0", me4bir[me2Id4[2]], me3bir[me2Id3[2]], me2bir[3], me1bir[me2Id1[2]]);
+		u2aId 	 = (Signal(6, 0x0), Signal(6, 0x0), me4bir[me2Id4[0]], me3bir[me2Id3[0]], me2bir[1], me1bir[me2Id1[0]]);
+		u2bId 	 = (Signal(6, 0x0), Signal(6, 0x0), me4bir[me2Id4[1]], me3bir[me2Id3[1]], me2bir[2], me1bir[me2Id1[1]]);
+		u2cId    = (Signal(6, 0x0), Signal(6, 0x0), me4bir[me2Id4[2]], me3bir[me2Id3[2]], me2bir[3], me1bir[me2Id1[2]]);
 			  	   	   
-		u3aId 	 = ((Signal)"6'h0", (Signal)"6'h0", me4bir[me3Id4[0]], me3bir[1], me2bir[me3Id2[0]], me1bir[me3Id1[0]]);
-		u3bId 	 = ((Signal)"6'h0", (Signal)"6'h0", me4bir[me3Id4[1]], me3bir[2], me2bir[me3Id2[1]], me1bir[me3Id1[1]]);
-		u3cId 	 = ((Signal)"6'h0", (Signal)"6'h0", me4bir[me3Id4[2]], me3bir[3], me2bir[me3Id2[2]], me1bir[me3Id1[2]]);
+		u3aId 	 = (Signal(6, 0x0), Signal(6, 0x0), me4bir[me3Id4[0]], me3bir[1], me2bir[me3Id2[0]], me1bir[me3Id1[0]]);
+		u3bId 	 = (Signal(6, 0x0), Signal(6, 0x0), me4bir[me3Id4[1]], me3bir[2], me2bir[me3Id2[1]], me1bir[me3Id1[1]]);
+		u3cId 	 = (Signal(6, 0x0), Signal(6, 0x0), me4bir[me3Id4[2]], me3bir[3], me2bir[me3Id2[2]], me1bir[me3Id1[2]]);
 			  	   	   
-		ub2aId	 = (mb2bir[mb2idb2[0]], mb1bir[mb2idb1[0]], (Signal)"6'h0", (Signal)"6'h0", me2bir[1], me1bir[mb2id1[0]]);
-		ub2bId	 = (mb2bir[mb2idb2[1]], mb1bir[mb2idb1[1]], (Signal)"6'h0", (Signal)"6'h0", me2bir[2], me1bir[mb2id1[1]]);
-		ub2cId	 = (mb2bir[mb2idb2[2]], mb1bir[mb2idb1[2]], (Signal)"6'h0", (Signal)"6'h0", me2bir[3], me1bir[mb2id1[2]]);
+		ub2aId	 = (mb2bir[mb2idb2[0]], mb1bir[mb2idb1[0]], Signal(6, 0x0), Signal(6, 0x0), me2bir[1], me1bir[mb2id1[0]]);
+		ub2bId	 = (mb2bir[mb2idb2[1]], mb1bir[mb2idb1[1]], Signal(6, 0x0), Signal(6, 0x0), me2bir[2], me1bir[mb2id1[1]]);
+		ub2cId	 = (mb2bir[mb2idb2[2]], mb1bir[mb2idb1[2]], Signal(6, 0x0), Signal(6, 0x0), me2bir[3], me1bir[mb2id1[2]]);
+
 
 // first clock
 		Eqme12r   =  Eqme12  ; // {2c1f[2], 2c1e[2], 2c1d[2], 2c1c[2], 2c1b[2], 2c1a[2], // [2] means size of field is 2 bits
@@ -1060,7 +1067,6 @@ beginmodule
 		Eq2b2r	  =	 Eq2b2	 ; // {2c2d[1], 2c2c[1], 2c2b[1], 2c2a[1], // [1] means size of field is 1 bits
 							   //  2b2d[1], 2b2c[1], 2b2b[1], 2b2a[1],                                     
 							   //  2a2d[1], 2a2c[1], 2a2b[1], 2a2a[1]}                                     
-
 
 		// register the PtAssignment units inputs to synchronize them with tau outputs
 		for (irr = 0; irr < NSEG1; irr++) me1r[irr]	= me1[irr];	
@@ -1097,8 +1103,8 @@ beginmodule
 		}
 	
 		// accelerator extrapolation result delay to match collision timing
-		Eqme23ar = (Eqme23ar(5, 0), ror(Eqme23a));	
-		
+		Eqme23ar = (Eqme23ar(5, 0), ror(Eqme23a));
+
 	end
 
 // multiplex the best muons to the output
@@ -1140,22 +1146,13 @@ beginmodule
 		idH, idM, idL,
 
 		pHp, pMp, pLp,
-		idHp, idMp, idLp,
-		
-		Eqme23ar(6), // acc track found		
-		
-		control(8,7), // pretrig
+		idHp, idMp, idLp,	
 
+		Eqme23ar(6), // acc track found		
+
+		control(8,7), // pretrig
 		clkp
 	);
-
-    // assign outputs
-//	assign	pHp = (FRH, phiH, ptH, signH, modeMemH, etaPTH);
-//	assign	pMp = (FRM, phiM, ptM, signM, modeMemM, etaPTM);
-//	assign	pLp = (FRL, phiL, ptL, signL, modeMemL, etaPTL);
-//	assign	idHp = idH;
-//	assign	idMp = idM;
-//	assign	idLp = idL;
 
 // generate date output
 #ifdef VGEN
@@ -1170,3 +1167,5 @@ beginmodule
 
 endmodule
 }
+
+

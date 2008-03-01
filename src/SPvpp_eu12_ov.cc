@@ -1,4 +1,4 @@
-#include <L1Trigger/CSCTrackFinder/src/SPvpp_eu12_ov.h>
+#include<L1Trigger/CSCTrackFinder/src/SPvpp_eu12_ov.h>
 #include <L1Trigger/CSCCommonTrigger/interface/vmac.h>
 
 void SPvpp_eu12_ov::operator()
@@ -22,7 +22,7 @@ initio
 	passZ.input("passZ");
 	meZ.input(BWMEIN-1, 0, "meZ");
 	Input_(control, 1, 0); // {"allow q = 4", "allow q = 3"}
-	
+
 beginmodule
 	qA.reg(BWQ-1,0,"qA");
 	qB.reg(BWQ-1,0,"qB");
@@ -38,6 +38,8 @@ beginmodule
 	Dphi.reg(BWPHI-3,0,"Dphi");
 	validA.reg ("validA");
 	validB.reg ("validB");
+
+modulebody
 
 	always (meA or meB or passX or passY or meY or passZ or meZ or control)
 	begin

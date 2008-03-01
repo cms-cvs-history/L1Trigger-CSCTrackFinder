@@ -1,6 +1,5 @@
-#include "L1Trigger/CSCTrackFinder/src/SPvpp_eu23_24_34.h"
-#include "L1Trigger/CSCCommonTrigger/interface/vmac.h"
-
+#include <L1Trigger/CSCTrackFinder/src/SPvpp_eu23_24_34.h>
+#include <L1Trigger/CSCCommonTrigger/interface/vmac.h>
 void SPvpp_eu23_24_34::operator()
 (
 	Signal meA,
@@ -40,6 +39,8 @@ beginmodule
 	validA.reg ("validA");
 	validB.reg ("validB");
 
+modulebody
+
 	always (meA or meB or MinEta or MaxEta or EtaWindow or control)	
 	begin
 
@@ -55,7 +56,7 @@ beginmodule
 
 		If 
 		(
-		 	//(!amA || !amB) &&
+//			(!amA || !amB) &&
 			(etaA <= MaxEta) && (etaA >= MinEta) && (etaB <= MaxEta) && (etaB >= MinEta) &&
 			(Deta <= EtaWindow) &&
 			(Dphi(9,7) == 0) &&

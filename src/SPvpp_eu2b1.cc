@@ -34,6 +34,8 @@ beginmodule
 	MedP2b1.init(6,0,"_MedP2b1");
 	LowP2b1.init(6,0,"_LowP2b1");
 
+modulebody
+
 	always (meA or mbB or MinEta or MaxEta)	
 	begin
 
@@ -70,14 +72,14 @@ initio
 beginfunction	
 	begin
 		begincase (eta(BWETAIN-1,1))
-			case1("6'd00") result =  0; case1("6'd01") result =  0; case1("6'd02") result =  0; case1("6'd03") result = 12; case1("6'd04") result = 11; case1("6'd05") result = 11; case1("6'd06") result = 10; case1("6'd07") result =  9;
-			case1("6'd08") result =  8; case1("6'd09") result =  8; case1("6'd10") result =  7; case1("6'd11") result =  7; case1("6'd12") result =  7; case1("6'd13") result =  6; case1("6'd14") result =  0; case1("6'd15") result =  0; 
-			case1("6'd16") result =  0; case1("6'd17") result =  0; case1("6'd18") result =  0; case1("6'd19") result =  0; case1("6'd20") result =  0; case1("6'd21") result =  0; case1("6'd22") result =  0; case1("6'd23") result =  0; 
-			case1("6'd24") result =  0; case1("6'd25") result =  0; case1("6'd26") result =  0; case1("6'd27") result =  0; case1("6'd28") result =  0; case1("6'd29") result =  0; case1("6'd30") result =  0; case1("6'd31") result =  0; 
-			case1("6'd32") result =  0; case1("6'd33") result =  0; case1("6'd34") result =  0; case1("6'd35") result =  0; case1("6'd36") result =  0; case1("6'd37") result =  0; case1("6'd38") result =  0; case1("6'd39") result =  0; 
-			case1("6'd40") result =  0; case1("6'd41") result =  0; case1("6'd42") result =  0; case1("6'd43") result =  0; case1("6'd44") result =  0; case1("6'd45") result =  0; case1("6'd46") result =  0; case1("6'd47") result =  0; 
-			case1("6'd48") result =  0; case1("6'd49") result =  0; case1("6'd50") result =  0; case1("6'd51") result =  0; case1("6'd52") result =  0; case1("6'd53") result =  0; case1("6'd54") result =  0; case1("6'd55") result =  0; 
-			case1("6'd56") result =  0; case1("6'd57") result =  0; case1("6'd58") result =  0; case1("6'd59") result =  0; case1("6'd60") result =  0; case1("6'd61") result =  0; case1("6'd62") result =  0; case1("6'd63") result =  0; 
+			case1(Signal(6, 00)) result =  0; case1(Signal(6, 01)) result =  0; case1(Signal(6, 02)) result =  0; case1(Signal(6, 03)) result = 12; case1(Signal(6, 04)) result = 11; case1(Signal(6, 05)) result = 11; case1(Signal(6, 06)) result = 10; case1(Signal(6, 07)) result =  9;
+			case1(Signal(6,  8)) result =  8; case1(Signal(6,  9)) result =  8; case1(Signal(6, 10)) result =  7; case1(Signal(6, 11)) result =  7; case1(Signal(6, 12)) result =  7; case1(Signal(6, 13)) result =  6; case1(Signal(6, 14)) result =  0; case1(Signal(6, 15)) result =  0; 
+			case1(Signal(6, 16)) result =  0; case1(Signal(6, 17)) result =  0; case1(Signal(6, 18)) result =  0; case1(Signal(6, 19)) result =  0; case1(Signal(6, 20)) result =  0; case1(Signal(6, 21)) result =  0; case1(Signal(6, 22)) result =  0; case1(Signal(6, 23)) result =  0; 
+			case1(Signal(6, 24)) result =  0; case1(Signal(6, 25)) result =  0; case1(Signal(6, 26)) result =  0; case1(Signal(6, 27)) result =  0; case1(Signal(6, 28)) result =  0; case1(Signal(6, 29)) result =  0; case1(Signal(6, 30)) result =  0; case1(Signal(6, 31)) result =  0; 
+			case1(Signal(6, 32)) result =  0; case1(Signal(6, 33)) result =  0; case1(Signal(6, 34)) result =  0; case1(Signal(6, 35)) result =  0; case1(Signal(6, 36)) result =  0; case1(Signal(6, 37)) result =  0; case1(Signal(6, 38)) result =  0; case1(Signal(6, 39)) result =  0; 
+			case1(Signal(6, 40)) result =  0; case1(Signal(6, 41)) result =  0; case1(Signal(6, 42)) result =  0; case1(Signal(6, 43)) result =  0; case1(Signal(6, 44)) result =  0; case1(Signal(6, 45)) result =  0; case1(Signal(6, 46)) result =  0; case1(Signal(6, 47)) result =  0; 
+			case1(Signal(6, 48)) result =  0; case1(Signal(6, 49)) result =  0; case1(Signal(6, 50)) result =  0; case1(Signal(6, 51)) result =  0; case1(Signal(6, 52)) result =  0; case1(Signal(6, 53)) result =  0; case1(Signal(6, 54)) result =  0; case1(Signal(6, 55)) result =  0; 
+			case1(Signal(6, 56)) result =  0; case1(Signal(6, 57)) result =  0; case1(Signal(6, 58)) result =  0; case1(Signal(6, 59)) result =  0; case1(Signal(6, 60)) result =  0; case1(Signal(6, 61)) result =  0; case1(Signal(6, 62)) result =  0; case1(Signal(6, 63)) result =  0; 
 		endcase
 	end
 endfunction
@@ -90,14 +92,14 @@ initio
 beginfunction
 	begin
 		begincase (eta(BWETAIN-1,1))
-			case1("6'd00") result = 127; case1("6'd01") result = 127; case1("6'd02") result = 127; case1("6'd03") result = 127; case1("6'd04") result =  39; case1("6'd05") result =  39; case1("6'd06") result =   39; case1("6'd07") result =  36;
-			case1("6'd08") result =  33; case1("6'd09") result =  30; case1("6'd10") result =  29; case1("6'd11") result =  25; case1("6'd12") result =  25; case1("6'd13") result =  23; case1("6'd14") result =  127; case1("6'd15") result = 127; 
-			case1("6'd16") result = 127; case1("6'd17") result = 127; case1("6'd18") result = 127; case1("6'd19") result = 127; case1("6'd20") result = 127; case1("6'd21") result = 127; case1("6'd22") result =  127; case1("6'd23") result = 127; 
-			case1("6'd24") result = 127; case1("6'd25") result = 127; case1("6'd26") result = 127; case1("6'd27") result = 127; case1("6'd28") result = 127; case1("6'd29") result = 127; case1("6'd30") result =  127; case1("6'd31") result = 127; 
-			case1("6'd32") result = 127; case1("6'd33") result = 127; case1("6'd34") result = 127; case1("6'd35") result = 127; case1("6'd36") result = 127; case1("6'd37") result = 127; case1("6'd38") result =  127; case1("6'd39") result = 127; 
-			case1("6'd40") result = 127; case1("6'd41") result = 127; case1("6'd42") result = 127; case1("6'd43") result = 127; case1("6'd44") result = 127; case1("6'd45") result = 127; case1("6'd46") result =  127; case1("6'd47") result = 127; 
-			case1("6'd48") result = 127; case1("6'd49") result = 127; case1("6'd50") result = 127; case1("6'd51") result = 127; case1("6'd52") result = 127; case1("6'd53") result = 127; case1("6'd54") result =  127; case1("6'd55") result = 127; 
-			case1("6'd56") result = 127; case1("6'd57") result = 127; case1("6'd58") result = 127; case1("6'd59") result = 127; case1("6'd60") result = 127; case1("6'd61") result = 127; case1("6'd62") result =  127; case1("6'd63") result = 127; 
+			case1(Signal(6, 00)) result = 127; case1(Signal(6, 01)) result = 127; case1(Signal(6, 02)) result = 127; case1(Signal(6, 03)) result = 127; case1(Signal(6, 04)) result =  39; case1(Signal(6, 05)) result =  39; case1(Signal(6, 06)) result =   39; case1(Signal(6, 07)) result =  36;
+			case1(Signal(6,  8)) result =  33; case1(Signal(6,  9)) result =  30; case1(Signal(6, 10)) result =  29; case1(Signal(6, 11)) result =  25; case1(Signal(6, 12)) result =  25; case1(Signal(6, 13)) result =  23; case1(Signal(6, 14)) result =  127; case1(Signal(6, 15)) result = 127; 
+			case1(Signal(6, 16)) result = 127; case1(Signal(6, 17)) result = 127; case1(Signal(6, 18)) result = 127; case1(Signal(6, 19)) result = 127; case1(Signal(6, 20)) result = 127; case1(Signal(6, 21)) result = 127; case1(Signal(6, 22)) result =  127; case1(Signal(6, 23)) result = 127; 
+			case1(Signal(6, 24)) result = 127; case1(Signal(6, 25)) result = 127; case1(Signal(6, 26)) result = 127; case1(Signal(6, 27)) result = 127; case1(Signal(6, 28)) result = 127; case1(Signal(6, 29)) result = 127; case1(Signal(6, 30)) result =  127; case1(Signal(6, 31)) result = 127; 
+			case1(Signal(6, 32)) result = 127; case1(Signal(6, 33)) result = 127; case1(Signal(6, 34)) result = 127; case1(Signal(6, 35)) result = 127; case1(Signal(6, 36)) result = 127; case1(Signal(6, 37)) result = 127; case1(Signal(6, 38)) result =  127; case1(Signal(6, 39)) result = 127; 
+			case1(Signal(6, 40)) result = 127; case1(Signal(6, 41)) result = 127; case1(Signal(6, 42)) result = 127; case1(Signal(6, 43)) result = 127; case1(Signal(6, 44)) result = 127; case1(Signal(6, 45)) result = 127; case1(Signal(6, 46)) result =  127; case1(Signal(6, 47)) result = 127; 
+			case1(Signal(6, 48)) result = 127; case1(Signal(6, 49)) result = 127; case1(Signal(6, 50)) result = 127; case1(Signal(6, 51)) result = 127; case1(Signal(6, 52)) result = 127; case1(Signal(6, 53)) result = 127; case1(Signal(6, 54)) result =  127; case1(Signal(6, 55)) result = 127; 
+			case1(Signal(6, 56)) result = 127; case1(Signal(6, 57)) result = 127; case1(Signal(6, 58)) result = 127; case1(Signal(6, 59)) result = 127; case1(Signal(6, 60)) result = 127; case1(Signal(6, 61)) result = 127; case1(Signal(6, 62)) result =  127; case1(Signal(6, 63)) result = 127; 
 		endcase
 	end
 endfunction
@@ -110,14 +112,14 @@ initio
 beginfunction
 	begin
 		begincase (eta(BWETAIN-1,1))
-			case1("6'd00") result = 127; case1("6'd01") result = 127; case1("6'd02") result = 127; case1("6'd03") result = 127; case1("6'd04") result =  90; case1("6'd05") result =  78; case1("6'd06") result =  76; case1("6'd07") result =  76;
-			case1("6'd08") result =  66; case1("6'd09") result =  65; case1("6'd10") result =  59; case1("6'd11") result =  50; case1("6'd12") result =  50; case1("6'd13") result =  49; case1("6'd14") result =  37; case1("6'd15") result = 127; 
-			case1("6'd16") result = 127; case1("6'd17") result = 127; case1("6'd18") result = 127; case1("6'd19") result = 127; case1("6'd20") result = 127; case1("6'd21") result = 127; case1("6'd22") result = 127; case1("6'd23") result = 127; 
-			case1("6'd24") result = 127; case1("6'd25") result = 127; case1("6'd26") result = 127; case1("6'd27") result = 127; case1("6'd28") result = 127; case1("6'd29") result = 127; case1("6'd30") result = 127; case1("6'd31") result = 127; 
-			case1("6'd32") result = 127; case1("6'd33") result = 127; case1("6'd34") result = 127; case1("6'd35") result = 127; case1("6'd36") result = 127; case1("6'd37") result = 127; case1("6'd38") result = 127; case1("6'd39") result = 127; 
-			case1("6'd40") result = 127; case1("6'd41") result = 127; case1("6'd42") result = 127; case1("6'd43") result = 127; case1("6'd44") result = 127; case1("6'd45") result = 127; case1("6'd46") result = 127; case1("6'd47") result = 127; 
-			case1("6'd48") result = 127; case1("6'd49") result = 127; case1("6'd50") result = 127; case1("6'd51") result = 127; case1("6'd52") result = 127; case1("6'd53") result = 127; case1("6'd54") result = 127; case1("6'd55") result = 127; 
-			case1("6'd56") result = 127; case1("6'd57") result = 127; case1("6'd58") result = 127; case1("6'd59") result = 127; case1("6'd60") result = 127; case1("6'd61") result = 127; case1("6'd62") result = 127; case1("6'd63") result = 127; 
+			case1(Signal(6, 00)) result = 127; case1(Signal(6, 01)) result = 127; case1(Signal(6, 02)) result = 127; case1(Signal(6, 03)) result = 127; case1(Signal(6, 04)) result =  90; case1(Signal(6, 05)) result =  78; case1(Signal(6, 06)) result =  76; case1(Signal(6, 07)) result =  76;
+			case1(Signal(6,  8)) result =  66; case1(Signal(6,  9)) result =  65; case1(Signal(6, 10)) result =  59; case1(Signal(6, 11)) result =  50; case1(Signal(6, 12)) result =  50; case1(Signal(6, 13)) result =  49; case1(Signal(6, 14)) result =  37; case1(Signal(6, 15)) result = 127; 
+			case1(Signal(6, 16)) result = 127; case1(Signal(6, 17)) result = 127; case1(Signal(6, 18)) result = 127; case1(Signal(6, 19)) result = 127; case1(Signal(6, 20)) result = 127; case1(Signal(6, 21)) result = 127; case1(Signal(6, 22)) result = 127; case1(Signal(6, 23)) result = 127; 
+			case1(Signal(6, 24)) result = 127; case1(Signal(6, 25)) result = 127; case1(Signal(6, 26)) result = 127; case1(Signal(6, 27)) result = 127; case1(Signal(6, 28)) result = 127; case1(Signal(6, 29)) result = 127; case1(Signal(6, 30)) result = 127; case1(Signal(6, 31)) result = 127; 
+			case1(Signal(6, 32)) result = 127; case1(Signal(6, 33)) result = 127; case1(Signal(6, 34)) result = 127; case1(Signal(6, 35)) result = 127; case1(Signal(6, 36)) result = 127; case1(Signal(6, 37)) result = 127; case1(Signal(6, 38)) result = 127; case1(Signal(6, 39)) result = 127; 
+			case1(Signal(6, 40)) result = 127; case1(Signal(6, 41)) result = 127; case1(Signal(6, 42)) result = 127; case1(Signal(6, 43)) result = 127; case1(Signal(6, 44)) result = 127; case1(Signal(6, 45)) result = 127; case1(Signal(6, 46)) result = 127; case1(Signal(6, 47)) result = 127; 
+			case1(Signal(6, 48)) result = 127; case1(Signal(6, 49)) result = 127; case1(Signal(6, 50)) result = 127; case1(Signal(6, 51)) result = 127; case1(Signal(6, 52)) result = 127; case1(Signal(6, 53)) result = 127; case1(Signal(6, 54)) result = 127; case1(Signal(6, 55)) result = 127; 
+			case1(Signal(6, 56)) result = 127; case1(Signal(6, 57)) result = 127; case1(Signal(6, 58)) result = 127; case1(Signal(6, 59)) result = 127; case1(Signal(6, 60)) result = 127; case1(Signal(6, 61)) result = 127; case1(Signal(6, 62)) result = 127; case1(Signal(6, 63)) result = 127; 
 		endcase
 	end
 endfunction

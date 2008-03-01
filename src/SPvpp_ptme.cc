@@ -1,10 +1,8 @@
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_ptme.h>
 #include <L1Trigger/CSCCommonTrigger/interface/vmac.h>
 
-
 #define PHICUTL 128
 #define PHICUTH (4095 - PHICUTL)
-
 
 void SPvpp_ptme::operator()
 (
@@ -70,7 +68,7 @@ initio
 	OutReg_(rankrp, 5, 0);
 
 	Input (clk);
-	
+
 beginmodule
 
 	SelectPhisp.init(11,0,"_SelectPhisp");
@@ -84,7 +82,7 @@ beginmodule
 	modenew.reg(3,0,"modenew");
 	si.reg("si"); 
 	d.reg(12,0,"d"); 
- 	c.reg(12,0,"c"); 
+ 	c.reg(12,0,"c");
 	SelPhi.reg(11,0,"SelPhi"); 
 	IdValid.reg(3,0,"IdValid");
 
@@ -112,10 +110,12 @@ beginmodule
 	Reg (FR);
 	Reg_(phi, BWPHI-1, 0);
 
+modulebody
+
 	always (posedge (clk))
 	begin
 
-		me1Eta[0] = 0; 
+		me1Eta[0] = Signal(BWPTETA, 0); 
 		me1Eta[1] = me1a(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); // this complicated bit numbering is made to take the most significant bits of the eta from the Signal values
 		me1Eta[2] = me1b(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		me1Eta[3] = me1c(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
@@ -123,17 +123,17 @@ beginmodule
 		me1Eta[5] = me1e(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		me1Eta[6] = me1f(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		
-		me2Eta[0] = 0; 
+		me2Eta[0] = Signal(BWPTETA, 0); 
 		me2Eta[1] = me2a(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		me2Eta[2] = me2b(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		me2Eta[3] = me2c(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		
-		me3Eta[0] = 0; 
+		me3Eta[0] = Signal(BWPTETA, 0); 
 		me3Eta[1] = me3a(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		me3Eta[2] = me3b(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		me3Eta[3] = me3c(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA);
 		
-		me1Phi[0] = 0; 
+		me1Phi[0] = Signal(BWPHI, 0);  
 		me1Phi[1] = me1a(BWPHI-1, 0); 
 		me1Phi[2] = me1b(BWPHI-1, 0); 
 		me1Phi[3] = me1c(BWPHI-1, 0); 
@@ -141,22 +141,22 @@ beginmodule
 		me1Phi[5] = me1e(BWPHI-1, 0); 
 		me1Phi[6] = me1f(BWPHI-1, 0); 
 		
-		me2Phi[0] = 0; 
+		me2Phi[0] = Signal(BWPHI, 0); 
 		me2Phi[1] = me2a(BWPHI-1, 0); 
 		me2Phi[2] = me2b(BWPHI-1, 0); 
 		me2Phi[3] = me2c(BWPHI-1, 0); 
 		
-		me3Phi[0] = 0; 
+		me3Phi[0] = Signal(BWPHI, 0); 
 		me3Phi[1] = me3a(BWPHI-1, 0); 
 		me3Phi[2] = me3b(BWPHI-1, 0); 
 		me3Phi[3] = me3c(BWPHI-1, 0); 
 		
-		me4Phi[0] = 0; 
+		me4Phi[0] = Signal(BWPHI, 0); 
 		me4Phi[1] = me4a(BWPHI-1, 0); 
 		me4Phi[2] = me4b(BWPHI-1, 0); 
 		me4Phi[3] = me4c(BWPHI-1, 0);
 
-        CSCID[0] = 0;
+        CSCID[0] = Signal(BWCSCID, 0);
         CSCID[1] = me1a(BWCSCID+BWQ+BWETAIN+BWPHI-1, BWQ+BWETAIN+BWPHI);
         CSCID[2] = me1b(BWCSCID+BWQ+BWETAIN+BWPHI-1, BWQ+BWETAIN+BWPHI);
         CSCID[3] = me1c(BWCSCID+BWQ+BWETAIN+BWPHI-1, BWQ+BWETAIN+BWPHI);
@@ -164,7 +164,7 @@ beginmodule
         CSCID[5] = me1e(BWCSCID+BWQ+BWETAIN+BWPHI-1, BWQ+BWETAIN+BWPHI);
         CSCID[6] = me1f(BWCSCID+BWQ+BWETAIN+BWPHI-1, BWQ+BWETAIN+BWPHI);
 
-		me1FR(0) = 0;
+		me1FR(0) = "1'b0";
 //DEA
 		me1FR(1) = DecodeFR(me1a(BWCSCID+BWQ+BWETAIN+BWPHI-1, BWQ+BWETAIN+BWPHI), 0); // FR is derived from CSCid
 		me1FR(2) = DecodeFR(me1b(BWCSCID+BWQ+BWETAIN+BWPHI-1, BWQ+BWETAIN+BWPHI), 1);
@@ -272,22 +272,22 @@ Signal SPvpp_SelectPhis::operator()(Signal IdValid)
 		EnableIdC.reg(3,0,"EnableIdC");
 		begin
 			begincase (IdValid)
-				case1("4'b0000") begin EnableIdA = 0; EnableIdB = 0; EnableIdC = 0; end //     
-				case1("4'b0001") begin EnableIdA = 1; EnableIdB = 0; EnableIdC = 0; end //    4
-				case1("4'b0010") begin EnableIdA = 2; EnableIdB = 0; EnableIdC = 0; end //   3 
-				case1("4'b0011") begin EnableIdA = 2; EnableIdB = 1; EnableIdC = 0; end //   34
-				case1("4'b0100") begin EnableIdA = 4; EnableIdB = 0; EnableIdC = 0; end //  2  
-				case1("4'b0101") begin EnableIdA = 4; EnableIdB = 1; EnableIdC = 0; end //  2 4
-				case1("4'b0110") begin EnableIdA = 4; EnableIdB = 2; EnableIdC = 0; end //  23 
-				case1("4'b0111") begin EnableIdA = 4; EnableIdB = 2; EnableIdC = 1; end //  234
-				case1("4'b1000") begin EnableIdA = 8; EnableIdB = 0; EnableIdC = 0; end // 1   
-				case1("4'b1001") begin EnableIdA = 8; EnableIdB = 1; EnableIdC = 0; end // 1  4
-				case1("4'b1010") begin EnableIdA = 8; EnableIdB = 2; EnableIdC = 0; end // 1 3 
-				case1("4'b1011") begin EnableIdA = 8; EnableIdB = 2; EnableIdC = 1; end // 1 34
-				case1("4'b1100") begin EnableIdA = 8; EnableIdB = 4; EnableIdC = 0; end // 12  
-				case1("4'b1101") begin EnableIdA = 8; EnableIdB = 4; EnableIdC = 1; end // 12 4
-				case1("4'b1110") begin EnableIdA = 8; EnableIdB = 4; EnableIdC = 2; end // 123 
-				case1("4'b1111") begin EnableIdA = 8; EnableIdB = 4; EnableIdC = 2; end // 1234
+				case1(Signal(4, 0)) begin EnableIdA = 0; EnableIdB = 0; EnableIdC = 0; end //     
+				case1(Signal(4, 1)) begin EnableIdA = 1; EnableIdB = 0; EnableIdC = 0; end //    4
+				case1(Signal(4, 2)) begin EnableIdA = 2; EnableIdB = 0; EnableIdC = 0; end //   3 
+				case1(Signal(4, 3)) begin EnableIdA = 2; EnableIdB = 1; EnableIdC = 0; end //   34
+				case1(Signal(4, 4)) begin EnableIdA = 4; EnableIdB = 0; EnableIdC = 0; end //  2  
+				case1(Signal(4, 5)) begin EnableIdA = 4; EnableIdB = 1; EnableIdC = 0; end //  2 4
+				case1(Signal(4, 6)) begin EnableIdA = 4; EnableIdB = 2; EnableIdC = 0; end //  23 
+				case1(Signal(4, 7)) begin EnableIdA = 4; EnableIdB = 2; EnableIdC = 1; end //  234
+				case1(Signal(4, 8)) begin EnableIdA = 8; EnableIdB = 0; EnableIdC = 0; end // 1   
+				case1(Signal(4, 9)) begin EnableIdA = 8; EnableIdB = 1; EnableIdC = 0; end // 1  4
+				case1(Signal(4,10)) begin EnableIdA = 8; EnableIdB = 2; EnableIdC = 0; end // 1 3 
+				case1(Signal(4,11)) begin EnableIdA = 8; EnableIdB = 2; EnableIdC = 1; end // 1 34
+				case1(Signal(4,12)) begin EnableIdA = 8; EnableIdB = 4; EnableIdC = 0; end // 12  
+				case1(Signal(4,13)) begin EnableIdA = 8; EnableIdB = 4; EnableIdC = 1; end // 12 4
+				case1(Signal(4,14)) begin EnableIdA = 8; EnableIdB = 4; EnableIdC = 2; end // 123 
+				case1(Signal(4,15)) begin EnableIdA = 8; EnableIdB = 4; EnableIdC = 2; end // 1234
 			endcase
 			result = (EnableIdA, EnableIdB, EnableIdC);
 		end
@@ -301,17 +301,17 @@ Signal SPvpp_Mode::operator()(Signal rank)
 	beginfunction
 		begin
 			begincase (rank)
-				case1("6'd00")					 result = 0;
-				case3("6'h12", "6'h17", "6'h1c") result = 2;
-				case3("6'h1f", "6'h21", "6'h23") result = 2;
-				case3("6'h11", "6'h16", "6'h1b") result = 3;
-				case3("6'h10", "6'h15", "6'h1a") result = 4;
-				case1("6'd04") 					 result = 5;
-				case3("6'h06", "6'h0b", "6'h0e") result = 6;
-				case3("6'h05", "6'h0a", "6'h0d") result = 7;
-				case1("6'd03") 					 result = 8;
-				case1("6'd02") 					 result = 9;
-				case1("6'd01") 					 result = "4'ha";
+				case1(Signal(6, 00))					 result = 0;
+				case3(Signal(6, 0x12), Signal(6, 0x17), Signal(6, 0x1c)) result = 2;
+				case3(Signal(6, 0x1f), Signal(6, 0x21), Signal(6, 0x23)) result = 2;
+				case3(Signal(6, 0x11), Signal(6, 0x16), Signal(6, 0x1b)) result = 3;
+				case3(Signal(6, 0x10), Signal(6, 0x15), Signal(6, 0x1a)) result = 4;
+				case1(Signal(6, 04)) 					 result = 5;
+				case3(Signal(6, 0x06), Signal(6, 0x0b), Signal(6, 0x0e)) result = 6;
+				case3(Signal(6, 0x05), Signal(6, 0x0a), Signal(6, 0x0d)) result = 7;
+				case1(Signal(6, 03)) 					 result = 8;
+				case1(Signal(6, 02)) 					 result = 9;
+				case1(Signal(6, 01)) 					 result = Signal(4, 0xa);
 				Default							 result = 0;
 			endcase
 		end

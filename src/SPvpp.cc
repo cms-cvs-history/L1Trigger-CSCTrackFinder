@@ -7,7 +7,6 @@ Runs Verilog++ model of Sector Processor
 */
 
 #include <L1Trigger/CSCTrackFinder/src/SPvpp.h>
-#include <L1Trigger/CSCTrackFinder/src/spbits.h>
 #include <L1Trigger/CSCCommonTrigger/interface/vmac.h>
 
 #ifdef MYDEBUG
@@ -103,7 +102,7 @@ if(mb1aQr != 0) cout<<"killing a\n";
 	else if (mb1aQr != 0) {mb1ap(BWPHI+BWQB) = 1; mb1ap(BWPHI-1, 0) = mb1aPhir; mb1ap(BWPHI+BWQB-1, BWPHI) = mb1aQr;}
 	else mb1ap = 0;
 
-	if      (mb1bQp != 0) {mb1bp(BWPHI+BWQB) = 0; mb1bp(BWPHI-1, 0) = mb1bPhip; mb1bp(BWPHI+BWQB-1, BWPHI) = mb1bQp;
+	if      (mb1bQp != 0) {mb1bp(BWPHI+BWQB) = 0; mb1bp(BWPHI-1, 0) = mb1bPhip; mb1bp(BWPHI+BWQB-1, BWPHI) = mb1bQp; 
 #ifdef MYDEBUG
 if(mb1bQr != 0) cout<<"killing b\n";
 #endif
@@ -225,7 +224,7 @@ if(mb1bQr != 0) cout<<"killing b\n";
 		Wire_(etawn4, BWETAIN, 0); 
 		Wire_(etawn5, BWETAIN, 0); 
 
-		Wire_(mindphi, BWPHI-1, 0);
+		Wire_(mindphi, BWPHIFSU-1, 0);
 		Wire_(mindeta_acc, BWETAIN-1,0); // min eta difference for acc tracks
 		Wire_(maxdeta_acc, BWETAIN-1,0); // max eta difference for acc tracks
 		Wire_(maxdphi_acc, BWPHI-3,0);   // max phi difference for acc tracks (without 2 lower bits)

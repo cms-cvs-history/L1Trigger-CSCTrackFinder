@@ -1,7 +1,6 @@
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_bxcorr.h>
 #include <L1Trigger/CSCCommonTrigger/interface/vmac.h>
 
-
 void SPvpp_bxcorr::operator()
 (
 	Signal rank1, Signal rank2, Signal rank3,
@@ -9,9 +8,9 @@ void SPvpp_bxcorr::operator()
 	Signal id1, Signal id2, Signal id3,
 	Signal bc1, Signal bc2, Signal bc3,
 	Signal idc1, Signal idc2, Signal idc3,
-	
+
 	Signal acc,
-	
+
 	Signal pretrig,
 	Signal clk
 )
@@ -38,7 +37,7 @@ initio
 	OutReg_(idc3, MUIDSIZE-1, 0);
 
 	Input (acc); // accelerator track found
-	
+
 	Input_(pretrig, 1, 0); // how many stubs required to mark track timing
 	Input (clk);
 
@@ -69,6 +68,12 @@ beginmodule
 	Reg__(del2stubs, 2, 0, 8, 0);
 	Reg__(del1stubs, 2, 0, 8, 0);
 
+	Reg_(tid, MUIDSIZE-1, 0);
+	Reg_(del1t, 2, 0);
+	Reg_(del2t, 2, 0);
+
+modulebody
+
 	int ii, jj;
 
 	always (posedge (clk))
@@ -91,7 +96,7 @@ beginmodule
 			del2stubs[i+6] = del2stubs[i+3];
 			del2stubs[i+3] = del2stubs[i];
 		end
-	
+
 	end
 
 	always 
@@ -107,8 +112,8 @@ beginmodule
 		pretrig
 	)
 	begin
-	
-	
+
+
 		in[0] = b1; // input
 		in[1] = b2;
 		in[2] = b3;
@@ -124,15 +129,18 @@ beginmodule
 		// calculate number of stubs with delay == 2 and delay >= 1
 		For (i = 0, i < 3, i++)
 		begin
-			del2stubs[i] = 0;
-			del1stubs[i] = 0;
+			tid = id[i];
+			del2t = 0;
+			del1t = 0;
 			for (jj = 0; jj < 6; jj++)
 			{
-				stubn = id[i](jj*6+2,jj*6); // stub number
-				stubd = id[i](jj*6+5,jj*6+3); // stub delay
-				If (stubn > 0 && stubd == 2) del2stubs[i]++; 
-				If (stubn > 0 && stubd >= 1) del1stubs[i]++; 
+				stubn = tid(jj*6+2,jj*6); // stub number
+				stubd = tid(jj*6+5,jj*6+3); // stub delay
+				If (stubn > 0 && stubd == 2) del2t = del2t + Signal(3, 1); 
+				If (stubn > 0 && stubd >= 1) del1t = del1t + Signal(3, 1); 
 			}
+			del2stubs[i] = del2t;
+			del1stubs[i] = del1t;
 		end
 
 
@@ -186,15 +194,15 @@ beginmodule
 			// count zeroes in the comparison results. The best track will have none, the next will have one, the third will have two.
 			// skip the bits corresponding to the comparison of the track with itself
 			begincase(i)
-				case1("4'h0") s = CountZ (larg1(8,1));
-				case1("4'h1") s = CountZ ((larg1(8,2), larg1(0)));
-				case1("4'h2") s = CountZ ((larg1(8,3), larg1(1,0)));
-				case1("4'h3") s = CountZ ((larg1(8,4), larg1(2,0)));
-				case1("4'h4") s = CountZ ((larg1(8,5), larg1(3,0)));
-				case1("4'h5") s = CountZ ((larg1(8,6), larg1(4,0)));
-				case1("4'h6") s = CountZ ((larg1(8,7), larg1(5,0)));
-				case1("4'h7") s = CountZ ((larg1(8)  , larg1(6,0)));
-				case1("4'h8") s = CountZ (larg1(7,0));
+				case1(Signal(4, 0x0)) s = CountZ (larg1(8,1));
+				case1(Signal(4, 0x1)) s = CountZ ((larg1(8,2), larg1(0)));
+				case1(Signal(4, 0x2)) s = CountZ ((larg1(8,3), larg1(1,0)));
+				case1(Signal(4, 0x3)) s = CountZ ((larg1(8,4), larg1(2,0)));
+				case1(Signal(4, 0x4)) s = CountZ ((larg1(8,5), larg1(3,0)));
+				case1(Signal(4, 0x5)) s = CountZ ((larg1(8,6), larg1(4,0)));
+				case1(Signal(4, 0x6)) s = CountZ ((larg1(8,7), larg1(5,0)));
+				case1(Signal(4, 0x7)) s = CountZ ((larg1(8)  , larg1(6,0)));
+				case1(Signal(4, 0x8)) s = CountZ (larg1(7,0));
 			endcase
 
 			// get the positional codes of the three best tracks to the three outputs

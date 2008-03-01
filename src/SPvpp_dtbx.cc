@@ -25,6 +25,8 @@ beginmodule
 
 	Reg_(mb1ar, BWMBIN-1,0);
 
+modulebody
+
 	always (posedge (clk))
 	begin
 

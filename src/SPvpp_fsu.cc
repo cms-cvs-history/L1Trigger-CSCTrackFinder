@@ -26,38 +26,38 @@ void SPvpp_fsu::operator()
 initio
 
 	me2aRank.input(5,0,"me2aRank");
-	Input_(phi2a, BWPHI-1,0);	
+	Input_(phi2a, BWPHIFSU-1,0);	
 
 	me2bRank.input(5,0,"me2bRank"); 
-	Input_(phi2b, BWPHI-1,0);	
+	Input_(phi2b, BWPHIFSU-1,0);	
 
 	me2cRank.input(5,0,"me2cRank"); 
-	Input_(phi2c, BWPHI-1,0);	
+	Input_(phi2c, BWPHIFSU-1,0);	
 
 	me3aRank.input(5,0,"me3aRank"); 
-	Input_(phi3a, BWPHI-1,0);	
+	Input_(phi3a, BWPHIFSU-1,0);	
 
 	me3bRank.input(5,0,"me3bRank"); 
-	Input_(phi3b, BWPHI-1,0);	
+	Input_(phi3b, BWPHIFSU-1,0);	
 
 	me3cRank.input(5,0,"me3cRank");
-	Input_(phi3c, BWPHI-1,0);	
+	Input_(phi3c, BWPHIFSU-1,0);	
 
 	mb2aRank.input(5,0,"mb2aRank"); 
-	Input_(phib2a, BWPHI-1,0);	
+	Input_(phib2a, BWPHIFSU-1,0);	
 
 	mb2bRank.input(5,0,"mb2bRank"); 
-	Input_(phib2b, BWPHI-1,0);	
+	Input_(phib2b, BWPHIFSU-1,0);	
 
 	mb2cRank.input(5,0,"mb2cRank"); 
-	Input_(phib2c, BWPHI-1,0);	
+	Input_(phib2c, BWPHIFSU-1,0);	
 	
 	m0.output(8,0,"m0",makereg); 
 	m1.output(8,0,"m1",makereg); 
 	m2.output(8,0,"m2",makereg);
 
 	Input (phi_watch_en); // enable ghost cancellation based on phi proximity
-	Input_(mindphi, BWPHI-1, 0); // min phi difference
+	Input_(mindphi, BWPHIFSU-1, 0); // min phi difference
 
 	Input (clk);
 
@@ -66,12 +66,12 @@ beginmodule
 	CountZ.init(2,0,"_CountZ");
 	
 	rank.reg(5,0,8,0,"rank");
-	Reg__(phi, BWPHI-1, 0, 8, 0);
+	Reg__(phi, BWPHIFSU-1, 0, 8, 0);
 
 	Reg__(rankr, 5, 0, 8, 0);     // 1bx delayed ranks
-	Reg__(phir, BWPHI-1, 0, 8, 0);// 1bx delayed phis
+	Reg__(phir, BWPHIFSU-1, 0, 8, 0);// 1bx delayed phis
 	Reg__(rankrr, 5, 0, 8, 0);     // 2bx delayed ranks
-	Reg__(phirr, BWPHI-1, 0, 8, 0);// 2bx delayed phis
+	Reg__(phirr, BWPHIFSU-1, 0, 8, 0);// 2bx delayed phis
 
 	Exists.reg(8,0,"Exists");
 	Reg_(survived, 8, 0);
@@ -86,9 +86,9 @@ beginmodule
 	
 	s.reg(2,0,"s");
 
-	Reg_(dphi, BWPHI-1, 0); // delta phi
-	Reg_(dphir, BWPHI-1, 0); 
-	Reg_(dphirr, BWPHI-1, 0); 
+	Reg_(dphi, BWPHIFSU-1, 0); // delta phi
+	Reg_(dphir, BWPHIFSU-1, 0); 
+	Reg_(dphirr, BWPHIFSU-1, 0); 
 
 	Reg_(killrr1, 8, 0); // which rankrr to kill
 	Reg_(killrr2, 8, 0); // which rankrr to kill
@@ -96,6 +96,10 @@ beginmodule
 	Reg_(killr,  8, 0); // which rankr to kill
 	Reg_(kill,   8, 0); // which rank to kill
 
+	Reg(dlm);
+	Reg(rilgrj);
+
+modulebody
 	
 	always (posedge (clk))
 	begin
@@ -167,10 +171,11 @@ beginmodule
 			killr = kill; // remember tracks to kill from -2bx to current comparisons on previous clock
 			kill = 0;
 
-			If (phi_watch_en)
-			begin
+//			If (phi_watch_en)
+//			begin
 				For (i = 0, i < 9, i++) 
 				begin
+					ilgj = Larger[i];
 					For (j = i+1, j < 9, j++)
 					begin
 						// compare and possibly cancel tracks in the same clock 
@@ -178,8 +183,8 @@ beginmodule
 		
 						If (dphirr < mindphi) // if they are close in phi
 						begin
-							If (Larger[i](j)) killrr1(j) = 1; // kill j if i is better
-							Else              killrr1(i) = 1; // kill i if j is better
+							If (ilgj(j)) killrr1(j) = 1; // kill j if i is better
+							Else         killrr1(i) = 1; // kill i if j is better
 						end
 					end
 				end
@@ -191,11 +196,17 @@ beginmodule
 						// compare -2bx tracks with -1bx, cancel delayed if there is a better current one close in phi
 						dphir = ifelse(phirr[i] > phir[j], phirr[i] - phir[j], phir[j] - phirr[i]);
 	
-						If (dphir < mindphi) // phi is close
+						dlm = dphir < mindphi;
+						rilgrj = rankrr[i] >= rankr[j];
+						If (dlm &&  rilgrj)  killr(j) = 1;   // -1bx is ghost (same or worse quality)
+						If (dlm && !rilgrj)  killrr2(i) = 1; // delayed one is pre-ghost (not all stubs have come up yet)
+
+/*						If (dphir < mindphi) // phi is close
 						begin
 							If (rankrr[i] >= rankr[j]) killr(j) = 1; // -1bx is ghost (same or worse quality)
 							Else                       killrr2(i) = 1; // delayed one is pre-ghost (not all stubs have come up yet)
 						end
+*/
 					end
 				end
 
@@ -206,15 +217,21 @@ beginmodule
 						// compare -2bx tracks with current ones, cancel delayed if there is a better current one close in phi
 						dphi = ifelse(phirr[i] > phi[j], phirr[i] - phi[j], phi[j] - phirr[i]);
 	
+						dlm = dphi < mindphi;
+						rilgrj = rankrr[i] >= rank[j];
+						If (dlm &&  rilgrj)  kill(j) = 1;   // -0bx is ghost (same or worse quality)
+						If (dlm && !rilgrj)  killrr3(i) = 1; // delayed one is pre-ghost (not all stubs have come up yet)
+/*
 						If (dphi < mindphi) // phi is close
 						begin
 							If (rankrr[i] >= rank[j]) kill(j) = 1; // -0bx is ghost (same or worse quality)
 							Else                      killrr3(i) = 1; // delayed one is pre-ghost (not all stubs have come up yet)
 						end
+*/
 					end
 				end
 
-			end
+//			end
 
 			survived = Exists & (~killrr1) & (~killrr2) & (~killrr3); // remove bad delayed tracks
 
@@ -227,15 +244,15 @@ beginmodule
 				// count zeroes in the comparison results. The best track will have none, the next will have one, the third will have two.
 				// skip the bits corresponding to the comparison of the track with itself
 				begincase(i)
-					case1("4'h0") s = CountZ (larg1(8,1));
-					case1("4'h1") s = CountZ ((larg1(8,2), larg1(0)));
-					case1("4'h2") s = CountZ ((larg1(8,3), larg1(1,0)));
-					case1("4'h3") s = CountZ ((larg1(8,4), larg1(2,0)));
-					case1("4'h4") s = CountZ ((larg1(8,5), larg1(3,0)));
-					case1("4'h5") s = CountZ ((larg1(8,6), larg1(4,0)));
-					case1("4'h6") s = CountZ ((larg1(8,7), larg1(5,0)));
-					case1("4'h7") s = CountZ ((larg1(8),   larg1(6,0)));
-					case1("4'h8") s = CountZ (larg1(7,0));
+					case1(Signal(4, 0x0)) s = CountZ (larg1(8,1));
+					case1(Signal(4, 0x1)) s = CountZ ((larg1(8,2), larg1(0)));
+					case1(Signal(4, 0x2)) s = CountZ ((larg1(8,3), larg1(1,0)));
+					case1(Signal(4, 0x3)) s = CountZ ((larg1(8,4), larg1(2,0)));
+					case1(Signal(4, 0x4)) s = CountZ ((larg1(8,5), larg1(3,0)));
+					case1(Signal(4, 0x5)) s = CountZ ((larg1(8,6), larg1(4,0)));
+					case1(Signal(4, 0x6)) s = CountZ ((larg1(8,7), larg1(5,0)));
+					case1(Signal(4, 0x7)) s = CountZ ((larg1(8),   larg1(6,0)));
+					case1(Signal(4, 0x8)) s = CountZ (larg1(7,0));
 				endcase
 
 				// get the positional codes of the three best tracks to the three outputs
@@ -274,30 +291,6 @@ Signal SPvpp_CountZeroes::operator()(Signal d)
 	endfunction
 }
 
-/*
-Signal SPvpp_CountZeroes11::operator()(Signal d)
-{
-	initio
-		d.input(10,0,"d");
-	beginfunction
-
-		Reg_(s, 3, 0);
-		Reg_(res, 3, 0);
-
-		begin
-			s = 0;
-			res = 0;
-			for (int i = 0; i < 11; i++)
-			{
-				If (!d(i)) s++;
-			}
-			If (s < 4) res(s) = 1;
-			result = res;
-		end
-
-	endfunction
-}
-*/
 
 
 

@@ -30,6 +30,8 @@ beginmodule
 
 	Reg_(Deta, BWETAIN,0);
 
+modulebody
+
 	always (meA or meB or MinEta or MaxEta or EtaWindow)	
 	begin
 

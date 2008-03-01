@@ -1,7 +1,6 @@
 #include <L1Trigger/CSCTrackFinder/src/SPvpp_ptmb.h>
 #include <L1Trigger/CSCCommonTrigger/interface/vmac.h>
 
-
 void SPvpp_ptmb::operator()
 (
 	// all etas use only 4 MSBs from the original Eta
@@ -68,7 +67,6 @@ initio
 
 	Input (clk);
 
-
 beginmodule
 	
 	SelectPhisbp.init(11,0,"_SelectPhisbp");
@@ -100,9 +98,11 @@ beginmodule
 	Reg (FR);
 	Reg_(phi, BWPHI-1, 0);
 
+modulebody
+
 	always (posedge (clk))
 	begin
-		me1Eta[0] = 0; 
+		me1Eta[0] = Signal(BWPTETA, 0); 
 		me1Eta[1] = me1a(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA);  // this complicated bit numbering is made to take the most significant bits of the eta from the Signal values
 		me1Eta[2] = me1b(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		me1Eta[3] = me1c(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
@@ -110,12 +110,12 @@ beginmodule
 		me1Eta[5] = me1e(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		me1Eta[6] = me1f(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		
-		me2Eta[0] = 0; 
+		me2Eta[0] = Signal(BWPTETA, 0); 
 		me2Eta[1] = me2a(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		me2Eta[2] = me2b(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		me2Eta[3] = me2c(BWPHI+BWETAIN-1, BWPHI+BWETAIN-BWPTETA); 
 		
-		me1Phi[0] = 0; 
+		me1Phi[0] = Signal(BWPTETA, 0); 
 		me1Phi[1] = me1a(BWPHI-1, 0); 
 		me1Phi[2] = me1b(BWPHI-1, 0); 
 		me1Phi[3] = me1c(BWPHI-1, 0); 
@@ -123,18 +123,18 @@ beginmodule
 		me1Phi[5] = me1e(BWPHI-1, 0); 
 		me1Phi[6] = me1f(BWPHI-1, 0); 
 		
-		me2Phi[0] = 0; 
+		me2Phi[0] = Signal(BWPHI, 0); 
 		me2Phi[1] = me2a(BWPHI-1, 0); 
 		me2Phi[2] = me2b(BWPHI-1, 0); 
 		me2Phi[3] = me2c(BWPHI-1, 0); 
 		
-		mb1Phi[0] = 0; 
+		mb1Phi[0] = Signal(BWPHI, 0); 
 		mb1Phi[1] = mb1a(BWPHI-1, 0); 
 		mb1Phi[2] = mb1b(BWPHI-1, 0); 
 		mb1Phi[3] = mb1c(BWPHI-1, 0); 
 		mb1Phi[4] = mb1d(BWPHI-1, 0); 
 		
-		mb2Phi[0] = 0; 
+		mb2Phi[0] = Signal(BWPHI, 0); 
 		mb2Phi[1] = mb2a(BWPHI-1, 0); 
 		mb2Phi[2] = mb2b(BWPHI-1, 0); 
 		mb2Phi[3] = mb2c(BWPHI-1, 0);
@@ -144,13 +144,13 @@ beginmodule
 		IdValid(1) = ifelse(id2  != 0, 1, 0);
 		IdValid(2) = ifelse(id1  != 0, 1, 0);
 		IdValid(3) = ifelse(idb1 != 0, 1, 0);
-		
+
 		etaPT = 
 			ifelse (IdValid(1) == 1, me2Eta[id2], 0);
 
 		// phi is taken only from key station 2
-		phi = ifelse (IdValid(1) == 1, me2Phi[id2], 0);	
-
+		phi = ifelse (IdValid(1) == 1, me2Phi[id2], 0);
+		
 		SelPhi = SelectPhisbp(IdValid);
 		phiA = 
 			ifelse (SelPhi(11) == 1, mb1Phi[idb1],
@@ -177,7 +177,7 @@ beginmodule
 		mode = Modebp(rank);
 
         pt = d;
-	   
+	    
 		si = ifelse ((d(12,9) != 7 && d(12,9) != 8 && mode > 5), 1, 0);
 	
 		modeMem = ifelse (si == 0, mode, 1);
@@ -209,22 +209,22 @@ Signal SPvpp_SelectPhisb::operator()(Signal IdValid)
 		EnableIdC.reg(3,0,"EnableIdC");
 		begin	
 			begincase (IdValid)
-				case1("4'b0000") begin EnableIdA = 0; EnableIdB = 0; EnableIdC = 0; end //         
-				case1("4'b0001") begin EnableIdA = 1; EnableIdB = 0; EnableIdC = 0; end //       b2
-				case1("4'b0010") begin EnableIdA = 2; EnableIdB = 0; EnableIdC = 0; end //	   2    
-				case1("4'b0011") begin EnableIdA = 1; EnableIdB = 2; EnableIdC = 0; end //	   2  b2
-				case1("4'b0100") begin EnableIdA = 4; EnableIdB = 0; EnableIdC = 0; end //	  1     
-				case1("4'b0101") begin EnableIdA = 1; EnableIdB = 4; EnableIdC = 0; end //	  1   b2
-				case1("4'b0110") begin EnableIdA = 4; EnableIdB = 2; EnableIdC = 0; end //	  12    
-				case1("4'b0111") begin EnableIdA = 1; EnableIdB = 2; EnableIdC = 0; end //	  12  b2
-				case1("4'b1000") begin EnableIdA = 8; EnableIdB = 0; EnableIdC = 0; end //		b1  
-				case1("4'b1001") begin EnableIdA = 8; EnableIdB = 1; EnableIdC = 0; end //		b1b2
-				case1("4'b1010") begin EnableIdA = 8; EnableIdB = 2; EnableIdC = 0; end //	   2b1  
-				case1("4'b1011") begin EnableIdA = 8; EnableIdB = 2; EnableIdC = 0; end //	   2b1b2
-				case1("4'b1100") begin EnableIdA = 8; EnableIdB = 4; EnableIdC = 0; end //	  1	b1  
-				case1("4'b1101") begin EnableIdA = 8; EnableIdB = 4; EnableIdC = 0; end //	  1 b1b2
-				case1("4'b1110") begin EnableIdA = 8; EnableIdB = 2; EnableIdC = 0; end //	  12b1  
-				case1("4'b1111") begin EnableIdA = 8; EnableIdB = 2; EnableIdC = 0; end //	  12b1b2
+				case1(Signal(4, 0)) begin EnableIdA = 0; EnableIdB = 0; EnableIdC = 0; end //         
+				case1(Signal(4, 1)) begin EnableIdA = 1; EnableIdB = 0; EnableIdC = 0; end //       b2
+				case1(Signal(4, 2)) begin EnableIdA = 2; EnableIdB = 0; EnableIdC = 0; end //	   2    
+				case1(Signal(4, 3)) begin EnableIdA = 1; EnableIdB = 2; EnableIdC = 0; end //	   2  b2
+				case1(Signal(4, 4)) begin EnableIdA = 4; EnableIdB = 0; EnableIdC = 0; end //	  1     
+				case1(Signal(4, 5)) begin EnableIdA = 1; EnableIdB = 4; EnableIdC = 0; end //	  1   b2
+				case1(Signal(4, 6)) begin EnableIdA = 4; EnableIdB = 2; EnableIdC = 0; end //	  12    
+				case1(Signal(4, 7)) begin EnableIdA = 1; EnableIdB = 2; EnableIdC = 0; end //	  12  b2
+				case1(Signal(4, 8)) begin EnableIdA = 8; EnableIdB = 0; EnableIdC = 0; end //		b1  
+				case1(Signal(4, 9)) begin EnableIdA = 8; EnableIdB = 1; EnableIdC = 0; end //		b1b2
+				case1(Signal(4,10)) begin EnableIdA = 8; EnableIdB = 2; EnableIdC = 0; end //	   2b1  
+				case1(Signal(4,11)) begin EnableIdA = 8; EnableIdB = 2; EnableIdC = 0; end //	   2b1b2
+				case1(Signal(4,12)) begin EnableIdA = 8; EnableIdB = 4; EnableIdC = 0; end //	  1	b1  
+				case1(Signal(4,13)) begin EnableIdA = 8; EnableIdB = 4; EnableIdC = 0; end //	  1 b1b2
+				case1(Signal(4,14)) begin EnableIdA = 8; EnableIdB = 2; EnableIdC = 0; end //	  12b1  
+				case1(Signal(4,15)) begin EnableIdA = 8; EnableIdB = 2; EnableIdC = 0; end //	  12b1b2
 			endcase
 			result = (EnableIdA, EnableIdB, EnableIdC);
 		end
@@ -238,15 +238,15 @@ Signal SPvpp_Modeb::operator()(Signal rank)
 	beginfunction
 		begin
 			begincase (rank)
-				case1("6'h00")						result = 0;
-				case3("6'h14", "6'h19", "6'h1e")	result = "4'hb";
-				case3("6'h20", "6'h22", "6'h24")	result = "4'hb";
-				case3("6'h13", "6'h18", "6'h1d")	result = "4'hc";
-				case1("6'h08")						result = "4'hd";
-				case3("6'h09", "6'h0c", "6'h0f")	result = "4'he";
-				case1("6'h07")						result = "4'hf";
+				case1(Signal(6, 0x00))						result = 0;
+				case3(Signal(6, 0x14), Signal(6, 0x19), Signal(6, 0x1e))	result = Signal(4, 0xb);
+				case3(Signal(6, 0x20), Signal(6, 0x22), Signal(6, 0x24))	result = Signal(4, 0xb);
+				case3(Signal(6, 0x13), Signal(6, 0x18), Signal(6, 0x1d))	result = Signal(4, 0xc);
+				case1(Signal(6, 0x08))						result = Signal(4, 0xd);
+				case3(Signal(6, 0x09), Signal(6, 0x0c), Signal(6, 0x0f))	result = Signal(4, 0xe);
+				case1(Signal(6, 0x07))						result = Signal(4, 0xf);
 // there could be e1e2 tracks in the overlap region
-				case3("6'h06", "6'h0b", "6'h0e") 	result = 6;
+				case3(Signal(6, 0x06), Signal(6, 0x0b), Signal(6, 0x0e)) 	result = 6;
 				Default								result = 0;
 			endcase
 		end
