@@ -70,7 +70,9 @@ modulebody
 			(Deta <= MaxDeta) && (Deta >= MinDeta) &&
 			(Dphi <= MaxDphi) &&
 			(qA != 0) && (qA != 3 /*|| control(0)*/) && (qA != 4 /*|| control(1)*/) && 
+			(qA != 5 /*|| control(1)*/) && 
 			(qB != 0) && (qB != 3 /*|| control(0)*/) && (qB != 4 /*|| control(1)*/) &&
+			(qB != 5 /*|| control(1)*/) && 
 			validA && validB 
 		) 
 		begin
