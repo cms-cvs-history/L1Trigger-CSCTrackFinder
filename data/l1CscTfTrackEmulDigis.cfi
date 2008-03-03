@@ -20,13 +20,13 @@ module l1CscTfTrackEmulDigis = CSCTFTrackProducer {
         vuint32 EtaWindows  = {2, 2, 2, 2, 2, 2}
 
         bool run_core             = true
-        bool trigger_on_ME1a      = true
-        bool trigger_on_ME1b      = true
-        bool trigger_on_ME2       = true
-        bool trigger_on_ME3       = true
-        bool trigger_on_ME4       = true
-        bool trigger_on_MB1a      = true
-        bool trigger_on_MB1d      = true
+        bool trigger_on_ME1a      = false
+        bool trigger_on_ME1b      = false
+        bool trigger_on_ME2       = false
+        bool trigger_on_ME3       = false
+        bool trigger_on_ME4       = false
+        bool trigger_on_MB1a      = false
+        bool trigger_on_MB1d      = false
         uint32 singlesTrackPt     = 0xFF
         uint32 singlesTrackOutput = 3
 

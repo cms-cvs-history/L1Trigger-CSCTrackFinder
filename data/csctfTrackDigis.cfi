@@ -17,23 +17,23 @@ module csctfTrackDigis = CSCTFTrackProducer {
         uint32  PreTrigger    = 2
         vuint32 EtaMin      = {22, 22, 14, 14, 14, 10, 10, 10}
         vuint32 EtaMax      = {127, 127, 127, 127, 127, 24, 24, 24}
-        vuint32 EtaWindows  = {2, 2, 2, 2, 2, 2}
+        vuint32 EtaWindows  = {4, 4, 4, 4, 4, 4}
 
         bool run_core             = true
-        bool trigger_on_ME1a      = true
-        bool trigger_on_ME1b      = true
-        bool trigger_on_ME2       = true
-        bool trigger_on_ME3       = true
-        bool trigger_on_ME4       = true
-        bool trigger_on_MB1a      = true # Doesn't work yet
-        bool trigger_on_MB1d      = true # Doesn't work yet
+        bool trigger_on_ME1a      = false
+        bool trigger_on_ME1b      = false
+        bool trigger_on_ME2       = false
+        bool trigger_on_ME3       = false
+        bool trigger_on_ME4       = false
+        bool trigger_on_MB1a      = false
+        bool trigger_on_MB1d      = false
         uint32 singlesTrackPt     = 0xFF
         uint32 singlesTrackOutput = 3
 
-        uint32 mindphip     = 70
+        uint32 mindphip     = 2
         uint32 mindeta_accp = 4
         uint32 maxdeta_accp = 16
-        uint32 maxdphi_accp = 128
+        uint32 maxdphi_accp = 64
 
    	PSet SRLUT = {
             untracked bool ReadLUTs = false
