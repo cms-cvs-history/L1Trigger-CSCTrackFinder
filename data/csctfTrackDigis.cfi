@@ -5,14 +5,16 @@ module csctfTrackDigis = CSCTFTrackProducer {
    untracked InputTag SectorReceiverInput = cscTriggerPrimitiveDigis:MPCSORTED
 
    bool useDT   = true
-   bool isTMB07 = true
+   bool isTMB07 = false
 
    PSet SectorProcessor = {
         using CSCCommonTrigger
 
         uint32  CoreLatency = 8
-        bool    UseBXA      = true
-        uint32  BXAExtendLength = 1
+        uint32  BXAdepth      = 2
+        bool    AllowALCTonly = true
+        bool    AllowCLCTonly = true
+        uint32  PreTrigger    = 2
         vuint32 EtaMin      = {22, 22, 14, 14, 14, 10, 10, 10}
         vuint32 EtaMax      = {127, 127, 127, 127, 127, 24, 24, 24}
         vuint32 EtaWindows  = {2, 2, 2, 2, 2, 2}
