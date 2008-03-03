@@ -50,7 +50,7 @@ modulebody
 		(
 			(eta <= MaxEta) && (eta >= MinEta) &&
 			(Dphi(9,7) == 0) &&
-			(qA != 0) && (qA != 3) && (qA != 4) && 
+			(qA != 0) && (qA != 1) && (qA != 2) && 
 			(qB != 0) &&
 			validA //&& validB
 		) 
