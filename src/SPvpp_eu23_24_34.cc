@@ -19,7 +19,7 @@ initio
 	MinEta.input(BWETAIN-1,0,"MinEta");
 	MaxEta.input(BWETAIN-1,0,"MaxEta");
 	EtaWindow.input(BWETAIN,0,"EtaWindow");
-	Input_(control, 1, 0); // {"allow q = 4", "allow q = 3"}
+	Input_(control, 1, 0); // {"allow q = 2", "allow q = 1"}
 
 beginmodule
 	qA.reg(BWQ-1,0,"qA");
@@ -60,8 +60,8 @@ modulebody
 			(etaA <= MaxEta) && (etaA >= MinEta) && (etaB <= MaxEta) && (etaB >= MinEta) &&
 			(Deta <= EtaWindow) &&
 			(Dphi(9,7) == 0) &&
-			(qA != 0) && (qA != 3 || control(0)) && (qA != 4 || control(1)) && 
-			(qB != 0) && (qB != 3 || control(0)) && (qB != 4 || control(1)) &&
+			(qA != 0) && (qA != 1 || control(0)) && (qA != 2 || control(1)) && 
+			(qB != 0) && (qB != 1 || control(0)) && (qB != 2 || control(1)) &&
 			validA && validB 
 		) 
 		begin

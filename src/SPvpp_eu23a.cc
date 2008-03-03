@@ -23,7 +23,7 @@ initio
 	Input_(MinDeta, BWETAIN-1,0); // min eta difference
 	Input_(MaxDeta, BWETAIN-1,0); // max eta difference
 	Input_(MaxDphi, BWPHI-3,0);   // max phi difference
-//	Input_(control, 1, 0); // {"allow q = 4", "allow q = 3"}
+//	Input_(control, 1, 0); // {"allow q = 2", "allow q = 1"}
 	Input (clk);
 
 beginmodule
@@ -69,9 +69,9 @@ modulebody
 //			(amA && amB) &&
 			(Deta <= MaxDeta) && (Deta >= MinDeta) &&
 			(Dphi <= MaxDphi) &&
-			(qA != 0) && (qA != 3 /*|| control(0)*/) && (qA != 4 /*|| control(1)*/) && 
+			(qA != 0) && (qA != 1 /*|| control(0)*/) && (qA != 2 /*|| control(1)*/) && 
 			(qA != 5 /*|| control(1)*/) && 
-			(qB != 0) && (qB != 3 /*|| control(0)*/) && (qB != 4 /*|| control(1)*/) &&
+			(qB != 0) && (qB != 1 /*|| control(0)*/) && (qB != 2 /*|| control(1)*/) &&
 			(qB != 5 /*|| control(1)*/) && 
 			validA && validB 
 		) 
