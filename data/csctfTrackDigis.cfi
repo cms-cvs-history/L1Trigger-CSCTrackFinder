@@ -3,17 +3,18 @@ include "L1Trigger/CSCCommonTrigger/data/CSCCommonTrigger.cfi"
 module csctfTrackDigis = CSCTFTrackProducer {
 
    untracked InputTag SectorReceiverInput = cscTriggerPrimitiveDigis:MPCSORTED
+   untracked InputTag DTproducer          =  dtTriggerPrimitiveDigis:
 
    bool useDT   = true
-   bool isTMB07 = false
+   bool isTMB07 = true
 
    PSet SectorProcessor = {
         using CSCCommonTrigger
 
         uint32  CoreLatency = 8
         uint32  BXAdepth      = 2
-        bool    AllowALCTonly = true
-        bool    AllowCLCTonly = true
+        bool    AllowALCTonly = false
+        bool    AllowCLCTonly = false
         uint32  PreTrigger    = 2
         vuint32 EtaMin      = {22, 22, 14, 14, 14, 10, 10, 10}
         vuint32 EtaMax      = {127, 127, 127, 127, 127, 24, 24, 24}
