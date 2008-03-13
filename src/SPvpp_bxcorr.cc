@@ -104,7 +104,7 @@ beginmodule
 		r[3] or r[4] or r[5] or r[6] or r[7] or r[8] or 
 		del1stubs[3] or del1stubs[4] or del1stubs[5] or del1stubs[6] or del1stubs[7] or del1stubs[8] or 
 		del2stubs[3] or del2stubs[4] or del2stubs[5] or del2stubs[6] or del2stubs[7] or del2stubs[8] or 
-		pretrig
+		pretrig or acc
 	)
 	begin
 	
