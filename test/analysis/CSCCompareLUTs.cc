@@ -27,6 +27,11 @@
 
 #include "L1Trigger/CSCTrackFinder/test/analysis/CSCCompareLUTs.h"
 
+#include "CondFormats/L1TObjects/interface/L1MuTriggerScales.h"
+#include "CondFormats/DataRecord/interface/L1MuTriggerScalesRcd.h"
+#include "CondFormats/L1TObjects/interface/L1MuTriggerPtScale.h"
+#include "CondFormats/DataRecord/interface/L1MuTriggerPtScaleRcd.h"
+
 CSCCompareLUTs::CSCCompareLUTs(edm::ParameterSet const& conf)
 {
   station = conf.getUntrackedParameter<int>("Station",-1);
@@ -541,6 +546,12 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
   iSetup.get<MuonGeometryRecord>().get( pDD );
   CSCTriggerGeometry::setGeometry(pDD);
 
+  edm::ESHandle< L1MuTriggerScales > scales ;
+  iSetup.get< L1MuTriggerScalesRcd >().get( scales ) ;
+
+  edm::ESHandle< L1MuTriggerPtScale > ptScale ;
+  iSetup.get< L1MuTriggerPtScaleRcd >().get( ptScale ) ;
+
   // Storing flags to be passed to the SR LUT objects.  This is done because when reading a file,
   // the file name for each LUT must be passed to the SR LUT object.  This is a way to read all the
   // LUT files within a given release by running this program once
@@ -655,8 +666,8 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 			    
 			    CSCSectorReceiverLUT SRLUT_1(endcapItr, sectorItr, subsectorItr, stationItr, _lutParam_1, isTMB07_1);
 			    CSCSectorReceiverLUT SRLUT_2(endcapItr, sectorItr, subsectorItr, stationItr, _lutParam_2, isTMB07_2);
-			    CSCTFPtLUT PtLUT_1(_lutParam_1);
-			    CSCTFPtLUT PtLUT_2(_lutParam_2);
+			    CSCTFPtLUT PtLUT_1(_lutParam_1, scales.product(), ptScale.product() );
+			    CSCTFPtLUT PtLUT_2(_lutParam_2, scales.product(), ptScale.product() );
 			    
 			    compareLUTs(&SRLUT_1, &SRLUT_2, &PtLUT_1, &PtLUT_2, false, true, true, true, false, endcapItr, sectorItr, subsectorItr, stationItr);
 			  }
@@ -728,8 +739,8 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
 		    
 		    CSCSectorReceiverLUT SRLUT_1(endcapItr, sectorItr, 1, stationItr, _lutParam_1, isTMB07_1);
 		    CSCSectorReceiverLUT SRLUT_2(endcapItr, sectorItr, 1, stationItr, _lutParam_2, isTMB07_2);
-		    CSCTFPtLUT PtLUT_1(_lutParam_1);
-		    CSCTFPtLUT PtLUT_2(_lutParam_2);
+		    CSCTFPtLUT PtLUT_1(_lutParam_1, scales.product(), ptScale.product() );
+		    CSCTFPtLUT PtLUT_2(_lutParam_2, scales.product(), ptScale.product() );
 
 		    compareLUTs(&SRLUT_1, &SRLUT_2, &PtLUT_1, &PtLUT_2, false, true, true, false, false, endcapItr, sectorItr, 1, stationItr);
 		  }
@@ -774,8 +785,8 @@ void CSCCompareLUTs::analyze(edm::Event const& e, edm::EventSetup const& iSetup)
   
   CSCSectorReceiverLUT SRLUT_1(1, 1, 1, 1, _lutParam_1,isTMB07_1);
   CSCSectorReceiverLUT SRLUT_2(1, 1, 1, 1, _lutParam_2,isTMB07_2);
-  CSCTFPtLUT PtLUT_1(_lutParam_1);
-  CSCTFPtLUT PtLUT_2(_lutParam_2);
+  CSCTFPtLUT PtLUT_1(_lutParam_1, scales.product(), ptScale.product() );
+  CSCTFPtLUT PtLUT_2(_lutParam_2, scales.product(), ptScale.product() );
   
   compareLUTs(&SRLUT_1, &SRLUT_2, &PtLUT_1, &PtLUT_2, true, false, false, false, true, 1, 1, 1, 1);
 }
