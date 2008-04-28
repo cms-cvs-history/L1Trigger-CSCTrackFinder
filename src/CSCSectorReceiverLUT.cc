@@ -1,5 +1,4 @@
 #include <L1Trigger/CSCTrackFinder/interface/CSCSectorReceiverLUT.h>
-#include <L1Trigger/CSCTrackFinder/interface/CSCSectorReceiverMiniLUT.h> // BJ
 #include <L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeometry.h>
 #include <L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeomManager.h>
 #include <L1Trigger/CSCCommonTrigger/interface/CSCPatternLUT.h>
@@ -65,13 +64,12 @@ CSCSectorReceiverLUT::CSCSectorReceiverLUT(int endcap, int sector, int subsector
 									   _station(station),isTMB07(TMB07)
 {
   LUTsFromFile = pset.getUntrackedParameter<bool>("ReadLUTs",false);
-  useMiniLUTs = pset.getUntrackedParameter<bool>("UseMiniLUTs", false); // BJ
   isBinary = pset.getUntrackedParameter<bool>("Binary",false);
 
   me_global_eta = NULL;
   me_global_phi = NULL;
   mb_global_phi = NULL;
-  if(LUTsFromFile && !useMiniLUTs) // BJ
+  if(LUTsFromFile)
     {
       me_lcl_phi_file = pset.getUntrackedParameter<edm::FileInPath>("LocalPhiLUT", edm::FileInPath(std::string("L1Trigger/CSCTrackFinder/LUTs/LocalPhiLUT"
 													       + (isBinary ? std::string(".bin") : std::string(".dat")))));
@@ -203,6 +201,8 @@ lclphidat CSCSectorReceiverLUT::calcLocalPhi(const lclphiadd& theadd) const
   if(theadd.strip < 2*CSCConstants::MAX_NUM_STRIPS)
     if(theadd.pattern_type == 1 || isTMB07) // if halfstrip (Note: no distrips in TMB 2007 patterns)
       data.phi_local = static_cast<unsigned>((0.5 + theadd.strip + patternOffset)*binPhiL);
+//    data.phi_local = static_cast<unsigned>((0.5 + theadd.strip - patternOffset)*binPhiL);
+//    data.phi_local = static_cast<unsigned>((0.5 + theadd.strip)*binPhiL);
     else // if distrip
       data.phi_local = static_cast<unsigned>((2 + theadd.strip + 4.*patternOffset)*binPhiL);
   else {
@@ -258,8 +258,7 @@ lclphidat CSCSectorReceiverLUT::localPhi(unsigned address) const
   lclphidat result;
   lclphiadd theadd(address);
 
-  if(useMiniLUTs && isTMB07) result = CSCSectorReceiverMiniLUT::calcLocalPhiMini(address);
-  else if(LUTsFromFile) result = me_lcl_phi[address];
+  if(LUTsFromFile) result = me_lcl_phi[address];
   else result = calcLocalPhi(theadd);
 
   return result;
@@ -269,8 +268,7 @@ lclphidat CSCSectorReceiverLUT::localPhi(lclphiadd address) const
 {
   lclphidat result;
 
-  if(useMiniLUTs && isTMB07) result = CSCSectorReceiverMiniLUT::calcLocalPhiMini(address.toint()); 
-  else if(LUTsFromFile) result = me_lcl_phi[address.toint()];
+  if(LUTsFromFile) result = me_lcl_phi[address.toint()];
   else result = calcLocalPhi(address);
 
   return result;
@@ -369,16 +367,8 @@ gblphidat CSCSectorReceiverLUT::calcGlobalPhiME(const gblphiadd& address) const
       thechamber = thegeom->chamber(_endcap,_station,_sector,_subsector,cscid);
       if(thechamber)
 	{
-	  if(isTMB07)
-	    {
-	      layergeom = const_cast<CSCLayerGeometry*>(thechamber->layer(CSCConstants::KEY_CLCT_LAYER)->geometry());
-	      thelayer = const_cast<CSCLayer*>(thechamber->layer(CSCConstants::KEY_CLCT_LAYER));
-	    }
-	  else
-	    {
-	      layergeom = const_cast<CSCLayerGeometry*>(thechamber->layer(CSCConstants::KEY_CLCT_LAYER_PRE_TMB07)->geometry());
-	      thelayer = const_cast<CSCLayer*>(thechamber->layer(CSCConstants::KEY_CLCT_LAYER_PRE_TMB07));
-	    }
+	  layergeom = const_cast<CSCLayerGeometry*>(thechamber->layer(CSCConstants::KEY_CLCT_LAYER)->geometry());
+	  thelayer = const_cast<CSCLayer*>(thechamber->layer(CSCConstants::KEY_CLCT_LAYER));
 	  const int nStrips = layergeom->numberOfStrips();
 	  // PhiL is the strip number converted into some units between 0 and
 	  // 1023.  When we did the conversion in fillLocalPhiTable(), we did
@@ -537,8 +527,7 @@ gblphidat CSCSectorReceiverLUT::globalPhiME(int phi_local, int wire_group, int c
   theadd.wire_group = ((1<<5)-1)&(wire_group >> 2); // want 2-7 of wg
   theadd.cscid = cscid;
 
-  if(useMiniLUTs && isTMB07) result = CSCSectorReceiverMiniLUT::calcGlobalPhiMEMini(_endcap, _sector, _station, _subsector, theadd.toint());
-  else if(LUTsFromFile) result = me_global_phi[theadd.toint()];
+  if(LUTsFromFile) result = me_global_phi[theadd.toint()];
   else result = calcGlobalPhiME(theadd);
 
   return result;
@@ -548,8 +537,7 @@ gblphidat CSCSectorReceiverLUT::globalPhiME(unsigned address) const
 {
   gblphidat result;
 
-  if(useMiniLUTs && isTMB07) result = CSCSectorReceiverMiniLUT::calcGlobalPhiMEMini(_endcap, _sector, _station, _subsector, address);
-  else if(LUTsFromFile) result = me_global_phi[address];
+  if(LUTsFromFile) result = me_global_phi[address];
   else result = calcGlobalPhiME(gblphiadd(address));
 
   return result;
@@ -559,8 +547,7 @@ gblphidat CSCSectorReceiverLUT::globalPhiME(gblphiadd address) const
 {
   gblphidat result;
 
-  if(useMiniLUTs && isTMB07) result = CSCSectorReceiverMiniLUT::calcGlobalPhiMEMini(_endcap, _sector, _station, _subsector, address.toint());
-  else if(LUTsFromFile) result = me_global_phi[address.toint()];
+  if(LUTsFromFile) result = me_global_phi[address.toint()];
   else result = calcGlobalPhiME(address);
 
   return result;
@@ -603,8 +590,7 @@ gblphidat CSCSectorReceiverLUT::globalPhiMB(int phi_local,int wire_group, int cs
   address.wire_group = ((1<<5)-1)&(wire_group>>2);
   address.phi_local = phi_local;
 
-  if(useMiniLUTs && isTMB07) result = CSCSectorReceiverMiniLUT::calcGlobalPhiMBMini(_endcap, _sector, _subsector, address.toint());
-  else if(LUTsFromFile) result = mb_global_phi[address.toint()];
+  if(LUTsFromFile) result = mb_global_phi[address.toint()];
   else result = calcGlobalPhiMB(globalPhiME(address));
 
   return result;
@@ -615,8 +601,7 @@ gblphidat CSCSectorReceiverLUT::globalPhiMB(unsigned address) const
   gblphidat result;
   gblphiadd theadd(address);
 
-  if(useMiniLUTs && isTMB07) result = CSCSectorReceiverMiniLUT::calcGlobalPhiMBMini(_endcap, _sector, _subsector, address);
-  else if(LUTsFromFile) result = mb_global_phi[theadd.toint()];
+  if(LUTsFromFile) result = mb_global_phi[theadd.toint()];
   else result = calcGlobalPhiMB(globalPhiME(address));
 
   return result;
@@ -626,8 +611,7 @@ gblphidat CSCSectorReceiverLUT::globalPhiMB(gblphiadd address) const
 {
   gblphidat result;
 
-  if(useMiniLUTs && isTMB07) result = CSCSectorReceiverMiniLUT::calcGlobalPhiMBMini(_endcap, _sector, _subsector, address.toint());
-  else if(LUTsFromFile) result = mb_global_phi[address.toint()];
+  if(LUTsFromFile) result = mb_global_phi[address.toint()];
   else result = calcGlobalPhiMB(globalPhiME(address));
 
   return result;
@@ -804,9 +788,10 @@ gbletadat CSCSectorReceiverLUT::globalEtaME(int tphi_bend, int tphi_local, int t
   theadd.wire_group = twire_group;
   theadd.cscid = tcscid;
 
-  if(useMiniLUTs && isTMB07) result = CSCSectorReceiverMiniLUT::calcGlobalEtaMEMini(_endcap, _sector, _station, _subsector, theadd.toint());
-  else if(LUTsFromFile) result = me_global_eta[theadd.toint()];
+  if(LUTsFromFile) result = me_global_eta[theadd.toint()];
   else result = calcGlobalEtaME(theadd);
+
+  //  if(address.wire_group == 0 && address.phi_local==0) std::cout << result.global_eta << std::endl;
 
   return result;
 }
@@ -816,8 +801,7 @@ gbletadat CSCSectorReceiverLUT::globalEtaME(unsigned address) const
   gbletadat result;
   gbletaadd theadd(address);
 
-  if(useMiniLUTs && isTMB07) result = CSCSectorReceiverMiniLUT::calcGlobalEtaMEMini(_endcap, _sector, _station, _subsector, address);
-  else if(LUTsFromFile) result = me_global_eta[address];
+  if(LUTsFromFile) result = me_global_eta[address];
   else result = calcGlobalEtaME(theadd);
   return result;
 }
@@ -826,8 +810,7 @@ gbletadat CSCSectorReceiverLUT::globalEtaME(gbletaadd address) const
 {
   gbletadat result;
 
-  if(useMiniLUTs && isTMB07) result = CSCSectorReceiverMiniLUT::calcGlobalEtaMEMini(_endcap, _sector, _station, _subsector, address.toint());
-  else if(LUTsFromFile) result = me_global_eta[address.toint()];
+  if(LUTsFromFile) result = me_global_eta[address.toint()];
   else result = calcGlobalEtaME(address);
   return result;
 }
