@@ -1,4 +1,3 @@
-	
 /***************************************************************************
  *																		   *
  *   CSCTFEfficiencies.cc												   *
@@ -14,12 +13,14 @@
 #include <L1Trigger/CSCTrackFinder/test/analysis/CSCTFEfficiencies.h>
 
 #include <SimDataFormats/Track/interface/SimTrackContainer.h>
+#include <SimDataFormats/Vertex/interface/SimVertexContainer.h>
 #include <DataFormats/L1GlobalMuonTrigger/interface/L1MuRegionalCand.h>
 
 #include <TMath.h>
 #include <TCanvas.h>
 #include <TStyle.h>
 #include <TF1.h>
+#include <TH2.h>
 
 namespace csctf_analysis
 {
@@ -49,30 +50,37 @@ void CSCTFEfficiencies::DeleteHistos()
 
 void CSCTFEfficiencies::beginJob(edm::EventSetup const& es)
 {
-	simEta = new TH1F("simEta","Simulated Track #eta",500,0,2.5); 
+	simEta = new TH1F("simEta","Simulated Track #eta",500,0, 2.5); 
 	simPhi = new TH1F("simPhi","Simulated Track #phi",128,0,6.4);
-	simPt = new TH1F("simPt","Simulated Track Momentum",301,-0.5,300.5);
+	simPt = new TH1F("simPt","Simulated Track Transverse Momentum", 140, 0, 7000);
+	simPz = new TH1F("simPz", "Simulated Track Z Momentum", 140, 0, 7000);
+	simEHalo = new TH1F("simEHalo", "Simulated Track Energy", 140, 0, 7000);
+	simP =  new TH1F("simP", "Simulated Track Total Momentum", 140, 0, 7000);
 	
-	trackedEta = new TH1F("trackedEta","Track Finder #eta", 50, 0, 2.5);
+	trackedEta = new TH1F("trackedEta","Track Finder #eta", 500, 0, 2.5);
 	trackedPhi = new TH1F("trackedPhi","Track Finder #phi", 80, 0, 6.4);
-	trackedPt = new TH1F("trackedPt","Track Finder Pt",301,-0.5,300.5);
+	trackedPt = new TH1F("trackedPt","Track Finder Pt",101,-0.5,100.5);
 	trackedBx = new TH1F("trackedBx","Track Finder Bx Assignment", 14, -6.5, 7.5);
+	trackedEHalo = new TH1F("trackedEHalo","Simulated Track Energy for Halo Trigger Muons", 140, 0, 7000);
+	trackedPtHalo = new TH1F("trackedPtHalo", "Tf Track Pt for Halo Trigger Muons", 141, -0.5, 140.5);
+	HaloPRes = new TH1F("HaloPRes", "Momentum Resolution for Halo Tracks", 1000, -1, 1);
 	
 	matchedPhi = new TH1F("matchedPhi","Matched Track #phi", 128, 0, 6.4);
 	matchedEta = new TH1F("matchedEta","Matched Track #eta",500,0, 2.5);
-	matchedPt = new TH1F("matchedPt","Matched Track Pt",301,-0.5,300.5);
-	matchedPt10 = new TH1F("matchedPt10","Matched Track Pt Tf > 10",301,-0.5,300.5); 
-	matchedPt20 = new TH1F("matchedPt20","Matched Track Pt Tf > 20",301,-0.5,300.5);
-	matchedPt40 = new TH1F("matchedPt40","Matched Track Pt Tf > 40",301,-0.5,300.5);
-	matchedPt60 = new TH1F("matchedPt60","Matched Track Pt Tf > 60",301,-0.5,300.5);
-	fidPtDen = new TH1F("fidPtDen", "Fiducial Sim Track Pt", 301,-0.5, 300.5);	
+	matchedPt = new TH1F("matchedPt","Matched Track Pt",101,-0.5,100.5);
+	matchedPt10 = new TH1F("matchedPt10","Matched Track Pt Tf > 10",101,-0.5,100.5); 
+	matchedPt20 = new TH1F("matchedPt20","Matched Track Pt Tf > 20",101,-0.5,100.5);
+	matchedPt40 = new TH1F("matchedPt40","Matched Track Pt Tf > 40",101,-0.5,100.5);
+	matchedPt60 = new TH1F("matchedPt60","Matched Track Pt Tf > 60",101,-0.5,100.5);
+	fidPtDen = new TH1F("fidPtDen", "Fiducial Sim Track Pt", 101,-0.5, 100.5);	
 	
 	EffPhi = new TH1F("EffPhi","Efficiency v #phi",128,0,6.4);
-	EffPt = new TH1F("EffPt","Efficiency v Pt",301,-0.5,300.5);
-	EffPt10 = new TH1F("EffPt10","Efficiency v Pt Tf > 10",301,-0.5,300.5);
-	EffPt20 = new TH1F("EffPt20","Efficiency v Pt Tf > 20",301,-0.5,300.5);
-	EffPt40 = new TH1F("EffPt40","Efficiency v Pt Tf > 40",301,-0.5,300.5);
-	EffPt60 = new TH1F("EffPt60","Efficiency v Pt Tf > 60",301,-0.5,300.5);
+	EffPt = new TH1F("EffPt","Efficiency v Pt",101,-0.5,100.5);
+	EffEn = new TH1F("EffEn", "Efficiency v Simualted Muon Eneregy",120, 1000, 7000);
+	EffPt10 = new TH1F("EffPt10","Efficiency v Pt Tf > 10",101,-0.5,100.5);
+	EffPt20 = new TH1F("EffPt20","Efficiency v Pt Tf > 20",101,-0.5,100.5);
+	EffPt40 = new TH1F("EffPt40","Efficiency v Pt Tf > 40",101,-0.5,100.5);
+	EffPt60 = new TH1F("EffPt60","Efficiency v Pt Tf > 60",101,-0.5,100.5);
 	EffEtaAll = new TH1F("EffEtaAll","Efficiency v eta for all Tracks", 500, 0, 2.5);
 	EffEtaQ3 = new TH1F("EffEtaQ3","Efficiency v #eta for Quality 3 Tracks", 500, 0, 2.5);
 	EffEtaQ2 = new TH1F("EffEtaQ2","Efficiency v #eta for Quality 2 Tracks", 500, 0, 2.5);
@@ -87,7 +95,13 @@ void CSCTFEfficiencies::beginJob(edm::EventSetup const& es)
 	
 	etaResolution = new TH1F("etaResolution","#eta Resolution", 1000, -1, 1);
 	phiResolution = new TH1F("phiResolution","#phi Resolution", 1000, -1, 1);
-	ptResolution = new TH1F("ptResolution","Pt Resolution for Quality > 1 Tracks", 600, -2, 2);
+	ptResolution = new TH1F("ptResolution","Pt Resolution for Quality > 1 Tracks", 300, -1.5, 1.5);
+	ptResolutionQ3 = new TH1F("ptResolutionQ3","Pt Resolution for Quality > 2 Tracks", 300, -1.5, 1.5);
+	ptResolutionEtaLow = new TH1F("ptResolutionEtaLow", "Pt Resolution for 1.2 < #eta < 1.6", 300, -1.5, 1.5);
+	ptResolutionEtaHigh = new TH1F("ptResolutionEtaHigh","Pt Resolution for 1.6 < #eta < 2.1", 300, -1.5, 1.5);
+	PhiResVPt = new TH2F("phiResVPt","#phi Resolution v Pt", 1000, -1, 1, 101,-0.5,100.5);
+	PtResVPt = new TH2F("PtResVPt","Pt Resolution v Pt", 300, -1.5, 1.5, 101, -0.5,100.5);
+	PtResVEta = new TH2F("PtResVEta", "PtResolution v #eta", 300, -1.5, 1.5, 500, 0.0, 2.5);
 	
 	ghostEta = new TH1F("ghostEta","Sim #eta Value for Fake Tracks",500, 0, 2.5);
 	ghostPhi = new TH1F("ghostPhi","Sim #phi Value for Fake Tracks",128, 0, 6.4);
@@ -100,7 +114,17 @@ void CSCTFEfficiencies::beginJob(edm::EventSetup const& es)
 	ghostselectPtRes = new TH1F("ghostselectPtRes","Pt Resolution for Smaller R TF on ghost event", 4000, -10, 30);
 	ghostdropPtRes = new TH1F("ghostdropPtRes","Pt Resolution for Greater R TF on ghost event", 4000, -10, 30);
 	
+	simHaloPipeOff = new TH1F("simHaloPipeOff", "Simulated Value for muon offset", 100, 0, 100);
+	simHaloPipeOff2 = new TH1F("simHaloPipeOff2", "Simulated Value for muon offset 2", 100, 0, 100);
+	trackedHaloPipeOff = new TH1F("trkHaloPipeOff", "Simulated Value for Halo triggered muon offset", 100, 0, 100);
+	EffHaloPipeOff = new TH1F("EffHaloPipeOff", "Efficiency Vs halo track radius", 100, 0, 100);
+	LostHaloPipeOff = new TH1F("LostHaloPipeOff", "Simulated Value for muon offset for lost tracks", 100, 0, 100);
+	simHaloPosition = new TH2F("simHaloPosition", "X-Y Distribution of Beam Halo Muons", 30, -30, 30, 30, -30, 30);
+	trackHaloPosition = new TH2F("trackHaloPosition", "X-Y Distribution of Tf Beam Halo Muons", 30, -30, 30, 30, -30, 30);
+	lostHaloPosition = new TH2F("lostHaloPosition", "X-Y Distribution of Lost Beam Halo Muons", 30, -30, 30, 30, -30, 30);
+	
 	ghosts = 0;
+	haloGhosts = 0;
 	lostTracks = 0;
 	haloTrigger = 0;
 	DebugCounter = 0; //Counter to be moved randomly for debug purposes
@@ -111,8 +135,20 @@ void CSCTFEfficiencies::endJob()
 	/////////////////////////
 	//// Set Axis Labels ////
 	/////////////////////////
+	EffEn->GetXaxis()->SetTitle("Simulated Track Energy (GeV)");
+	EffEn->GetYaxis()->SetTitle("Efficiency");
+	EffEn->SetLineColor(3);
+	EffEn->SetFillColor(9);
+	EffHaloPipeOff->GetXaxis()->SetTitle("Radius");
+	EffHaloPipeOff->GetYaxis()->SetTitle("Efficiency");
+	EffHaloPipeOff->SetLineColor(3);
+	EffHaloPipeOff->SetFillColor(9);
 	EffPhi->GetXaxis()->SetTitle("#phi Sim (Rad)");
 	EffPhi->GetYaxis()->SetTitle("Efficiency");
+	PtResVPt->GetXaxis()->SetTitle("Pt_{Sim} / Pt_{Tf} - 1");
+	PtResVPt->GetYaxis()->SetTitle("Pt_{Sim} (GeV/c)");
+	PtResVEta->GetXaxis()->SetTitle("Pt_{Sim} / Pt_{Tf} - 1");
+	PtResVEta->GetYaxis()->SetTitle("#eta_{Sim}");
 	etaResolution->GetXaxis()->SetTitle("#eta_{Sim} - #eta_{Tf}");
 	etaResolution->GetYaxis()->SetTitle("Count");
 	phiResolution->GetXaxis()->SetTitle("#phi_{Sim} - #phi_{Tf} (Rad)");
@@ -127,7 +163,25 @@ void CSCTFEfficiencies::endJob()
 	ghostPhi->GetYaxis()->SetTitle("Count");
 	ghostPt->GetXaxis()->SetTitle("Pt_{Sim} (GeV/c)");
 	ghostPt->GetYaxis()->SetTitle("Count");
-	
+	simHaloPosition->GetXaxis()->SetTitle("X position");
+	simHaloPosition->GetYaxis()->SetTitle("Y position");
+	simHaloPosition->SetMarkerStyle(3);
+	trackHaloPosition->SetMarkerStyle(3);
+	lostHaloPosition->SetMarkerStyle(2);
+	ptResolutionQ3->GetXaxis()->SetTitle("Pt_{Sim} / Pt_{Tf} - 1");
+	ptResolutionQ3->GetYaxis()->SetTitle("Count");
+	ptResolutionEtaLow->GetXaxis()->SetTitle("Pt_{Sim} / Pt_{Tf} - 1");
+	ptResolutionEtaLow->GetYaxis()->SetTitle("Count");
+	ptResolutionEtaHigh->GetXaxis()->SetTitle("Pt_{Sim} / Pt_{Tf} - 1");
+	ptResolutionEtaHigh->GetYaxis()->SetTitle("Count");
+	simEHalo->GetXaxis()->SetTitle("Simulated Muon Energy");
+	simEHalo->GetYaxis()->SetTitle("Count");
+	simPt->GetXaxis()->SetTitle("Pt_{Sim}");
+	simPt->GetYaxis()->SetTitle("Count");
+	simP->GetXaxis()->SetTitle("P_{Sim}");
+	simP->GetYaxis()->SetTitle("Count");
+	simPz->GetXaxis()->SetTitle("Pz_{Sim}");
+	simPz->GetYaxis()->SetTitle("Count");
 	
 	/////////////////////
 	//// Efficiency /////
@@ -141,8 +195,7 @@ void CSCTFEfficiencies::endJob()
 	EffEtaQ2->Divide(EtaQ2, simEta);
 	EffEtaQ1->Divide(EtaQ1, simEta);
 	EffPhi->Divide(matchedPhi, simPhi);
-	
-	
+		
 	TCanvas* PtEffAll = new TCanvas("PtEffAll");
 	TF1* fitThresh = new TF1("fitThresh", csctf_analysis::thresh, 0, 100, 4);
 	fitThresh->SetParNames("Pt40","Resol","Constant","Slope");
@@ -202,8 +255,11 @@ void CSCTFEfficiencies::endJob()
 	/////////////////////////////////
 	LostPhi->Add(simPhi,matchedPhi,1,-1);
 	LostEta->Add(simEta,matchedEta,1,-1);
+	lostHaloPosition->Add(simHaloPosition,trackHaloPosition,1,-1);
+	LostHaloPipeOff->Add(trackedHaloPipeOff,simHaloPipeOff, -1,1);
 	std::cout << "Ghosts: " << ghosts << std::endl << "Lost Tracks: " << lostTracks << std::endl;
-	std::cout << "Halo bit set: " << haloTrigger << "x times." << std::endl << std::endl;
+	std::cout << "Halo bit set: " << haloTrigger << "x times." << std::endl;
+	std::cout << "Halo Ghosts: " << haloGhosts << std::endl << std::endl;
 	
 	//////////////////////
 	//// Print Histos ////
@@ -215,7 +271,13 @@ void CSCTFEfficiencies::endJob()
 	Hlist.Add(EffPt40);
 	Hlist.Add(EffPt60);
 	Hlist.Add(PtEffAll);
+	Hlist.Add(simPz);
 	Hlist.Add(EtaEff);
+	Hlist.Add(trackedEHalo);
+	Hlist.Add(trackedEta);
+	Hlist.Add(trackedPhi);
+	Hlist.Add(trackedPtHalo);
+	Hlist.Add(HaloPRes);
 	Hlist.Add(ghostDelPhi);
 	Hlist.Add(ghostDelEta);
 	Hlist.Add(ghostTrackRad);
@@ -225,26 +287,32 @@ void CSCTFEfficiencies::endJob()
 	Hlist.Add(EffPt20);
 	Hlist.Add(EffPt40);
 	Hlist.Add(EffPt60);
-	//Hlist.Add(simEta);
-	//Hlist.Add(simPhi);
-	//Hlist.Add(simPt);
-	//Hlist.Add(trackedEta);
-	//Hlist.Add(trackedPhi);
-	//Hlist.Add(trackedPt);
-	Hlist.Add(numEScat);
 	Hlist.Add(ghostPhi);
 	Hlist.Add(ghostEta);
 	Hlist.Add(ghostRadius);
 	Hlist.Add(ghostPt);
 	Hlist.Add(trackedBx);
+	Hlist.Add(numEScat);
 	Hlist.Add(EffPhi);
 	Hlist.Add(EffPt);
+	Hlist.Add(EffEn);
+	Hlist.Add(simEHalo);
+	Hlist.Add(simEta);
+	Hlist.Add(simPhi);
+	Hlist.Add(simPt);
+	Hlist.Add(simP);
 	Hlist.Add(Radius);
 	Hlist.Add(LostPhi);
 	Hlist.Add(LostEta);
 	Hlist.Add(etaResolution);
 	Hlist.Add(phiResolution);
 	Hlist.Add(ptResolution);
+	Hlist.Add(PhiResVPt); 
+	Hlist.Add(PtResVPt);
+	Hlist.Add(PtResVEta);
+	Hlist.Add(ptResolutionQ3);
+	Hlist.Add(ptResolutionEtaLow);
+	Hlist.Add(ptResolutionEtaHigh);
 	Hlist.Write();
 	delete fAnalysis;
 }
@@ -261,8 +329,10 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	// get sim track and found track data here... then run analysis functions
 	edm::Handle<edm::SimTrackContainer> simTracks;
 	edm::Handle<std::vector<L1MuRegionalCand> > tfTracks;
-	e.getByLabel("csctfmuonsorter","CSC", tfTracks);
+	edm::Handle<std::vector<SimVertex> > simVertexs;
+	e.getByLabel("csctfDigis","CSC", tfTracks);
 	e.getByLabel("g4SimHits",simTracks);
+	e.getByLabel("g4SimHits",simVertexs);
 	
 	// declare variables which must be defined outside of sim & tf loop for verbose track matching
 	bool DEBUG = false;
@@ -275,6 +345,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	bool pt10bit2 = false, pt20bit2 = false, pt40bit2 = false, pt60bit2 = false;
 	bool pt10bit3 = false, pt20bit3 = false, pt40bit3 = false, pt60bit3 = false;
 	bool pt10bit4 = false, pt20bit4 = false, pt40bit4 = false, pt60bit4 = false;
+	bool LowResbit1 = false, LowResbit2 = false, LowResbit3 = false, LowResbit4 = false;
 	bool pt10bit1Old = false, pt20bit1Old = false, pt40bit1Old = false, pt60bit1Old = false;
 	bool pt10bit2Old = false, pt20bit2Old = false, pt40bit2Old = false, pt60bit2Old = false;
 	bool pt10bit3Old = false, pt20bit3Old = false, pt40bit3Old = false, pt60bit3Old = false;
@@ -283,24 +354,29 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	double pairPtOld2, pairPt10Old2, pairPt20Old2, pairPt40Old2, pairPt60Old2, pairPhiOld2, pairEtaOld2;
 	double pairPtOld3, pairPt10Old3, pairPt20Old3, pairPt40Old3, pairPt60Old3, pairPhiOld3, pairEtaOld3;
 	double pairPtOld4, pairPt10Old4, pairPt20Old4, pairPt40Old4, pairPt60Old4, pairPhiOld4, pairEtaOld4;
+	double PtRes1OldHigh, PtRes2OldHigh, PtRes3OldHigh, PtRes4OldHigh, PtRes1OldLow, PtRes2OldLow, PtRes3OldLow, PtRes4OldLow;
 	double T1Phi, T1Eta, T1Pt, T2Phi, T2Eta, T2Pt, T3Phi, T3Eta, T3Pt, T4Phi, T4Eta, T4Pt, gDelPhi, gDelEta, gRad;
 	double EtaRes1, EtaRes2, EtaRes3, EtaRes4, PhiRes1, PhiRes2, PhiRes3, PhiRes4, PtRes1, PtRes2, PtRes3, PtRes4;
 	double EtaRes1Old, EtaRes2Old, EtaRes3Old, EtaRes4Old, PhiRes1Old, PhiRes2Old, PhiRes3Old, PhiRes4Old, PtRes1Old, PtRes2Old, PtRes3Old, PtRes4Old;
 	int mecBx, T1Bx, T2Bx, T3Bx, T4Bx, T1BxOld, T2BxOld, T3BxOld, T4BxOld, pair1Bx, pair2Bx, pair3Bx, pair4Bx;
 	int T1Q, T2Q, T3Q, T4Q;
 	int pairQ1, pairQ2, pairQ3, pairQ4;
+	int simTrkCount = 0;
 
 	
 	
 	//Declare iterators for sim & tf loops
 	edm::SimTrackContainer::const_iterator simTrk = simTracks->begin();
-	std::vector<L1MuRegionalCand>::const_iterator tfTrk;
 	
+	std::vector<L1MuRegionalCand>::const_iterator tfTrk;
+	std::vector<SimVertex>::const_iterator simVtx;
 	for(; simTrk != simTracks->end(); simTrk++)  // Loop over all Simulated tracks for an Event
 	{
-
+		simTrkCount++;
 		HepLorentzVector mom;
+		//Hep3Vector position;
 		mom.set(simTrk->momentum().x(), simTrk->momentum().y(), simTrk->momentum().z(), simTrk->momentum().t());
+		
 		double genPhi = (mom.phi() > 0) ? mom.phi() : mom.phi() + 2*M_PI;
 		
 		if( fabs(simTrk->type()) == 13 ) // Disclude electrons from scattering
@@ -317,15 +393,33 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 			firstMuon++;	
 			double genEta = mom.pseudoRapidity();
 			double genPt = mom.perp();
-			//if( mom.perp() >= 2 )
-			//{
+			double genE = mom.e();
+			double genPz = mom.z();
+			double genP = sqrt( (mom.x())*(mom.x()) + (mom.y())*(mom.y()) + (mom.z())*(mom.z()) );
+			
+			if( mom.perp() >= 2 )
+			{
 				simCounter++;
 				simEta->Fill( fabs(genEta) );
 				simPhi->Fill( genPhi );
-				simPt->Fill( genPt );
-				
+				simPt->Fill( fabs(genPt) );
+				simEHalo->Fill( genE );
+				simPz->Fill( fabs(genPz) );
+				simP->Fill( fabs(genP) );
+				//simHaloPipeOff->Fill( haloPipeOffset );
+				//simHaloPosition->Fill( genXpos, genYpos);
+								
 				tfTrk = tfTracks->begin();
 				tfLoop = 0;
+				int firstMuonHalo = 0;
+				
+				int noShower = 0;
+
+				
+				if( ( genEta >= 1.2 ) && ( genEta <= 2.1 ) )
+				{
+					fidPtDen->Fill(genPt);
+				}
 				
 				for(; tfTrk != tfTracks->end(); tfTrk++)  // Loop over all Found tracks for an event
 				{
@@ -343,19 +437,41 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 					int mecBx = tfTrk->bx();
 					int mecCharge;
 					int mecHalo = tfTrk->finehalo_packed();
+
 					
-					if( mecHalo != 0 )
+
+					
+					/*
+					
+						if( ( mecHalo != 0 ) && ( tfLoop == 1 ) ) 
+							{
+								trackHaloPosition->Fill( genXpos, genYpos);
+								trackedHaloPipeOff->Fill( haloPipeOffset );
+							}//mecHalo
+					
+					*/
+					
+					if( ( mecHalo != 0 ) && ( tfLoop == 1 ) )
 					{
-						haloTrigger++;
 						std::cout << std::endl << "Halo Trigger" << std::endl;
 						std::cout << std::endl << "Halo Val: " << mecHalo << "." << std::endl; 
+						if( firstMuonHalo == 0)
+						{
+							haloTrigger++;
+							trackedEHalo->Fill( genE );
+							trackedPtHalo->Fill( mecPt );
+							double ERes = genP/mecPt - 1;
+							HaloPRes->Fill(ERes);
+							firstMuonHalo = 1;
+						}
 					}
 					
+					if( ( tfLoop != 1 ) && ( firstMuonHalo == 1 ) ) haloGhosts++;
 					
-					if( ( genEta >= 1.2 ) && ( genEta <= 2.1 ) && ( mecQuality > 1 )  && ( tfLoop == 1 ) )
+					/*if( ( genEta >= 1.2 ) && ( genEta <= 2.1 ) && ( mecQuality > 1 )  && ( tfLoop == 1 ) )
 					{
 						fidPtDen->Fill(genPt);
-					}
+					}*/
 					
 					if( mecChargePacked == 1) // Packed charge = 1 for -1 and 0 for +1
 					{
@@ -392,13 +508,14 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 						if( (genEta >= 1.2) && (genEta <= 2.1) && ( mecQuality > 1 ) )
 						{
 							fid1 = true;
-							
+
 							if( mecPt > 10) pt10bit1 = true;
 							if( mecPt > 20) pt20bit1 = true;
 							if( mecPt > 40) pt40bit1 = true;
 							if( mecPt > 60) pt60bit1 = true;
 							
 							PtRes1 = (genPt)/(mecPt) - 1;
+							
 						}  //pt Resolution very bad for Quality 1 tracks, so they are discluded.  
 					} //first tf muon
 					
@@ -502,12 +619,22 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 						
 						EtaRes1Old = EtaRes1;
 						PhiRes1Old = PhiRes1;
+						
 						fid1Old = false;
 						
 						if (fid1 == true)
 						{
 							pairPtOld1 = T1Pt;
 							PtRes1Old = PtRes1;
+							
+							if( T1Eta < 1.6 )
+							{
+								PtRes1OldLow = PtRes1;
+								LowResbit1 = true;
+							} else {
+								PtRes1OldHigh = PtRes1;
+							}
+							
 
 							if( pt10bit1 == true ) 
 							{
@@ -552,6 +679,14 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 						{
 							PtRes1Old = PtRes1;
 							pairPtOld1 = T1Pt;
+							
+							if( T1Eta < 1.6 )
+							{
+								PtRes1OldLow = PtRes1;
+								LowResbit1 = true;
+							} else {
+								PtRes1OldHigh = PtRes1;
+							}
 							
 							if( pt10bit1 == true ) 
 							{
@@ -604,6 +739,14 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 							pairPtOld2 = T2Pt;
 							PtRes2Old = PtRes2;
 							
+							if( T2Eta < 1.6 )
+							{
+								PtRes2OldLow = PtRes2;
+								LowResbit2 = true;
+							} else {
+								PtRes2OldHigh = PtRes2;
+							}
+							
 							if( pt10bit2 == true ) 
 							{
 								pairPt10Old2 = T2Pt;
@@ -648,6 +791,14 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 						{
 							pairPtOld2 = T2Pt;
 							PtRes2Old = PtRes2;
+							
+							if( T2Eta < 1.6 )
+							{
+								PtRes2OldLow = PtRes2;
+								LowResbit2 = true;
+							} else {
+								PtRes2OldHigh = PtRes2;
+							}
 							
 							if( pt10bit2 == true ) 
 							{
@@ -700,7 +851,15 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 						if (fid3 == true)
 						{
 							pairPtOld3 = T3Pt;
-							PtRes3Old = PtRes3;							
+							PtRes3Old = PtRes3;
+							
+							if( T3Eta < 1.6 )
+							{
+								PtRes3OldLow = PtRes3;
+								LowResbit3 = true;
+							} else {
+								PtRes3OldHigh = PtRes3;
+							}							
 							
 							if( pt10bit3 == true ) 
 							{
@@ -746,6 +905,14 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 						{
 							pairPtOld3 = T3Pt;
 							PtRes3Old = PtRes3;
+							
+							if( T3Eta < 1.6 )
+							{
+								PtRes3OldLow = PtRes3;
+								LowResbit3 = true;
+							} else {
+								PtRes3OldHigh = PtRes3;
+							}
 							
 							if( pt10bit3 == true ) 
 							{
@@ -798,6 +965,14 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 							pairPtOld4 = T4Pt;
 							PtRes4Old = PtRes4;
 							
+							if( T4Eta < 1.6 )
+							{
+								PtRes4OldLow = PtRes4;
+								LowResbit4 = true;
+							} else {
+								PtRes4OldHigh = PtRes4;
+							}
+							
 							if( pt10bit4 == true ) 
 							{
 								pairPt10Old4 = T4Pt;
@@ -843,6 +1018,14 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 							pairPtOld4 = T4Pt;
 							PtRes4Old = PtRes4;
 							
+							if( T4Eta < 1.6 )
+							{
+								PtRes4OldLow = PtRes4;
+								LowResbit4 = true;
+							} else {
+								PtRes4OldHigh = PtRes4;
+							}							
+							
 							if( pt10bit4 == true ) 
 							{
 								pairPt10Old4 = T4Pt;
@@ -881,7 +1064,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 			pt40bit1 = false, pt40bit2 = false, pt40bit3 = false, pt40bit4 = false;
 			pt60bit1 = false, pt60bit2 = false, pt60bit3 = false, pt60bit4 = false;
 			
-			//}//sim track momentum >= 10
+			}//sim track momentum >= 10
 	    
 			if(DEBUG == true)
 			{
@@ -909,17 +1092,28 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		{
 			matchedPt->Fill(pairPtOld1);
 			ptResolution->Fill(PtRes1Old);
+			PtResVPt->Fill(PtRes1Old,pairPtOld1);
+			PtResVEta->Fill(PtRes1Old,pairEtaOld1);
+		
 			if( pt10bit1Old == true ) matchedPt10->Fill(pairPt10Old1);
 			if( pt20bit1Old == true ) matchedPt20->Fill(pairPt20Old1);
 			if( pt40bit1Old == true ) matchedPt40->Fill(pairPt40Old1);
 			if( pt60bit1Old == true ) matchedPt60->Fill(pairPt60Old1);
+			
+			if( LowResbit1 == true )
+			{
+				ptResolutionEtaLow->Fill(PtRes1OldLow);
+			} else {
+				ptResolutionEtaHigh->Fill(PtRes1OldHigh);
+			}
 			
 		}
 		
 		Radius->Fill(R1Old);
 		etaResolution->Fill(EtaRes1Old);
 		phiResolution->Fill(PhiRes1Old);
-		
+		PhiResVPt->Fill(PhiRes1Old,pairPtOld1);
+
 		
 		if( pairQ1 >= 1)
 		{
@@ -933,6 +1127,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		if( pairQ1 >= 3)
 		{
 			EtaQ3->Fill(pairEtaOld1);
+			if(fid1Old == true) ptResolutionQ3->Fill(PtRes1Old);
 		}
 		
 	}//link1 == true
@@ -950,14 +1145,25 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		{
 			matchedPt->Fill(pairPtOld2);
 			ptResolution->Fill(PtRes2Old);
+			PtResVPt->Fill(PtRes2Old,pairPtOld2);
+			PtResVEta->Fill(PtRes2Old,pairEtaOld2);
+			
 			if( pt10bit2Old == true ) matchedPt10->Fill(pairPt10Old2);
 			if( pt20bit2Old == true ) matchedPt20->Fill(pairPt20Old2);
 			if( pt40bit2Old == true ) matchedPt40->Fill(pairPt40Old2);
 			if( pt60bit2Old == true ) matchedPt60->Fill(pairPt60Old2);
+			
+			if( LowResbit2 == true )
+			{
+				ptResolutionEtaLow->Fill(PtRes2OldLow);
+			} else {
+				ptResolutionEtaHigh->Fill(PtRes2OldHigh);
+			}
 		}
 		Radius->Fill(R2Old);
 		etaResolution->Fill(EtaRes2Old);
 		phiResolution->Fill(PhiRes2Old);
+		PhiResVPt->Fill(PhiRes2Old,pairPtOld2);
 						
 		if( pairQ2 >= 1)
 		{
@@ -971,6 +1177,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		if( pairQ2 >= 3)
 		{
 			EtaQ3->Fill(pairEtaOld2);
+			if(fid2Old == true) ptResolutionQ3->Fill(PtRes2Old);
 		}
 		
 	}//link2 == true
@@ -989,14 +1196,25 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		{
 			matchedPt->Fill(pairPtOld3);
 			ptResolution->Fill(PtRes3Old);
+			PtResVPt->Fill(PtRes3Old,pairPtOld3);
+			PtResVEta->Fill(PtRes3Old,pairEtaOld3);
+			
 			if( pt10bit3Old == true ) matchedPt10->Fill(pairPt10Old3);
 			if( pt20bit3Old == true ) matchedPt20->Fill(pairPt20Old3);
 			if( pt40bit3Old == true ) matchedPt40->Fill(pairPt40Old3);
 			if( pt60bit3Old == true ) matchedPt60->Fill(pairPt60Old3);
+			
+			if( LowResbit3 == true )
+			{
+				ptResolutionEtaLow->Fill(PtRes3OldLow);
+			} else {
+				ptResolutionEtaHigh->Fill(PtRes3OldHigh);
+			}
 		}
 		Radius->Fill(R3Old);
 		etaResolution->Fill(EtaRes3Old);
 		phiResolution->Fill(PhiRes3Old);
+		PhiResVPt->Fill(PhiRes3Old,pairPtOld3);
 		
 		if( pairQ3 >= 1)
 		{
@@ -1010,6 +1228,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		if( pairQ3 >= 3)
 		{
 			EtaQ3->Fill(pairEtaOld3);
+			if(fid3Old == true) ptResolutionQ3->Fill(PtRes3Old);
 		}
 	}// link3 == true
 	
@@ -1027,15 +1246,26 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		{
 			matchedPt->Fill(pairPtOld4);
 			ptResolution->Fill(PtRes4Old);
+			PtResVPt->Fill(PtRes4Old,pairPtOld4);
+			PtResVEta->Fill(PtRes4Old,pairEtaOld4);
+			
 			if( pt10bit4Old == true ) matchedPt10->Fill(pairPt10Old4);
 			if( pt20bit4Old == true ) matchedPt20->Fill(pairPt20Old4);
 			if( pt40bit4Old == true ) matchedPt40->Fill(pairPt40Old4);
 			if( pt60bit4Old == true ) matchedPt60->Fill(pairPt60Old4);
+			
+			if( LowResbit4 == true )
+			{
+				ptResolutionEtaLow->Fill(PtRes4OldLow);
+			} else {
+				ptResolutionEtaHigh->Fill(PtRes4OldHigh);
+			}
 		}
 		
 		Radius->Fill(R4Old);
 		etaResolution->Fill(EtaRes4Old);
 		phiResolution->Fill(PhiRes4Old);
+		PhiResVPt->Fill(PhiRes4Old,pairPtOld4);
 
 		
 		if( pairQ4 >= 1)
@@ -1050,6 +1280,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		if( pairQ4 >= 3)
 		{
 			EtaQ3->Fill(pairEtaOld4);
+			if(fid4Old == true) ptResolutionQ3->Fill(PtRes4Old);
 		}
 	}// link4 == true
 	

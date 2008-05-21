@@ -19,6 +19,7 @@
 
 //ROOT
 #include <TH1F.h>
+#include <TH2D.h>
 #include <TH1I.h>
 #include <TFile.h>
 #include <TTree.h>
@@ -33,6 +34,7 @@ class CSCTFEfficiencies : public edm::EDAnalyzer {
   virtual void endJob();
   virtual void beginJob(edm::EventSetup const&);
   int ghosts;
+  int haloGhosts;
   int lostTracks;
   int DebugCounter;
   unsigned haloTrigger;
@@ -45,18 +47,22 @@ class CSCTFEfficiencies : public edm::EDAnalyzer {
   void DeleteHistos();
   Int_t cnttrk, cntGen;
 
-  TH1F* simEta, *simPhi, *simPt, *fidPtDen;
-  TH1F* trackedEta, *trackedPhi, *trackedPt, *trackedBx;
-  TH1F* matchedPhi, *matchedEta, *matchedPt, *Radius;
-  TH1F* EffEtaAll, *EffEtaQ3, *EffEtaQ2, *EffEtaQ1, *EffPhi, *EffPt;
+  TH1F* simEta, *simPhi, *simPt, *simPz, *simP, *simEHalo, *fidPtDen;
+  TH1F* trackedEta, *trackedPhi, *trackedPt, *trackedBx, *trackedEHalo, *trackedPtHalo;
+  TH1F* matchedPhi, *matchedEta, *matchedPt, *Radius, *HaloPRes;
+  TH1F* EffEtaAll, *EffEtaQ3, *EffEtaQ2, *EffEtaQ1, *EffPhi, *EffPt, *EffEn;
   TH1F* EtaQ3, *EtaQ2, *EtaQ1;
   TH1F* LostPhi, *LostEta;
   TH1F* ghostPhi, *ghostEta, *ghostPt, *ghostRadius;
   TH1F* etaResolution, *phiResolution, *ptResolution;
   TH1F* matchedPt10, *matchedPt20, *matchedPt40, *matchedPt60;
   TH1F* EffPt10, *EffPt20, *EffPt40, *EffPt60;
+  TH1F* ptResolutionEtaLow, *ptResolutionEtaHigh, *ptResolutionQ3;
   TH1F* numEScat, *ghostDelPhi, *ghostDelEta, *ghostTrackRad, *ghostselectPtRes, *ghostdropPtRes ;
-  //TH2F* PhiResVPt;
+  TH1F* simHaloPipeOff, *trackedHaloPipeOff, *EffHaloPipeOff, *simHaloPipeOff2, *LostHaloPipeOff;
+  TH2F* simHaloPosition, *trackHaloPosition, *lostHaloPosition;
+  TH2F* PhiResVPt;
+  TH2F* PtResVPt, *PtResVEta;
   
 };
 
