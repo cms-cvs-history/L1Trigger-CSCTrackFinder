@@ -39,6 +39,7 @@ module csctfTrackDigis = CSCTFTrackProducer {
    	PSet SRLUT = {
             untracked bool ReadLUTs = false
             untracked bool Binary = false
+            untracked bool UseMiniLUTs = true
             untracked string LUTPath = "./"
         }
 
