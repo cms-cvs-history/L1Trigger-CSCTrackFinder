@@ -31,6 +31,23 @@ module csctfTrackDigis = CSCTFTrackProducer {
         uint32 singlesTrackPt     = 0xFF
         uint32 singlesTrackOutput = 3
 
+        uint32 kill_fiber   = 0x0000
+        uint32 QualityEnableME1a  = 0xFFFF
+        uint32 QualityEnableME1b  = 0xFFFF
+        uint32 QualityEnableME1c  = 0xFFFF
+        uint32 QualityEnableME1d  = 0xFFFF
+        uint32 QualityEnableME1e  = 0xFFFF
+        uint32 QualityEnableME1f  = 0xFFFF
+        uint32 QualityEnableME2a  = 0xFFFF
+        uint32 QualityEnableME2b  = 0xFFFF
+        uint32 QualityEnableME2c  = 0xFFFF
+        uint32 QualityEnableME3a  = 0xFFFF
+        uint32 QualityEnableME3b  = 0xFFFF
+        uint32 QualityEnableME3c  = 0xFFFF
+        uint32 QualityEnableME4a  = 0xFFFF
+        uint32 QualityEnableME4b  = 0xFFFF
+        uint32 QualityEnableME4c  = 0xFFFF
+
         uint32 mindphip     = 2
         uint32 mindeta_accp = 4
         uint32 maxdeta_accp = 16
