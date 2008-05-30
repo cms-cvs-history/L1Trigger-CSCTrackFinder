@@ -29,7 +29,7 @@ module csctfTrackDigis = CSCTFTrackProducer {
         bool trigger_on_MB1a      = false
         bool trigger_on_MB1d      = false
         uint32 singlesTrackPt     = 0xFF
-        uint32 singlesTrackOutput = 3
+        uint32 singlesTrackOutput = 1
 
         uint32 kill_fiber   = 0x0000
         uint32 QualityEnableME1a  = 0xFFFF
