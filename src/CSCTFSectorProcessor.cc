@@ -28,50 +28,50 @@ CSCTFSectorProcessor::CSCTFSectorProcessor(const unsigned& endcap,
   m_maxBX = pset.getParameter<int>("MaxBX");
 
   m_bxa_depth = -1;
-  try {
+  //  try {
     m_bxa_depth = pset.getParameter<unsigned>("BXAdepth");
-  } catch(...) {
-    LogDebug("CSCTFSectorProcessor") << "Looking for BXAdepth in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
-  }
+    //  } catch(...) {
+    //    LogDebug("CSCTFSectorProcessor") << "Looking for BXAdepth in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
+    //  }
   m_allowALCTonly = -1;
-  try {
+  //  try {
     m_allowALCTonly = ( pset.getParameter<bool>("AllowALCTonly") ? 1 : 0 );
-  } catch(...) {
-    LogDebug("CSCTFSectorProcessor") << "Looking for AllowALCTonly in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFSectorProcessor") << "Looking for AllowALCTonly in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
+//   }
   m_allowCLCTonly = -1;
-  try {
+  //  try {
     m_allowCLCTonly = ( pset.getParameter<bool>("AllowCLCTonly") ? 1 : 0 );
-  } catch(...) {
-    LogDebug("CSCTFSectorProcessor") << "Looking for AllowCLCTonly in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFSectorProcessor") << "Looking for AllowCLCTonly in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
+//   }
   m_preTrigger = -1;
-  try {
+  //  try {
     m_preTrigger    = pset.getParameter<unsigned>("PreTrigger");
-  } catch(...) {
-    LogDebug("CSCTFSectorProcessor") << "Looking for PreTrigger in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFSectorProcessor") << "Looking for PreTrigger in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
+//   }
 
   std::vector<unsigned>::const_iterator iter;
   int index=0;
 
   for(index=0; index<6; index++) m_etawin[index] = -1;
-  try {
+  //  try {
     std::vector<unsigned> etawins = pset.getParameter<std::vector<unsigned> >("EtaWindows");
     for(iter=etawins.begin(),index=0; iter!=etawins.end()&&index<6; iter++,index++) m_etawin[index] = *iter;
     LogDebug("CSCTFSectorProcessor") << "Using EtaWindows parameters from .cfi file for endcap="<<m_endcap<<", sector="<<m_sector;
-  } catch(...) {
-    LogDebug("CSCTFSectorProcessor") << "Looking for EtaWindows in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFSectorProcessor") << "Looking for EtaWindows in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
+//   }
 
   for(index=0; index<8; index++) m_etamin[index] = -1;
-  try {
+  //  try {
     std::vector<unsigned> etamins = pset.getParameter<std::vector<unsigned> >("EtaMin");
     for(iter=etamins.begin(),index=0; iter!=etamins.end()&&index<8; iter++,index++) m_etamin[index] = *iter;
     LogDebug("CSCTFSectorProcessor") << "Using EtaMin parameters from .cfi file for endcap="<<m_endcap<<", sector="<<m_sector;
-  } catch(...) {
-    LogDebug("CSCTFSectorProcessor") << "Looking for EtaMin in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFSectorProcessor") << "Looking for EtaMin in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
+//   }
 
   for(index=0; index<8; index++) m_etamax[index] = -1;
   try {
@@ -83,20 +83,20 @@ CSCTFSectorProcessor::CSCTFSectorProcessor(const unsigned& endcap,
   }
 
   m_mindphip=-1;
-  try {
+  //  try {
     m_mindphip = pset.getParameter<unsigned>("mindphip");
     LogDebug("CSCTFSectorProcessor") << "Using mindphip parameters from .cfi file for endcap="<<m_endcap<<", sector="<<m_sector;
-  } catch(...) {
-    LogDebug("CSCTFSectorProcessor") << "Looking for mindphip in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFSectorProcessor") << "Looking for mindphip in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
+//   }
 
   m_mindeta_accp=-1;
-  try {
+  //  try {
     m_mindeta_accp = pset.getParameter<unsigned>("mindeta_accp");
     LogDebug("CSCTFSectorProcessor") << "Using mindeta_accp parameters from .cfi file for endcap="<<m_endcap<<", sector="<<m_sector;
-  } catch(...) {
-    LogDebug("CSCTFSectorProcessor") << "Looking for mindeta_accp in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFSectorProcessor") << "Looking for mindeta_accp in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
+//   }
 
   m_maxdeta_accp=-1;
   try {
@@ -107,14 +107,14 @@ CSCTFSectorProcessor::CSCTFSectorProcessor(const unsigned& endcap,
   }
 
   m_maxdphi_accp=-1;
-  try {
+  //  try {
     m_maxdphi_accp = pset.getParameter<unsigned>("maxdphi_accp");
     LogDebug("CSCTFSectorProcessor") << "Using maxdphi_accp parameters from .cfi file for endcap="<<m_endcap<<", sector="<<m_sector;
-  } catch(...) {
-    LogDebug("CSCTFSectorProcessor") << "Looking for maxdphi_accp in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFSectorProcessor") << "Looking for maxdphi_accp in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
+//   }
 
-  try {
+//  try {
     edm::ParameterSet srLUTset = pset.getParameter<edm::ParameterSet>("SRLUT");
     for(int i = 1; i <= 4; ++i)
       {
@@ -127,20 +127,20 @@ CSCTFSectorProcessor::CSCTFSectorProcessor(const unsigned& endcap,
             srLUTs_[FPGAs[i]] = new CSCSectorReceiverLUT(endcap, sector, 0, i, srLUTset, TMB07);
       }
       LogDebug("CSCTFSectorProcessor") << "Using stand-alone SR LUT for endcap="<<m_endcap<<", sector="<<m_sector;
-  } catch(...) {
-    LogDebug("CSCTFSectorProcessor") << "Looking for SR LUT in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFSectorProcessor") << "Looking for SR LUT in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
+//   }
 
   core_ = new CSCTFSPCoreLogic();
 
-  try {
+  //  try {
     edm::ParameterSet ptLUTset = pset.getParameter<edm::ParameterSet>("PTLUT");
     ptLUT_ = new CSCTFPtLUT(ptLUTset, scales, ptScale);
     LogDebug("CSCTFSectorProcessor") << "Using stand-alone PT LUT for endcap="<<m_endcap<<", sector="<<m_sector;
-  } catch(...){
-    ptLUT_=0;
-    LogDebug("CSCTFSectorProcessor") << "Looking for PT LUT in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
-  }
+//   } catch(...){
+//     ptLUT_=0;
+//     LogDebug("CSCTFSectorProcessor") << "Looking for PT LUT in EventSetup for endcap="<<m_endcap<<", sector="<<m_sector;
+//   }
 }
 
 void CSCTFSectorProcessor::initialize(const edm::EventSetup& c){
@@ -267,17 +267,17 @@ bool CSCTFSectorProcessor::run(const CSCTriggerContainer<csctf::TrackStub>& stub
 	  unsigned fpga = (id.station() == 1) ? CSCTriggerNumbering::triggerSubSectorFromLabels(id) - 1 : id.station();
 
           lclphidat lclPhi;
-          try {
+	  //          try {
             lclPhi = srLUTs_[FPGAs[fpga]]->localPhi(itr->getStrip(), itr->getPattern(), itr->getQuality(), itr->getBend());
-          } catch(...) { bzero(&lclPhi,sizeof(lclPhi)); }
+	    //          } catch(...) { bzero(&lclPhi,sizeof(lclPhi)); }
           gblphidat gblPhi;
-          try {
+	  //          try {
             gblPhi = srLUTs_[FPGAs[fpga]]->globalPhiME(lclPhi.phi_local, itr->getKeyWG(), itr->cscid());
-          } catch(...) { bzero(&gblPhi,sizeof(gblPhi)); }
+	    //          } catch(...) { bzero(&gblPhi,sizeof(gblPhi)); }
           gbletadat gblEta;
-          try {
+	  //          try {
             gblEta = srLUTs_[FPGAs[fpga]]->globalEtaME(lclPhi.phi_bend_local, lclPhi.phi_local, itr->getKeyWG(), itr->cscid());
-          } catch(...) { bzero(&gblEta,sizeof(gblEta)); }
+	    //          } catch(...) { bzero(&gblEta,sizeof(gblEta)); }
 
 	  itr->setEtaPacked(gblEta.global_eta);
 	  itr->setPhiPacked(gblPhi.global_phi);
