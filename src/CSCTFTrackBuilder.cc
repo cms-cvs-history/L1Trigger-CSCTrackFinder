@@ -42,75 +42,75 @@ CSCTFTrackBuilder::CSCTFTrackBuilder(const edm::ParameterSet& pset, bool TMB07,
   singlesTrackPt  = -1;
   singlesTrackOutput = -1;
 
-  try {
+  //  try {
     run_core = pset.getParameter<bool>("run_core");
     LogDebug("CSCTFTrackBuilder") << "Using run_core configuration parameter from .cfi file";
-  } catch(...) {
-    LogDebug("CSCTFTrackBuilder") << "Looking for run_core parameter in EventSetup";
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFTrackBuilder") << "Looking for run_core parameter in EventSetup";
+//   }
   
-  try {
+//  try {
     trigger_on_ME1a = pset.getParameter<bool>("trigger_on_ME1a");
     LogDebug("CSCTFTrackBuilder") << "Using trigger_on_ME1a parameter from .cfi file";
-  } catch(...) {
-    LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_ME1a parameter in EventSetup";
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_ME1a parameter in EventSetup";
+//   }
   
-  try {
+//  try {
     trigger_on_ME1b = pset.getParameter<bool>("trigger_on_ME1b");
     LogDebug("CSCTFTrackBuilder") << "Using trigger_on_ME1b parameter from .cfi file";
-  } catch(...) {
-    LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_ME1b parameter in EventSetup";
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_ME1b parameter in EventSetup";
+//   }
   
-  try {
+//  try {
     trigger_on_ME2 = pset.getParameter<bool>("trigger_on_ME2");
     LogDebug("CSCTFTrackBuilder") << "Using trigger_on_ME2 parameter from .cfi file";
-  } catch(...) {
-    LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_ME2 parameter in EventSetup";
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_ME2 parameter in EventSetup";
+//   }
   
-  try {
+//  try {
     trigger_on_ME3 = pset.getParameter<bool>("trigger_on_ME3");
     LogDebug("CSCTFTrackBuilder") << "Using trigger_on_ME3 parameter from .cfi file";
-  } catch(...) {
-    LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_ME3 parameter in EventSetup";
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_ME3 parameter in EventSetup";
+//   }
   
-  try {
+//  try {
     trigger_on_ME4 = pset.getParameter<bool>("trigger_on_ME4");
     LogDebug("CSCTFTrackBuilder") << "Using trigger_on_ME4 parameter from .cfi file";
-  } catch(...) {
-    LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_ME4 parameter in EventSetup";
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_ME4 parameter in EventSetup";
+//   }
   
-  try {
+//  try {
     trigger_on_MB1a = pset.getParameter<bool>("trigger_on_MB1a");
     LogDebug("CSCTFTrackBuilder") << "Using trigger_on_MB1a parameter from .cfi file";
-  } catch(...) {
-    LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_MB1a parameter in EventSetup";
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_MB1a parameter in EventSetup";
+//   }
   
-  try {
+//  try {
     trigger_on_MB1d = pset.getParameter<bool>("trigger_on_MB1d");
     LogDebug("CSCTFTrackBuilder") << "Using trigger_on_MB1d parameter from .cfi file";
-  } catch(...) {
-    LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_MB1d parameter in EventSetup";
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFTrackBuilder") << "Looking for trigger_on_MB1d parameter in EventSetup";
+//   }
   
-  try {
+//  try {
     singlesTrackPt = pset.getParameter<unsigned int>("singlesTrackPt");
     LogDebug("CSCTFTrackBuilder") << "Using singlesTrackPt parameter from .cfi file";
-  } catch(...) {
-    LogDebug("CSCTFTrackBuilder") << "Looking for singlesTrackPt parameter in EventSetup";
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFTrackBuilder") << "Looking for singlesTrackPt parameter in EventSetup";
+//   }
   
-  try {
+//  try {
     singlesTrackOutput = pset.getParameter<unsigned int>("singlesTrackOutput");
     LogDebug("CSCTFTrackBuilder") << "Using singlesTrackOutput parameter from .cfi file";
-  } catch(...) {
-    LogDebug("CSCTFTrackBuilder") << "Looking for singlesTrackOutput parameter in EventSetup";
-  }
+//   } catch(...) {
+//     LogDebug("CSCTFTrackBuilder") << "Looking for singlesTrackOutput parameter in EventSetup";
+//   }
   
   m_minBX = pset.getParameter<int>("MinBX");
   m_maxBX = pset.getParameter<int>("MaxBX");
