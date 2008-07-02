@@ -13,7 +13,7 @@
 <use name=SimDataFormats/EncodedEventId>
 #<lib name=CSCTriggerPrimitivesReader>
 
-<use name=root>
+<use name=rootgraphics>
 
 
 <library file=analysis/CSCMakeSRLUT.cc name=CSCMakeSRLUT>
