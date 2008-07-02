@@ -16,30 +16,30 @@
 <use name=rootgraphics>
 
 
-<library file=analysis/CSCMakeSRLUT.cc name=CSCMakeSRLUT>
-     <flags EDM_PLUGIN=1>
-</library>
+#<library file=analysis/CSCMakeSRLUT.cc name=CSCMakeSRLUT>
+#     <flags EDM_PLUGIN=1>
+#</library>
 
-<library file=analysis/CSCCompareSRLUTs.cc name=CSCCompareSRLUTs>
-     <flags EDM_PLUGIN=1>
-</library>
+#<library file=analysis/CSCCompareSRLUTs.cc name=CSCCompareSRLUTs>
+#     <flags EDM_PLUGIN=1>
+#</library>
 
 #<library file=analysis/CSCTFEfficiencies.cc name=CSCTFEfficiencies>
 #     <flags EDM_PLUGIN=1>
 #</library>
 
-<library file=analysis/CSCTrackStubAnalysis.cc name=CSCTrackStubAnalysis>
-     <flags EDM_PLUGIN=1>
-</library>
+#<library file=analysis/CSCTrackStubAnalysis.cc name=CSCTrackStubAnalysis>
+#     <flags EDM_PLUGIN=1>
+#</library>
 
 #<library file=analysis/CSCTFStubReader.cc name=CSCTFStubReader>
 #     <flags EDM_PLUGIN=1>
 #</library>
 
-<library file=analysis/CSCMakePTLUT.cc name=CSCMakePTLUT>
-     <flags EDM_PLUGIN=1>
-</library>
+#<library file=analysis/CSCMakePTLUT.cc name=CSCMakePTLUT>
+#     <flags EDM_PLUGIN=1>
+#</library>
 
-<library file=analysis/CSCCompareLUTs.cc name=CSCCompareLUTs>
-     <flags EDM_PLUGIN=1>
-</library>
+#<library file=analysis/CSCCompareLUTs.cc name=CSCCompareLUTs>
+#     <flags EDM_PLUGIN=1>
+#</library>
