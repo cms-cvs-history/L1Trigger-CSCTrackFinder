@@ -18,6 +18,8 @@
 
 #include <TMath.h>
 #include <TCanvas.h>
+#include <TLorentzVector.h>
+
 #include <TStyle.h>
 #include <TF1.h>
 #include <TH2.h>
@@ -330,7 +332,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	edm::Handle<edm::SimTrackContainer> simTracks;
 	edm::Handle<std::vector<L1MuRegionalCand> > tfTracks;
 	edm::Handle<std::vector<SimVertex> > simVertexs;
-	e.getByLabel("csctfDigis","CSC", tfTracks);
+	e.getByLabel("simCsctfDigis","CSC", tfTracks);
 	e.getByLabel("g4SimHits",simTracks);
 	e.getByLabel("g4SimHits",simVertexs);
 	
@@ -373,31 +375,27 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	for(; simTrk != simTracks->end(); simTrk++)  // Loop over all Simulated tracks for an Event
 	{
 		simTrkCount++;
-		HepLorentzVector mom;
+		TLorentzVector mom;
 		//Hep3Vector position;
-		mom.set(simTrk->momentum().x(), simTrk->momentum().y(), simTrk->momentum().z(), simTrk->momentum().t());
+		mom.SetPxPyPzE(simTrk->momentum().x(), simTrk->momentum().y(), simTrk->momentum().z(), simTrk->momentum().t());
 		
-		double genPhi = (mom.phi() > 0) ? mom.phi() : mom.phi() + 2*M_PI;
+		double genPhi = (mom.Phi() > 0) ? mom.Phi() : mom.Phi() + 2*M_PI;
 		
 		if( fabs(simTrk->type()) == 13 ) // Disclude electrons from scattering
 		{
-			if(DEBUG == true)
-			{	
-				std::cout << std::endl << "Sim Track Info"<<std::endl<<"Sim type, pt, phi, eta:"<< std::endl << simTrk->type() << ", " << mom.perp() << ", " << genPhi << ", " << mom.pseudoRapidity() << std::endl;
-			} // Debug
 			
 			///////////////////////////////
 			//// Sim Track Information ////
 			///////////////////////////////
 		
 			firstMuon++;	
-			double genEta = mom.pseudoRapidity();
-			double genPt = mom.perp();
-			double genE = mom.e();
-			double genPz = mom.z();
-			double genP = sqrt( (mom.x())*(mom.x()) + (mom.y())*(mom.y()) + (mom.z())*(mom.z()) );
+			double genEta = mom.PseudoRapidity();
+			double genPt = mom.Pt();
+			double genE = mom.E();
+			double genPz = mom.Z();
+			double genP = mom.P();
 			
-			if( mom.perp() >= 2 )
+			if( mom.Pt() >= 2 )
 			{
 				simCounter++;
 				simEta->Fill( fabs(genEta) );
@@ -1333,11 +1331,11 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 			simTrk = simTracks->begin();
 			for(; simTrk != simTracks->end(); simTrk++)  // Loop over all Simulated tracks for an Event
 			{
-				HepLorentzVector mom;
-				mom.set(simTrk->momentum().x(), simTrk->momentum().y(), simTrk->momentum().z(), simTrk->momentum().t());
-				double genPhi = (mom.phi() > 0) ? mom.phi() : mom.phi() + 2*M_PI;
-				double genEta = mom.pseudoRapidity();
-				double genPt = mom.perp();
+				TLorentzVector mom;
+				mom.SetPxPyPzE(simTrk->momentum().x(), simTrk->momentum().y(), simTrk->momentum().z(), simTrk->momentum().t());
+				double genPhi = (mom.Phi() > 0) ? mom.Phi() : mom.Phi() + 2*M_PI;
+				double genEta = mom.PseudoRapidity();
+				double genPt = mom.Pt();
 				
 				if( fabs(simTrk->type()) != 13 )
 				{
