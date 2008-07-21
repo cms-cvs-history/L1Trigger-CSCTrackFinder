@@ -7,6 +7,7 @@ module csctfTrackDigis = CSCTFTrackProducer {
 
    bool useDT   = true
    bool isTMB07 = true
+   bool initializeFromPSet = true
 
    PSet SectorProcessor = {
         using CSCCommonTrigger
