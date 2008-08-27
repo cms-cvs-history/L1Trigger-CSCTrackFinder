@@ -21,6 +21,7 @@
 #include <TLorentzVector.h>
 
 #include <TStyle.h>
+#include <TLegend.h>
 #include <TF1.h>
 #include <TH2.h>
 
@@ -236,6 +237,13 @@ void CSCTFEfficiencies::endJob()
 	EffPt20->Draw("same");
 	EffPt40->Draw("same");
 	EffPt60->Draw("same");
+	TrackerLeg1 = new TLegend(0.4,0.6,0.8,0.8);
+	TrackerLeg1->AddEntry(EffPt,"All Tracks","f");
+	TrackerLeg1->AddEntry(EffPt10,"Pt_{TF} > 10","f");
+	TrackerLeg1->AddEntry(EffPt20,"Pt_{TF} > 20","f");
+	TrackerLeg1->AddEntry(EffPt40,"Pt_{TF} > 40","f");
+	TrackerLeg1->AddEntry(EffPt60,"Pt_{TF} > 60","f");
+	TrackerLeg1->Draw();
 	PtEffAll->Print("EffPt");
 	
 	
@@ -250,7 +258,12 @@ void CSCTFEfficiencies::endJob()
 	EffEtaQ1->Draw();
 	EffEtaQ2->Draw("same");
 	EffEtaQ3->Draw("same");
-	EtaEff->Print("EffEtaAll");
+	TrackerLeg2 = new TLegend(0.4,0.6,0.8,0.8);
+	TrackerLeg2->AddEntry(EffEtaQ1,"All Tracks","f");
+	TrackerLeg2->AddEntry(EffEtaQ2,"Quality > 1","f");
+	TrackerLeg2->AddEntry(EffEtaQ3,"Quality > 2","f");
+	TrackerLeg2->Draw();
+	EtaEff->Print("EffEta");
 	
 	/////////////////////////////////
 	//// Ghost & Lost Track Info ////

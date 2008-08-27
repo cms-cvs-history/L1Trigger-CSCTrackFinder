@@ -63,6 +63,7 @@ class CSCTFEfficiencies : public edm::EDAnalyzer {
   TH2F* simHaloPosition, *trackHaloPosition, *lostHaloPosition;
   TH2F* PhiResVPt;
   TH2F* PtResVPt, *PtResVEta;
+  TLegend* TrackerLeg1, *TrackerLeg2;
   
 };
 
