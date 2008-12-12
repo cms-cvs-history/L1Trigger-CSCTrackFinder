@@ -36,7 +36,7 @@ void CSCTrackStubAnalysis::beginJob(edm::EventSetup const& es)
 {
   hDTts_phi = new TH1I("hDTts_phi","DT Track Stub Phi",4096,-2047,2047);
   hCSCts_phi  = new TH1I("hCSCts_phi","CSC Track Stub Phi",4096,0,4095);
-  hDTvsCSC_phi  = new TH2I("hDTvsCSC_phi","DT Track Stub Phi vs. CSC Track Stub Phi",4096,-2047,2047, 4096, 0, 4095);  
+  hDTvsCSC_phi  = new TH2I("hDTvsCSC_phi","DT Track Stub Phi vs. CSC Track Stub Phi",4096,-2047,2047, 4096, 0, 4095);
   hDTvsCSC_phi_corr = new TH2I("hDTvsCSC_phi","Corrected DT Track Stub Phi vs. CSC Track Stub Phi",4096,0,4095, 4096, 0, 4095);
 
   hDTts_phi->SetDirectory(0);
@@ -51,7 +51,7 @@ void CSCTrackStubAnalysis::endJob()
   TCanvas* c1 = new TCanvas("c1");
 
   hDTts_phi->Draw();
- 
+
   c1->Print("CSCTrackStubAnalysis.ps(");
 
   hCSCts_phi->Draw();
@@ -106,7 +106,8 @@ void CSCTrackStubAnalysis::analyze(edm::Event const& e, edm::EventSetup const& e
 	    {
 	      int wheel = (e == 1) ? 2 : -2;
 	      int sector = 2*s - 1;
-	      int csc_bx = bx - ((L1MuDTTFConfig::getBxMin() + L1MuDTTFConfig::getBxMax())/2) + CSCConstants::TIME_OFFSET + 4;
+//	      int csc_bx = bx - ((L1MuDTTFConfig::getBxMin() + L1MuDTTFConfig::getBxMax())/2) + CSCConstants::TIME_OFFSET + 4;
+	      int csc_bx = bx - ((L1MuDTTFConfig::getBxMin() + L1MuDTTFConfig::getBxMax())/2) + 4;
 
 	      for(int is = sector; is <= sector+1; ++is)
 		{
@@ -125,11 +126,11 @@ void CSCTrackStubAnalysis::analyze(edm::Event const& e, edm::EventSetup const& e
 			  //std::cout << "DT STUB PHI: " << dtts[stub]->phi() << std::endl;
 			  hDTts_phi->Fill(dtts[stub]->phi());
 			  ++cntdtts;
-			  
+
 			  if(csc_bx <= 9 && 3 <= csc_bx)
 			    {
 			      std::vector<csctf::TrackStub> temp = cscts->get(e, s, csc_bx);
-			      
+
 			      std::vector<csctf::TrackStub>::const_iterator itr = temp.begin();
 			      std::vector<csctf::TrackStub>::const_iterator end = temp.end();
 
@@ -143,7 +144,7 @@ void CSCTrackStubAnalysis::analyze(edm::Event const& e, edm::EventSetup const& e
 				  dt_corr_phi = ((double)dt_corr_phi) * 3232./3640.; // scale DT binning to CSC binning
 
 				  dt_corr_phi += 491; // match up DT sector boundary inside of CSC sector
-				  
+
 				  hDTvsCSC_phi_corr->Fill(dt_corr_phi, itr->phiPacked());
 
 				  if(dt_corr_phi < least.first && itr->phiPacked() < least.second)
