@@ -11,7 +11,7 @@
 #include <Geometry/Records/interface/MuonGeometryRecord.h>
 
 // MC particles
-#include <SimDataFormats/HepMCProduct/interface/HepMCProduct.h>
+#include <SimDataFormats/GeneratorProducts/interface/HepMCProduct.h>
 
 // MC tests
 #include <L1Trigger/CSCTriggerPrimitives/test/CSCAnodeLCTAnalyzer.h>
