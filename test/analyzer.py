@@ -15,7 +15,7 @@ process.source = cms.Source("DaqSource",
         firstEvent  = cms.untracked.int32(0),
         tfDDUnumber = cms.untracked.int32(0),
         FED760 = cms.untracked.vstring('RUI01'),
-        RUI01  = cms.untracked.vstring('/tmp/kkotov/66637__.bin_760')
+        RUI01  = cms.untracked.vstring('/tmp/kkotov/66637_.bin_760')
   )
 )
 
