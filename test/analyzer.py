@@ -9,9 +9,19 @@ process.MessageLogger.cout.placeholder = cms.untracked.bool(False)
 process.MessageLogger.cout.threshold = cms.untracked.string('INFO')
 process.MessageLogger.debugModules = cms.untracked.vstring('*')
 
-process.source = cms.Source("PoolSource",
-  fileNames = cms.untracked.vstring('file:027C2180-D39B-DD11-8102-000423D99660.root')
+process.source = cms.Source("DaqSource",
+    readerPluginName = cms.untracked.string('CSCFileReader'),
+    readerPset = cms.untracked.PSet(
+        firstEvent  = cms.untracked.int32(0),
+        tfDDUnumber = cms.untracked.int32(0),
+        FED760 = cms.untracked.vstring('RUI01'),
+        RUI01  = cms.untracked.vstring('/tmp/kkotov/66637__.bin_760')
+  )
 )
+
+#process.source = cms.Source("PoolSource",
+#  fileNames = cms.untracked.vstring('')
+#)
 #readFiles = cms.untracked.vstring()
 #process.source = cms.Source ("PoolSource", fileNames = readFiles)
 #readFiles.extend((
@@ -55,8 +65,8 @@ process.load("L1TriggerConfig.L1ScalesProducers.L1MuTriggerPtScaleConfig_cff")
 process.csctfanalyzer = cms.EDAnalyzer("CSCTFAnalyzer",
          mbProducer     = cms.untracked.InputTag("null"),
          lctProducer    = cms.untracked.InputTag("csctfDigis"),
-         trackProducer  = cms.untracked.InputTag("csctfDigis"),
-#         trackProducer  = cms.untracked.InputTag("simCsctfTrackDigis"),
+#         trackProducer  = cms.untracked.InputTag("csctfDigis"),
+         trackProducer  = cms.untracked.InputTag("simCsctfTrackDigis"),
          statusProducer = cms.untracked.InputTag("null")
 )
 
