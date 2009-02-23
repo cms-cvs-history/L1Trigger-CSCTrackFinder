@@ -1,5 +1,6 @@
 #include <time.h>
 #include <iostream>
+#include <cstdlib>
 #include "vpp_generated.h"
 using namespace std;
 vpp_generated sp;
