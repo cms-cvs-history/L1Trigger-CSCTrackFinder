@@ -34,76 +34,80 @@ void vpp_generated::wrap
 	unsigned& me1idM, unsigned& me2idM, unsigned& me3idM, unsigned& me4idM, unsigned& mb1idM, unsigned& mb2idM,
 	unsigned& me1idL, unsigned& me2idL, unsigned& me3idL, unsigned& me4idL, unsigned& mb1idL, unsigned& mb2idL,
 
-	unsigned mneta0p, unsigned mneta1p, unsigned mneta2p, unsigned mneta3p, unsigned mneta4p, unsigned mneta5p, unsigned mneta6p, unsigned mneta7p,
-	unsigned mxeta0p, unsigned mxeta1p, unsigned mxeta2p, unsigned mxeta3p, unsigned mxeta4p, unsigned mxeta5p, unsigned mxeta6p, unsigned mxeta7p,
-	unsigned etawn0p, unsigned etawn1p, unsigned etawn2p, unsigned etawn3p, unsigned etawn4p, unsigned etawn5p, 				  unsigned etawn7p,
-	unsigned mindphip, unsigned mindetap,
+	unsigned mneta0p, unsigned mneta1p, unsigned mneta2p, unsigned mneta3p, unsigned mneta4p, unsigned mneta5p, unsigned mneta6p, unsigned mneta7p, 
+	unsigned mxeta0p, unsigned mxeta1p, unsigned mxeta2p, unsigned mxeta3p, unsigned mxeta4p, unsigned mxeta5p, unsigned mxeta6p, unsigned mxeta7p, 
+	unsigned etawn0p, unsigned etawn1p, unsigned etawn2p, unsigned etawn3p, unsigned etawn4p, unsigned etawn5p, 
 
-	unsigned mindeta_acc0p, unsigned maxdeta_acc0p, unsigned maxdphi_acc0p,
-	unsigned mindeta_acc1p, unsigned maxdeta_acc1p, unsigned maxdphi_acc1p,
-	unsigned mindphi_accp, unsigned mindeta_accp,
-
-	unsigned straightp, unsigned curvedp,
+	unsigned mindphip,
+	unsigned mindeta_accp, unsigned maxdeta_accp, unsigned maxdphi_accp,
 	unsigned controlp
 )
 {
 
 	// delayed CSC track stubs
-	static ULLONG me1arr,me1brr,me1crr,me1drr,me1err,me1frr;
-	static ULLONG me2arr,me2brr,me2crr,me3arr,me3brr,me3crr;
-	static ULLONG me4arr,me4brr,me4crr;
+	static ULLONG me1ar,me1br,me1cr,me1dr,me1er,me1fr;
+	static ULLONG me2ar,me2br,me2cr,me3ar,me3br,me3cr;
+	static ULLONG me4ar,me4br,me4cr;
 
 	// delayed DT inputs for serialization
 	static ULLONG mb1aPhir, mb1aQr;
 	static ULLONG mb1bPhir, mb1bQr;
 
 	// put delayed inputs into the core inputs (internal variables of vpp_generated)
-	me1ar = me1arr;
-	me1br = me1brr;
-	me1cr = me1crr;
-	me1dr = me1drr;
-	me1er = me1err;
-	me1fr = me1frr;
-				 		    
-	me2ar = me2arr;
-	me2br = me2brr;
-	me2cr = me2crr;
-				 		    
-	me3ar = me3arr;
-	me3br = me3brr;
-	me3cr = me3crr;
-				 		    
-	me4ar = me4arr;
-	me4br = me4brr;
-	me4cr = me4crr;
+	me1ap = me1ar;
+	me1bp = me1br;
+	me1cp = me1cr;
+	me1dp = me1dr;
+	me1ep = me1er;
+	me1fp = me1fr;
+		 		 
+	me2ap = me2ar;
+	me2bp = me2br;
+	me2cp = me2cr;
+		 		 
+	me3ap = me3ar;
+	me3bp = me3br;
+	me3cp = me3cr;
+		 		 
+	me4ap = me4ar;
+	me4bp = me4br;
+	me4cp = me4cr;
 
 	// pack CSC inputs into delayed inputs. This delay is necessary to compensate for deserialization of DT inputs in the core
-	me1arr = ((me1aValidp&1)<<27) | ((me1aCSCidp&0xf)<<23) | ((me1aQp&0xf)<<19) | ((me1aEtap&0x7f)<<12) |  (me1aPhip&0xfff);
-	me1brr = ((me1bValidp&1)<<27) | ((me1bCSCidp&0xf)<<23) | ((me1bQp&0xf)<<19) | ((me1bEtap&0x7f)<<12) |  (me1bPhip&0xfff);
-	me1crr = ((me1cValidp&1)<<27) | ((me1cCSCidp&0xf)<<23) | ((me1cQp&0xf)<<19) | ((me1cEtap&0x7f)<<12) |  (me1cPhip&0xfff);
-	me1drr = ((me1dValidp&1)<<27) | ((me1dCSCidp&0xf)<<23) | ((me1dQp&0xf)<<19) | ((me1dEtap&0x7f)<<12) |  (me1dPhip&0xfff);
-	me1err = ((me1eValidp&1)<<27) | ((me1eCSCidp&0xf)<<23) | ((me1eQp&0xf)<<19) | ((me1eEtap&0x7f)<<12) |  (me1ePhip&0xfff);
-	me1frr = ((me1fValidp&1)<<27) | ((me1fCSCidp&0xf)<<23) | ((me1fQp&0xf)<<19) | ((me1fEtap&0x7f)<<12) |  (me1fPhip&0xfff);
-		 		  				   	 		 			   		   				  	   				   		   			  				  						  	  	  	  
-	me2arr = ((me2aValidp&1)<<23) |                          ((me2aQp&0xf)<<19) | ((me2aEtap&0x7f)<<12) |  (me2aPhip&0xfff);
-	me2brr = ((me2bValidp&1)<<23) |                          ((me2bQp&0xf)<<19) | ((me2bEtap&0x7f)<<12) |  (me2bPhip&0xfff);
-	me2crr = ((me2cValidp&1)<<23) |                          ((me2cQp&0xf)<<19) | ((me2cEtap&0x7f)<<12) |  (me2cPhip&0xfff);
-		 		  				   								   				 	   				   		   			  			 
-	me3arr = ((me3aValidp&1)<<23) |                          ((me3aQp&0xf)<<19) | ((me3aEtap&0x7f)<<12) |  (me3aPhip&0xfff);
-	me3brr = ((me3bValidp&1)<<23) |                          ((me3bQp&0xf)<<19) | ((me3bEtap&0x7f)<<12) |  (me3bPhip&0xfff);
-	me3crr = ((me3cValidp&1)<<23) |                          ((me3cQp&0xf)<<19) | ((me3cEtap&0x7f)<<12) |  (me3cPhip&0xfff);
-		 		  				   	 		 				   	   				 	   				   		   			  				 						     	   
-	me4arr = ((me4aValidp&1)<<23) |                          ((me4aQp&0xf)<<19) | ((me4aEtap&0x7f)<<12) |  (me4aPhip&0xfff);
-	me4brr = ((me4bValidp&1)<<23) |                          ((me4bQp&0xf)<<19) | ((me4bEtap&0x7f)<<12) |  (me4bPhip&0xfff);
-	me4crr = ((me4cValidp&1)<<23) |                          ((me4cQp&0xf)<<19) | ((me4cEtap&0x7f)<<12) |  (me4cPhip&0xfff);
+	me1ar = ((me1aValidp&1)<<27) | ((me1aCSCidp&0xf)<<23) | ((me1aQp&0xf)<<19) | ((me1aEtap&0x7f)<<12) |  (me1aPhip&0xfff);
+	me1br = ((me1bValidp&1)<<27) | ((me1bCSCidp&0xf)<<23) | ((me1bQp&0xf)<<19) | ((me1bEtap&0x7f)<<12) |  (me1bPhip&0xfff);
+	me1cr = ((me1cValidp&1)<<27) | ((me1cCSCidp&0xf)<<23) | ((me1cQp&0xf)<<19) | ((me1cEtap&0x7f)<<12) |  (me1cPhip&0xfff);
+	me1dr = ((me1dValidp&1)<<27) | ((me1dCSCidp&0xf)<<23) | ((me1dQp&0xf)<<19) | ((me1dEtap&0x7f)<<12) |  (me1dPhip&0xfff);
+	me1er = ((me1eValidp&1)<<27) | ((me1eCSCidp&0xf)<<23) | ((me1eQp&0xf)<<19) | ((me1eEtap&0x7f)<<12) |  (me1ePhip&0xfff);
+	me1fr = ((me1fValidp&1)<<27) | ((me1fCSCidp&0xf)<<23) | ((me1fQp&0xf)<<19) | ((me1fEtap&0x7f)<<12) |  (me1fPhip&0xfff);
+			  				   	 		 			   		   				  	   				   		   			  				  						  	  	  	  
+	me2ar = ((me2aValidp&1)<<27) |                          ((me2aQp&0xf)<<19) | ((me2aEtap&0x7f)<<12) |  (me2aPhip&0xfff);
+	me2br = ((me2bValidp&1)<<27) |                          ((me2bQp&0xf)<<19) | ((me2bEtap&0x7f)<<12) |  (me2bPhip&0xfff);
+	me2cr = ((me2cValidp&1)<<27) |                          ((me2cQp&0xf)<<19) | ((me2cEtap&0x7f)<<12) |  (me2cPhip&0xfff);
+			  				   								   				 	   				   		   			  			 
+	me3ar = ((me3aValidp&1)<<27) |                          ((me3aQp&0xf)<<19) | ((me3aEtap&0x7f)<<12) |  (me3aPhip&0xfff);
+	me3br = ((me3bValidp&1)<<27) |                          ((me3bQp&0xf)<<19) | ((me3bEtap&0x7f)<<12) |  (me3bPhip&0xfff);
+	me3cr = ((me3cValidp&1)<<27) |                          ((me3cQp&0xf)<<19) | ((me3cEtap&0x7f)<<12) |  (me3cPhip&0xfff);
+			  				   	 		 				   	   				 	   				   		   			  				 						     	   
+	me4ar = ((me4aValidp&1)<<27) |                          ((me4aQp&0xf)<<19) | ((me4aEtap&0x7f)<<12) |  (me4aPhip&0xfff);
+	me4br = ((me4bValidp&1)<<27) |                          ((me4bQp&0xf)<<19) | ((me4bEtap&0x7f)<<12) |  (me4bPhip&0xfff);
+	me4cr = ((me4cValidp&1)<<27) |                          ((me4cQp&0xf)<<19) | ((me4cEtap&0x7f)<<12) |  (me4cPhip&0xfff);
 			  			
 	// serialize 4 DT inputs into 2 inputs for the core
-	if      (mb1aQp != 0) {mb1ap =             ((mb1aQp&0x7)<<12) | (mb1aPhip&0xfff); }
+	if      (mb1aQp != 0) {mb1ap = ((mb1aQp&0x7)<<12) | (mb1aPhip&0xfff); 
+#ifdef MYDEBUG
+		if(mb1aQr != 0) cout<<"killing a\n";
+#endif
+	}
 	else if (mb1aQr != 0) {mb1ap = (1 << 15) | ((mb1aQr&0x7)<<12) | (mb1aPhir&0xfff);}
 	else mb1ap = 0;
 
-	if      (mb1bQp != 0) {mb1cp =             ((mb1bQp&0x7)<<12) | (mb1bPhip&0xfff); }
-	else if (mb1bQr != 0) {mb1cp = (1 << 15) | ((mb1bQr&0x7)<<12) | (mb1bPhir&0xfff);}
+	if      (mb1bQp != 0) {mb1cp = ((mb1bQp&0x7)<<12) | (mb1bPhip&0xfff); 
+#ifdef MYDEBUG
+		if(mb1bQr != 0) cout<<"killing b\n";
+#endif
+	}
+	else if (mb1bQr != 0) {mb1cp = (1 << 15) | ((mb1bQp&0x7)<<12) | (mb1bPhip&0xfff);}
 	else mb1cp = 0;
 
 	mb1aPhir = mb1cPhip; mb1aQr = mb1cQp;
@@ -134,25 +138,12 @@ void vpp_generated::wrap
 	etawn3 = etawn3p;
 	etawn4 = etawn4p;
 	etawn5 = etawn5p;
-	etawn7 = etawn7p;
 
-	control = controlp;
-	mindphi = mindphip;
-	mindeta = mindetap;
-
-	mindeta_acc0 = mindeta_acc0p;
-	maxdeta_acc0 = maxdeta_acc0p;
-	maxdphi_acc0 = maxdphi_acc0p;
-
-	mindeta_acc1 = mindeta_acc1p;
-	maxdeta_acc1 = maxdeta_acc1p;
-	maxdphi_acc1 = maxdphi_acc1p;
-
-	mindphi_acc = mindphi_accp; 
+	mindphi     = mindphip    ;
 	mindeta_acc = mindeta_accp;
-
-	straight = straightp;
-	curved = curvedp;
+	maxdeta_acc = maxdeta_accp;
+	maxdphi_acc = maxdphi_accp;
+	control     = controlp    ;
 
 	// drive clock up and down
 	for (int i = 1; i >= 0; i--)
@@ -201,35 +192,37 @@ void vpp_generated::wrap
 	//Retrieve ints from id codes
 	bp = 0;
 
-	me1idH = (idHp >> bp) & 0x1f;
-	me1idM = (idMp >> bp) & 0x1f;
-	me1idL = (idLp >> bp) & 0x1f;
+	me1idH = (idHp >> bp) & 0x3f;
+	me1idM = (idMp >> bp) & 0x3f;
+	me1idL = (idLp >> bp) & 0x3f;
 
-	bp += 5;
+	bp += 6;
 
-	me2idH = (idHp >> bp) & 0xf;	
-	me2idM = (idMp >> bp) & 0xf;
-	me2idL = (idLp >> bp) & 0xf;
+	me2idH = (idHp >> bp) & 0x3f;	
+	me2idM = (idMp >> bp) & 0x3f;
+	me2idL = (idLp >> bp) & 0x3f;
 
-	bp += 4;
+	bp += 6;
 
-	me3idH = (idHp >> bp) & 0xf;	
-	me3idM = (idMp >> bp) & 0xf;
-	me3idL = (idLp >> bp) & 0xf;
+	me3idH = (idHp >> bp) & 0x3f;	
+	me3idM = (idMp >> bp) & 0x3f;
+	me3idL = (idLp >> bp) & 0x3f;
 
-	bp += 4;
+	bp += 6;
 
-	me4idH = (idHp >> bp) & 0xf;	
-	me4idM = (idMp >> bp) & 0xf;
-	me4idL = (idLp >> bp) & 0xf;
+	me4idH = (idHp >> bp) & 0x3f;	
+	me4idM = (idMp >> bp) & 0x3f;
+	me4idL = (idLp >> bp) & 0x3f;
 
-	bp += 4;
+	bp += 6;
 
-	mb1idH = (idHp >> bp) & 0x1f;
-	mb1idM = (idMp >> bp) & 0x1f;
-	mb1idL = (idLp >> bp) & 0x1f;
+	mb1idH = (idHp >> bp) & 0x3f;
+	mb1idM = (idMp >> bp) & 0x3f;
+	mb1idL = (idLp >> bp) & 0x3f;
 
-	mb2idH = 0;
-	mb2idM = 0;
-	mb2idL = 0;
+	bp += 6;
+
+	mb2idH = (idHp >> bp) & 0x3f;
+	mb2idM = (idMp >> bp) & 0x3f;
+	mb2idL = (idLp >> bp) & 0x3f;
 }
