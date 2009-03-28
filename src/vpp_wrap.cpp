@@ -34,14 +34,17 @@ void vpp_generated::wrap
 	unsigned& me1idM, unsigned& me2idM, unsigned& me3idM, unsigned& me4idM, unsigned& mb1idM, unsigned& mb2idM,
 	unsigned& me1idL, unsigned& me2idL, unsigned& me3idL, unsigned& me4idL, unsigned& mb1idL, unsigned& mb2idL,
 
-	unsigned mneta0p, unsigned mneta1p, unsigned mneta2p, unsigned mneta3p, unsigned mneta4p, unsigned mneta5p, unsigned mneta6p, unsigned mneta7p,
-	unsigned mxeta0p, unsigned mxeta1p, unsigned mxeta2p, unsigned mxeta3p, unsigned mxeta4p, unsigned mxeta5p, unsigned mxeta6p, unsigned mxeta7p,
-	unsigned etawn0p, unsigned etawn1p, unsigned etawn2p, unsigned etawn3p, unsigned etawn4p, unsigned etawn5p, 				  unsigned etawn7p,
+	unsigned mneta12p, unsigned mneta13p, unsigned mneta23p, unsigned mneta24p, unsigned mneta34p, unsigned mneta12ovp, unsigned mneta12dtp, unsigned mneta14p,
+	unsigned mxeta12p, unsigned mxeta13p, unsigned mxeta23p, unsigned mxeta24p, unsigned mxeta34p, unsigned mxeta12ovp, unsigned mxeta12dtp, unsigned mxeta14p,
+	unsigned etawn12p, unsigned etawn13p, unsigned etawn23p, unsigned etawn24p, unsigned etawn34p, unsigned etawn12ovp, 				  unsigned etawn14p,
 	unsigned mindphip, unsigned mindetap,
 
-	unsigned mindeta_acc0p, unsigned maxdeta_acc0p, unsigned maxdphi_acc0p,
-	unsigned mindeta_acc1p, unsigned maxdeta_acc1p, unsigned maxdphi_acc1p,
-	unsigned mindphi_accp, unsigned mindeta_accp,
+	unsigned mindeta_halo12p, unsigned maxdeta_halo12p, unsigned maxdphi_halo12p,
+	unsigned mindeta_halo13p, unsigned maxdeta_halo13p, unsigned maxdphi_halo13p,
+
+	unsigned mindeta_halo112p, unsigned maxdeta_halo112p, unsigned maxdphi_halo112p,
+	unsigned mindeta_halo113p, unsigned maxdeta_halo113p, unsigned maxdphi_halo113p,
+	unsigned mindphi_halop, unsigned mindeta_halop,
 
 	unsigned straightp, unsigned curvedp,
 	unsigned controlp
@@ -102,54 +105,62 @@ void vpp_generated::wrap
 	else if (mb1aQr != 0) {mb1ap = (1 << 15) | ((mb1aQr&0x7)<<12) | (mb1aPhir&0xfff);}
 	else mb1ap = 0;
 
-	if      (mb1bQp != 0) {mb1cp =             ((mb1bQp&0x7)<<12) | (mb1bPhip&0xfff); }
-	else if (mb1bQr != 0) {mb1cp = (1 << 15) | ((mb1bQr&0x7)<<12) | (mb1bPhir&0xfff);}
-	else mb1cp = 0;
+	if      (mb1bQp != 0) {mb1bp =             ((mb1bQp&0x7)<<12) | (mb1bPhip&0xfff); }
+	else if (mb1bQr != 0) {mb1bp = (1 << 15) | ((mb1bQr&0x7)<<12) | (mb1bPhir&0xfff);}
+	else mb1bp = 0;
 
 	mb1aPhir = mb1cPhip; mb1aQr = mb1cQp;
 	mb1bPhir = mb1dPhip; mb1bQr = mb1dQp;
 
 	// put all other inputs into core inputs
-	mneta0 = mneta0p;
-	mneta1 = mneta1p;
-	mneta2 = mneta2p;
-	mneta3 = mneta3p;
-	mneta4 = mneta4p;
-	mneta5 = mneta5p;
-	mneta6 = mneta6p;
-	mneta7 = mneta7p;
-
-	mxeta0 = mxeta0p;
-	mxeta1 = mxeta1p;
-	mxeta2 = mxeta2p;
-	mxeta3 = mxeta3p;
-	mxeta4 = mxeta4p;
-	mxeta5 = mxeta5p;
-	mxeta6 = mxeta6p;
-	mxeta7 = mxeta7p;
-			 		   
-	etawn0 = etawn0p;
-	etawn1 = etawn1p;
-	etawn2 = etawn2p;
-	etawn3 = etawn3p;
-	etawn4 = etawn4p;
-	etawn5 = etawn5p;
-	etawn7 = etawn7p;
+	mneta12  = mneta12p; 
+	mneta13  = mneta13p; 
+	mneta23  = mneta23p; 
+	mneta24  = mneta24p; 
+	mneta34  = mneta34p; 
+	mneta12ov  = mneta12ovp; 
+	mneta12dt  = mneta12dtp; 
+	mneta14  = mneta14p; 
+	 	   	   	   
+	mxeta12  = mxeta12p; 
+	mxeta13  = mxeta13p; 
+	mxeta23  = mxeta23p; 
+	mxeta24  = mxeta24p; 
+	mxeta34  = mxeta34p; 
+	mxeta12ov  = mxeta12ovp; 
+	mxeta12dt  = mxeta12dtp; 
+	mxeta14  = mxeta14p; 
+	 	   	   	   
+	etawn12  = etawn12p; 
+	etawn13  = etawn13p; 
+	etawn23  = etawn23p; 
+	etawn24  = etawn24p; 
+	etawn34  = etawn34p; 
+	etawn12ov  = etawn12ovp; 
+	etawn14  = etawn14p; 
 
 	control = controlp;
 	mindphi = mindphip;
 	mindeta = mindetap;
 
-	mindeta_acc0 = mindeta_acc0p;
-	maxdeta_acc0 = maxdeta_acc0p;
-	maxdphi_acc0 = maxdphi_acc0p;
+	mindeta_halo12 = mindeta_halo12p;
+	maxdeta_halo12 = maxdeta_halo12p;
+	maxdphi_halo12 = maxdphi_halo12p;
 
-	mindeta_acc1 = mindeta_acc1p;
-	maxdeta_acc1 = maxdeta_acc1p;
-	maxdphi_acc1 = maxdphi_acc1p;
+	mindeta_halo13 = mindeta_halo13p;
+	maxdeta_halo13 = maxdeta_halo13p;
+	maxdphi_halo13 = maxdphi_halo13p;
 
-	mindphi_acc = mindphi_accp; 
-	mindeta_acc = mindeta_accp;
+	mindeta_halo112 = mindeta_halo112p;
+	maxdeta_halo112 = maxdeta_halo112p;
+	maxdphi_halo112 = maxdphi_halo112p;
+
+	mindeta_halo113 = mindeta_halo113p;
+	maxdeta_halo113 = maxdeta_halo113p;
+	maxdphi_halo113 = maxdphi_halo113p;
+
+	mindphi_halo = mindphi_halop; 
+	mindeta_halo = mindeta_halop;
 
 	straight = straightp;
 	curved = curvedp;

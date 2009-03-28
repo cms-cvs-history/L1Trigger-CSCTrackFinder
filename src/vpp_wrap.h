@@ -32,14 +32,17 @@ void wrap
 	unsigned& me1idM, unsigned& me2idM, unsigned& me3idM, unsigned& me4idM, unsigned& mb1idM, unsigned& mb2idM,
 	unsigned& me1idL, unsigned& me2idL, unsigned& me3idL, unsigned& me4idL, unsigned& mb1idL, unsigned& mb2idL,
 
-	unsigned mneta0p, unsigned mneta1p, unsigned mneta2p, unsigned mneta3p, unsigned mneta4p, unsigned mneta5p, unsigned mneta6p, unsigned mneta7p,
-	unsigned mxeta0p, unsigned mxeta1p, unsigned mxeta2p, unsigned mxeta3p, unsigned mxeta4p, unsigned mxeta5p, unsigned mxeta6p, unsigned mxeta7p,
-	unsigned etawn0p, unsigned etawn1p, unsigned etawn2p, unsigned etawn3p, unsigned etawn4p, unsigned etawn5p, 				  unsigned etawn7p,
+	unsigned mneta12p, unsigned mneta13p, unsigned mneta23p, unsigned mneta24p, unsigned mneta34p, unsigned mneta12ovp, unsigned mneta12dtp, unsigned mneta14p,
+	unsigned mxeta12p, unsigned mxeta13p, unsigned mxeta23p, unsigned mxeta24p, unsigned mxeta34p, unsigned mxeta12ovp, unsigned mxeta12dtp, unsigned mxeta14p,
+	unsigned etawn12p, unsigned etawn13p, unsigned etawn23p, unsigned etawn24p, unsigned etawn34p, unsigned etawn12ovp, 				  unsigned etawn14p,
 	unsigned mindphip, unsigned mindetap,
 
-	unsigned mindeta_acc0p, unsigned maxdeta_acc0p, unsigned maxdphi_acc0p,
-	unsigned mindeta_acc1p, unsigned maxdeta_acc1p, unsigned maxdphi_acc1p,
-	unsigned mindphi_accp, unsigned mindeta_accp,
+	unsigned mindeta_halo12p, unsigned maxdeta_halo12p, unsigned maxdphi_halo12p,
+	unsigned mindeta_halo13p, unsigned maxdeta_halo13p, unsigned maxdphi_halo13p,
+
+	unsigned mindeta_halo112p, unsigned maxdeta_halo112p, unsigned maxdphi_halo112p,
+	unsigned mindeta_halo113p, unsigned maxdeta_halo113p, unsigned maxdphi_halo113p,
+	unsigned mindphi_halop, unsigned mindeta_halop,
 
 	unsigned straightp, unsigned curvedp,
 	unsigned controlp
