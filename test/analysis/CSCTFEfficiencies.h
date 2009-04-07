@@ -1,11 +1,6 @@
 #ifndef CSCTrackFinder_CSCTFEfficiencies_h
 #define CSCTrackFinder_CSCTFEfficiencies_h
 
-/**
- * \author L. Gray 6/17/06
- *
- */
-
 #include "FWCore/PluginManager/interface/ModuleDef.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
@@ -25,6 +20,7 @@
 #include <TTree.h>
 #include <TStyle.h>
 #include <TCanvas.h>
+#include <TLegend.h>
 
 class CSCTFEfficiencies : public edm::EDAnalyzer {
  public:
@@ -63,7 +59,10 @@ class CSCTFEfficiencies : public edm::EDAnalyzer {
   TH2F* simHaloPosition, *trackHaloPosition, *lostHaloPosition;
   TH2F* PhiResVPt;
   TH2F* PtResVPt, *PtResVEta;
-  TLegend* TrackerLeg1, *TrackerLeg2;
+  TH1F* Gene, *Genmu , *Genglu, *Genmes, *GenBar;
+  
+  TLegend* TrackerLeg1, *TrackerLeg2, *TrackerLeg3;
+  
   
 };
 

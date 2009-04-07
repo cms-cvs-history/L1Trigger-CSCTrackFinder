@@ -1,13 +1,13 @@
-/***************************************************************************
- *																		   *
- *   CSCTFEfficiencies.cc												   *
- *   Original Code by L. Grey											   *
- *   Version 2.0 written by J. Gartner									   *
- *   V 2.0 - 1/17/08 == Basic efficiency plots and verbose track matching. *
- *																		   *
- *   For Questions or Comments email: joseph.anthony.gartner.iii@cern.ch   *
- *   Please use this code for good, not awesome.						   *
- *																		   *
+/****************************************************************************
+ *					 				    									*
+ *   CSCTFEfficiencies.cc					 	    						*
+ *   Original Code by L. Grey						    					*
+ *   Version 2.0 written by J. Gartner					    				*
+ *   V 2.0 - 1/17/08 == Basic efficiency plots and verbose track matching.  *
+ *							 		    									*
+ *   For Questions or Comments email: joseph.anthony.gartner.iii@cern.ch    *
+ *   Please use this code for good, not awesome.			    			*
+ *									    									*
  ***************************************************************************/
 
 #include <L1Trigger/CSCTrackFinder/test/analysis/CSCTFEfficiencies.h>
@@ -18,12 +18,11 @@
 
 #include <TMath.h>
 #include <TCanvas.h>
-#include <TLorentzVector.h>
-
 #include <TStyle.h>
-#include <TLegend.h>
 #include <TF1.h>
 #include <TH2.h>
+#include <TLegend.h>
+#include <TLorentzVector.h>
 
 namespace csctf_analysis
 {
@@ -281,27 +280,15 @@ void CSCTFEfficiencies::endJob()
 	//////////////////////
 	fAnalysis = new TFile(outFile.c_str(), "RECREATE");//c
 	TObjArray Hlist(0);
-	Hlist.Add(EffPt10);
-	Hlist.Add(EffPt20);
-	Hlist.Add(EffPt40);
-	Hlist.Add(EffPt60);
 	Hlist.Add(PtEffAll);
-	Hlist.Add(simPz);
 	Hlist.Add(EtaEff);
-	Hlist.Add(trackedEHalo);
 	Hlist.Add(trackedEta);
 	Hlist.Add(trackedPhi);
-	Hlist.Add(trackedPtHalo);
-	Hlist.Add(HaloPRes);
 	Hlist.Add(ghostDelPhi);
 	Hlist.Add(ghostDelEta);
 	Hlist.Add(ghostTrackRad);
 	Hlist.Add(ghostselectPtRes);
 	Hlist.Add(ghostdropPtRes);
-	Hlist.Add(EffPt10);
-	Hlist.Add(EffPt20);
-	Hlist.Add(EffPt40);
-	Hlist.Add(EffPt60);
 	Hlist.Add(ghostPhi);
 	Hlist.Add(ghostEta);
 	Hlist.Add(ghostRadius);
@@ -377,8 +364,8 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	int T1Q, T2Q, T3Q, T4Q;
 	int pairQ1, pairQ2, pairQ3, pairQ4;
 	int simTrkCount = 0;
+	int partIde = 0, partIdmu = 0, partIdglu = 0, partIdmes = 0, partIdBar = 0;
 
-	
 	
 	//Declare iterators for sim & tf loops
 	edm::SimTrackContainer::const_iterator simTrk = simTracks->begin();
@@ -389,13 +376,17 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	{
 		simTrkCount++;
 		TLorentzVector mom;
-		//Hep3Vector position;
 		mom.SetPxPyPzE(simTrk->momentum().x(), simTrk->momentum().y(), simTrk->momentum().z(), simTrk->momentum().t());
 		
 		double genPhi = (mom.Phi() > 0) ? mom.Phi() : mom.Phi() + 2*M_PI;
+		int partID = simTrk->type();
 		
-		if( fabs(simTrk->type()) == 13 ) // Disclude electrons from scattering
+		if( fabs(partID) == 13 ) // Disclude electrons from scattering
 		{
+			if(DEBUG == true)
+			{	
+				std::cout << std::endl << "Sim Track Info"<<std::endl<<"Sim type, pt, phi, eta:"<< std::endl << simTrk->type() << ", " << mom.Pt() << ", " << genPhi << ", " << mom.PseudoRapidity() << std::endl;
+			} // Debug
 			
 			///////////////////////////////
 			//// Sim Track Information ////
@@ -416,11 +407,8 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 				simPt->Fill( fabs(genPt) );
 				simEHalo->Fill( genE );
 				simPz->Fill( fabs(genPz) );
-				simP->Fill( fabs(genP) );
-				//simHaloPipeOff->Fill( haloPipeOffset );
-				//simHaloPosition->Fill( genXpos, genYpos);
-								
-				tfTrk = tfTracks->begin();
+				simP->Fill( fabs(genP) );					
+				
 				tfLoop = 0;
 				int firstMuonHalo = 0;
 				
@@ -432,7 +420,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 					fidPtDen->Fill(genPt);
 				}
 				
-				for(; tfTrk != tfTracks->end(); tfTrk++)  // Loop over all Found tracks for an event
+				for(tfTrk = tfTracks->begin(); tfTrk != tfTracks->end(); tfTrk++)  // Loop over all Found tracks for an event
 				{
 					tfLoop++;
 					
@@ -448,19 +436,6 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 					int mecBx = tfTrk->bx();
 					int mecCharge;
 					int mecHalo = tfTrk->finehalo_packed();
-
-					
-
-					
-					/*
-					
-						if( ( mecHalo != 0 ) && ( tfLoop == 1 ) ) 
-							{
-								trackHaloPosition->Fill( genXpos, genYpos);
-								trackedHaloPipeOff->Fill( haloPipeOffset );
-							}//mecHalo
-					
-					*/
 					
 					if( ( mecHalo != 0 ) && ( tfLoop == 1 ) )
 					{
@@ -478,11 +453,6 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 					}
 					
 					if( ( tfLoop != 1 ) && ( firstMuonHalo == 1 ) ) haloGhosts++;
-					
-					/*if( ( genEta >= 1.2 ) && ( genEta <= 2.1 ) && ( mecQuality > 1 )  && ( tfLoop == 1 ) )
-					{
-						fidPtDen->Fill(genPt);
-					}*/
 					
 					if( mecChargePacked == 1) // Packed charge = 1 for -1 and 0 for +1
 					{
@@ -613,6 +583,8 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 					
 					
 				}//tfTrack loop
+				
+				numEScat->Fill(tfLoop);
 				
 				////////////////////////////
 				//// Matched Track Info ////
@@ -1085,7 +1057,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		
 		} // |partid| == 13
     } // simTrk loop
-	
+
 	/////////////////////////////
 	//// Fill Matched Histos ////
 	/////////////////////////////
@@ -1391,7 +1363,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		ghostDelPhi->Fill(gDelPhi);
 		ghostDelEta->Fill(gDelEta);
 		ghostTrackRad->Fill(gRad);
-		numEScat->Fill(electronCount);
+		
 		
 		if( R1 < R2 )
 		{
@@ -1423,13 +1395,9 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		
 		}
 		
-		if( R2 == R1)
+		if( DEBUG == true)
 		{
 			std::cout << "R1: " << R1 << ".  Bx1: " << bunches1 << ".  Bx2: " << bunches2 << "." << std::endl;
-			
-		}
-		if(DEBUG == true)
-		{
 			std::cout << std::endl << "---------- Fake Track ------------" << std::flush << std::endl;
 		}
 	}
