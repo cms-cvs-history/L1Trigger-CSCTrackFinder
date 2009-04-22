@@ -9,5 +9,5 @@
 #define siginit(s) {if ((CH_##s = s - RC_##s) != 0) {__glob__change__ = 1; RC_##s = s;}}
 
 // memory initialization
-#define meminit(s) for (int __mem_ind__ = 0; __mem_ind__ < sizeof(s)/sizeof(ULLONG); __mem_ind__++) siginit(s[__mem_ind__]);
+#define meminit(s) for (unsigned int __mem_ind__ = 0; __mem_ind__ < sizeof(s)/sizeof(ULLONG); __mem_ind__++) siginit(s[__mem_ind__]);
 
