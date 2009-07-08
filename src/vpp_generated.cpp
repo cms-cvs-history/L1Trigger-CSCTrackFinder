@@ -7,6 +7,9 @@
 // Author    : madorsky
 // Timestamp : Thu Mar 26 13:01:21 2009
 
+#if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ == 3
+#pragma GCC diagnostic ignored "-Warray-bounds"
+#endif
 #include "vpp_generated.h"
 #include "vpp_tools.h"
 void vpp_generated::run()
