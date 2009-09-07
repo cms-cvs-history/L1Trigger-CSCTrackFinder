@@ -11,6 +11,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/ESHandle.h"
+#include "L1Trigger/CSCTrackFinder/src/CSCTFDTReceiver.h"
 
 //ROOT
 #include <TH1F.h>
@@ -20,7 +21,6 @@
 #include <TTree.h>
 #include <TStyle.h>
 #include <TCanvas.h>
-#include <TLegend.h>
 
 class CSCTFEfficiencies : public edm::EDAnalyzer {
  public:
@@ -37,6 +37,9 @@ class CSCTFEfficiencies : public edm::EDAnalyzer {
  private:
   // variables persistent across events should be declared here.
   //
+	CSCTFDTReceiver* my_dtrc;
+	
+  edm::InputTag lctProducer;
   std::string outFile;//c
   TFile* fAnalysis;//c
 
@@ -59,10 +62,8 @@ class CSCTFEfficiencies : public edm::EDAnalyzer {
   TH2F* simHaloPosition, *trackHaloPosition, *lostHaloPosition;
   TH2F* PhiResVPt;
   TH2F* PtResVPt, *PtResVEta;
-  TH1F* Gene, *Genmu , *Genglu, *Genmes, *GenBar;
-  
-  TLegend* TrackerLeg1, *TrackerLeg2, *TrackerLeg3;
-  
+	TH1F* dtStubBx;
+  TLegend* TrackerLeg1, *TrackerLeg2;
   
 };
 

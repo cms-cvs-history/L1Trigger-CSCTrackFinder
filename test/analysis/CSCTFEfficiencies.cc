@@ -1,28 +1,40 @@
 /****************************************************************************
- *					 				    									*
- *   CSCTFEfficiencies.cc					 	    						*
- *   Original Code by L. Grey						    					*
- *   Version 2.0 written by J. Gartner					    				*
- *   V 2.0 - 1/17/08 == Basic efficiency plots and verbose track matching.  *
- *							 		    									*
- *   For Questions or Comments email: joseph.anthony.gartner.iii@cern.ch    *
- *   Please use this code for good, not awesome.			    			*
- *									    									*
+ *																		   																		*
+ *   CSCTFEfficiencies.cc												   													*
+ *   Original Code by L. Grey											   												*
+ *   Version 2.0 written by J. Gartner									   									*
+ *   V 2.0 - 1/17/08 == Basic efficiency plots and verbose track matching. 	*
+ *																		   																		*
+ *   For Questions or Comments email: joseph.anthony.gartner.iii@cern.ch   	*
+ *   Please use this code for good, not awesome.						   							*
+ *																		   																		*
  ***************************************************************************/
-
-#include <L1Trigger/CSCTrackFinder/test/analysis/CSCTFEfficiencies.h>
 
 #include <SimDataFormats/Track/interface/SimTrackContainer.h>
 #include <SimDataFormats/Vertex/interface/SimVertexContainer.h>
+
+#include <L1Trigger/CSCTrackFinder/interface/CSCTrackFinderDataTypes.h>
+#include <L1Trigger/CSCTrackFinder/test/analysis/CSCTFEfficiencies.h>
+
+#include <DataFormats/CSCDigi/interface/CSCCorrelatedLCTDigiCollection.h>
+#include <DataFormats/MuonDetId/interface/CSCDetId.h>
+#include <DataFormats/MuonDetId/interface/CSCTriggerNumbering.h>
+#include <DataFormats/L1CSCTrackFinder/interface/CSCTriggerContainer.h>
+#include <DataFormats/L1CSCTrackFinder/interface/TrackStub.h>
 #include <DataFormats/L1GlobalMuonTrigger/interface/L1MuRegionalCand.h>
+#include <DataFormats/L1CSCTrackFinder/interface/L1CSCTrackCollection.h>
+#include <DataFormats/L1CSCTrackFinder/interface/L1CSCStatusDigiCollection.h>
+#include <DataFormats/L1DTTrackFinder/interface/L1MuDTChambPhContainer.h>
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 
 #include <TMath.h>
 #include <TCanvas.h>
+#include <TLorentzVector.h>
+
 #include <TStyle.h>
+#include <TLegend.h>
 #include <TF1.h>
 #include <TH2.h>
-#include <TLegend.h>
-#include <TLorentzVector.h>
 
 namespace csctf_analysis
 {
@@ -41,6 +53,8 @@ CSCTFEfficiencies::CSCTFEfficiencies(edm::ParameterSet const& conf)
   cntGen = 0;
   
   outFile = conf.getUntrackedParameter<std::string>("OutFile");//c
+	
+	my_dtrc = new CSCTFDTReceiver();
 }
 
 void CSCTFEfficiencies::DeleteHistos()
@@ -125,6 +139,8 @@ void CSCTFEfficiencies::beginJob(edm::EventSetup const& es)
 	trackHaloPosition = new TH2F("trackHaloPosition", "X-Y Distribution of Tf Beam Halo Muons", 30, -30, 30, 30, -30, 30);
 	lostHaloPosition = new TH2F("lostHaloPosition", "X-Y Distribution of Lost Beam Halo Muons", 30, -30, 30, 30, -30, 30);
 	
+	dtStubBx = new TH1F("dtStubBx", "Stub timing from DT", 13, -6.5, 6.5);
+	
 	ghosts = 0;
 	haloGhosts = 0;
 	lostTracks = 0;
@@ -188,6 +204,7 @@ void CSCTFEfficiencies::endJob()
 	/////////////////////
 	//// Efficiency /////
 	/////////////////////
+	/*
 	EffPt10->Divide(matchedPt10, fidPtDen);
 	EffPt20->Divide(matchedPt20, fidPtDen);
 	EffPt40->Divide(matchedPt40, fidPtDen);
@@ -280,15 +297,28 @@ void CSCTFEfficiencies::endJob()
 	//////////////////////
 	fAnalysis = new TFile(outFile.c_str(), "RECREATE");//c
 	TObjArray Hlist(0);
+	Hlist.Add(dtStubBx);
+	Hlist.Add(EffPt10);
+	Hlist.Add(EffPt20);
+	Hlist.Add(EffPt40);
+	Hlist.Add(EffPt60);
 	Hlist.Add(PtEffAll);
+	Hlist.Add(simPz);
 	Hlist.Add(EtaEff);
+	Hlist.Add(trackedEHalo);
 	Hlist.Add(trackedEta);
 	Hlist.Add(trackedPhi);
+	Hlist.Add(trackedPtHalo);
+	Hlist.Add(HaloPRes);
 	Hlist.Add(ghostDelPhi);
 	Hlist.Add(ghostDelEta);
 	Hlist.Add(ghostTrackRad);
 	Hlist.Add(ghostselectPtRes);
 	Hlist.Add(ghostdropPtRes);
+	Hlist.Add(EffPt10);
+	Hlist.Add(EffPt20);
+	Hlist.Add(EffPt40);
+	Hlist.Add(EffPt60);
 	Hlist.Add(ghostPhi);
 	Hlist.Add(ghostEta);
 	Hlist.Add(ghostRadius);
@@ -316,16 +346,17 @@ void CSCTFEfficiencies::endJob()
 	Hlist.Add(ptResolutionEtaLow);
 	Hlist.Add(ptResolutionEtaHigh);
 	Hlist.Write();
-	delete fAnalysis;
+	delete fAnalysis;*/
 }
 
 void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 {
-    const float ptscale[33] = { 
-      -1.,   0.0,   1.5,   2.0,   2.5,   3.0,   3.5,   4.0,
-      4.5,   5.0,   6.0,   7.0,   8.0,  10.0,  12.0,  14.0,  
-      16.0,  18.0,  20.0,  25.0,  30.0,  35.0,  40.0,  45.0, 
-      50.0,  60.0,  70.0,  80.0,  90.0, 100.0, 120.0, 140.0, 1.E6 };
+	/*
+  const float ptscale[33] = { 
+  	-1.,   0.0,   1.5,   2.0,   2.5,   3.0,   3.5,   4.0,
+    4.5,   5.0,   6.0,   7.0,   8.0,  10.0,  12.0,  14.0,  
+    16.0,  18.0,  20.0,  25.0,  30.0,  35.0,  40.0,  45.0, 
+    50.0,  60.0,  70.0,  80.0,  90.0, 100.0, 120.0, 140.0, 1.E6 };
 
 
 	// get sim track and found track data here... then run analysis functions
@@ -336,13 +367,27 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	e.getByLabel("g4SimHits",simTracks);
 	e.getByLabel("g4SimHits",simVertexs);
 	
+	edm::Handle<L1MuDTChambPhContainer> dttrig;
+	e.getByLabel("simDtTriggerPrimitiveDigis",dttrig);
+	std::vector<L1MuDTChambPhDigi> *dtStubs = dttrig->getContainer();
+	std::vector<L1MuDTChambPhDigi>::const_iterator iter;
+	for(iter = dtStubs->begin(); iter != dtStubs->end(); iter++)
+	{
+		//std::cout << "Dt stub ana bx: " << iter->bxNum() << std::endl;
+		dtStubBx->Fill(iter->bxNum());
+	}
+	
+					
+	//std::vector<L1MuRegionalCand>::const_iterator tfTrk;
+	//for(tfTrk = tfTracks->begin(); tfTrk != tfTracks->end(); tfTrk++) 	
+		
 	// declare variables which must be defined outside of sim & tf loop for verbose track matching
 	bool DEBUG = false;
 	double R1 = 0.5, R2 = 0.5, R3 = 0.5, R4 = 0.5;
 	double R1Old, R2Old, R3Old, R4Old;
 	int tfLoop = 0, tfLoop2 = 0, simCounter = 0, firstMuon = 0;
 	bool link1 = false, link2 = false, link3 = false,link4 = false;
-	bool fid1 = false, fid2 = false, fid3 = false, fid4 = false, fid1Old = false, fid2Old = false, fid3Old = false, fid4Old = false; //fiducial tracks will be those whose eta values are between 1.1 & 2.4
+	bool fid1 = false, fid2 = false, fid3 = false, fid4 = false, fid1Old = false, fid2Old = false, fid3Old = false, fid4Old = false; 
 	bool pt10bit1 = false, pt20bit1 = false, pt40bit1 = false, pt60bit1 = false;
 	bool pt10bit2 = false, pt20bit2 = false, pt40bit2 = false, pt60bit2 = false;
 	bool pt10bit3 = false, pt20bit3 = false, pt40bit3 = false, pt60bit3 = false;
@@ -364,30 +409,35 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	int T1Q, T2Q, T3Q, T4Q;
 	int pairQ1, pairQ2, pairQ3, pairQ4;
 	int simTrkCount = 0;
-	int partIde = 0, partIdmu = 0, partIdglu = 0, partIdmes = 0, partIdBar = 0;
-
 	
+	edm::Handle<reco::GenParticleCollection>  genParticles;
+  e.getByLabel("genParticles", genParticles);
+	for (reco::GenParticleCollection::const_iterator p=genParticles->begin(); p!=genParticles->end(); ++p) {
+ 		int id = abs(p->pdgId());
+	 	if (id == 13) {  // mu
+			float ptt =  p->pt();
+			float etaa = p->eta();
+			float phii = p->phi();
+			std::cout << "Generator Pt, eta, phi: " << ptt << ", " << etaa << ", " << phii << std::endl;
+		
+		}
+	}
+
 	//Declare iterators for sim & tf loops
 	edm::SimTrackContainer::const_iterator simTrk = simTracks->begin();
-	
 	std::vector<L1MuRegionalCand>::const_iterator tfTrk;
 	std::vector<SimVertex>::const_iterator simVtx;
 	for(; simTrk != simTracks->end(); simTrk++)  // Loop over all Simulated tracks for an Event
 	{
 		simTrkCount++;
 		TLorentzVector mom;
+		//Hep3Vector position;
 		mom.SetPxPyPzE(simTrk->momentum().x(), simTrk->momentum().y(), simTrk->momentum().z(), simTrk->momentum().t());
 		
 		double genPhi = (mom.Phi() > 0) ? mom.Phi() : mom.Phi() + 2*M_PI;
-		int partID = simTrk->type();
 		
-		if( fabs(partID) == 13 ) // Disclude electrons from scattering
+		if( fabs(simTrk->type()) == 13 ) // Disclude electrons from scattering
 		{
-			if(DEBUG == true)
-			{	
-				std::cout << std::endl << "Sim Track Info"<<std::endl<<"Sim type, pt, phi, eta:"<< std::endl << simTrk->type() << ", " << mom.Pt() << ", " << genPhi << ", " << mom.PseudoRapidity() << std::endl;
-			} // Debug
-			
 			///////////////////////////////
 			//// Sim Track Information ////
 			///////////////////////////////
@@ -398,8 +448,11 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 			double genE = mom.E();
 			double genPz = mom.Z();
 			double genP = mom.P();
+			std::cout << "Sim Track Pt, eta, phi: " << genPt << ", " << genEta << ", " << genPhi << std::endl;
 			
-			if( mom.Pt() >= 2 )
+			
+			
+			if( (genPt >= 2) && (genEta >= 0.8 ) )
 			{
 				simCounter++;
 				simEta->Fill( fabs(genEta) );
@@ -407,7 +460,10 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 				simPt->Fill( fabs(genPt) );
 				simEHalo->Fill( genE );
 				simPz->Fill( fabs(genPz) );
-				simP->Fill( fabs(genP) );					
+				simP->Fill( fabs(genP) );
+				//simHaloPipeOff->Fill( haloPipeOffset );
+				//simHaloPosition->Fill( genXpos, genYpos);
+								
 				
 				tfLoop = 0;
 				int firstMuonHalo = 0;
@@ -439,8 +495,8 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 					
 					if( ( mecHalo != 0 ) && ( tfLoop == 1 ) )
 					{
-						std::cout << std::endl << "Halo Trigger" << std::endl;
-						std::cout << std::endl << "Halo Val: " << mecHalo << "." << std::endl; 
+						//std::cout << std::endl << "Halo Trigger" << std::endl;
+						//std::cout << std::endl << "Halo Val: " << mecHalo << "." << std::endl; 
 						if( firstMuonHalo == 0)
 						{
 							haloTrigger++;
@@ -454,6 +510,11 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 					
 					if( ( tfLoop != 1 ) && ( firstMuonHalo == 1 ) ) haloGhosts++;
 					
+					/*if( ( genEta >= 1.2 ) && ( genEta <= 2.1 ) && ( mecQuality > 1 )  && ( tfLoop == 1 ) )
+					{
+						fidPtDen->Fill(genPt);
+					}*/
+					/*
 					if( mecChargePacked == 1) // Packed charge = 1 for -1 and 0 for +1
 					{
 						mecCharge = -1;
@@ -490,10 +551,10 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 						{
 							fid1 = true;
 
-							if( mecPt > 10) pt10bit1 = true;
-							if( mecPt > 20) pt20bit1 = true;
-							if( mecPt > 40) pt40bit1 = true;
-							if( mecPt > 60) pt60bit1 = true;
+							if( mecPt >= 10) pt10bit1 = true;
+							if( mecPt >= 20) pt20bit1 = true;
+							if( mecPt >= 40) pt40bit1 = true;
+							if( mecPt >= 60) pt60bit1 = true;
 							
 							PtRes1 = (genPt)/(mecPt) - 1;
 							
@@ -516,10 +577,10 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 						{
 							fid2 = true;
 														
-							if( mecPt > 10) pt10bit2 = true;
-							if( mecPt > 20) pt20bit2 = true;
-							if( mecPt > 40) pt40bit2 = true;
-							if( mecPt > 60) pt60bit2 = true;
+							if( mecPt >= 10) pt10bit2 = true;
+							if( mecPt >= 20) pt20bit2 = true;
+							if( mecPt >= 40) pt40bit2 = true;
+							if( mecPt >= 60) pt60bit2 = true;
 							
 							PtRes2 = (genPt)/(mecPt) - 1;
 						}
@@ -541,10 +602,10 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 						{
 							fid3 = true;
 														
-							if( mecPt > 10) pt10bit3 = true;
-							if( mecPt > 20) pt20bit3 = true;
-							if( mecPt > 40) pt40bit3 = true;
-							if( mecPt > 60) pt60bit3 = true;
+							if( mecPt >= 10) pt10bit3 = true;
+							if( mecPt >= 20) pt20bit3 = true;
+							if( mecPt >= 40) pt40bit3 = true;
+							if( mecPt >= 60) pt60bit3 = true;
 
 							PtRes3 = (genPt)/(mecPt) - 1;						
 						}
@@ -566,10 +627,10 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 						{
 							fid4 = true;
 							
-							if( mecPt > 10) pt10bit4 = true;
-							if( mecPt > 20) pt20bit4 = true;
-							if( mecPt > 40) pt40bit4 = true;
-							if( mecPt > 60) pt60bit4 = true;
+							if( mecPt >= 10) pt10bit4 = true;
+							if( mecPt >= 20) pt20bit4 = true;
+							if( mecPt >= 40) pt40bit4 = true;
+							if( mecPt >= 60) pt60bit4 = true;
 						
 							PtRes4 = (genPt)/(mecPt) - 1;
 						}	
@@ -577,14 +638,16 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 
 					if(DEBUG == true)
 					{
-						std::cout << std::endl << "Found Track Info"<< std::endl << "Quality, Charge, pt, phi, eta:"<< std::endl << mecQuality << ", " << mecCharge  << ", " << mecPt << ", "<< mecPhi << ", " << mecEta << ", " << std::flush << std::endl;
+						std::cout << std::endl << "Found Track Info"<< std::endl;
+						std::cout << "Quality, Charge, pt, phi, eta:"<< std::endl; 
+						std::cout << mecQuality << ", " << mecCharge  << ", " << mecPt << ", "<< mecPhi << ", " << mecEta << ", " << std::flush << std::endl;
 						std::cout << "R1: " << R1 << ".  R2: " << R2 << ".  R3: " << R3 << ". R4: " << R4 << "."<< std::endl;
 					}
 					
 					
 				}//tfTrack loop
 				
-				numEScat->Fill(tfLoop);
+				if (tfLoop == 0) std::cout << "Sim info for lost track (Pt, eta, phi): " << genPt << ", " << genEta << ", " << genPhi << "." << std::endl;
 				
 				////////////////////////////
 				//// Matched Track Info ////
@@ -654,7 +717,6 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 						pairEtaOld1 = T1Eta;
 						pairQ1 = T1Q;
 						pair1Bx = T1Bx;
-						
 						EtaRes1Old = EtaRes1;
 						PhiRes1Old = PhiRes1;
 						
@@ -1057,7 +1119,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		
 		} // |partid| == 13
     } // simTrk loop
-
+	
 	/////////////////////////////
 	//// Fill Matched Histos ////
 	/////////////////////////////
@@ -1363,7 +1425,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		ghostDelPhi->Fill(gDelPhi);
 		ghostDelEta->Fill(gDelEta);
 		ghostTrackRad->Fill(gRad);
-		
+		numEScat->Fill(electronCount);
 		
 		if( R1 < R2 )
 		{
@@ -1395,9 +1457,13 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		
 		}
 		
-		if( DEBUG == true)
+		if( R2 == R1)
 		{
 			std::cout << "R1: " << R1 << ".  Bx1: " << bunches1 << ".  Bx2: " << bunches2 << "." << std::endl;
+			
+		}
+		if(DEBUG == true)
+		{
 			std::cout << std::endl << "---------- Fake Track ------------" << std::flush << std::endl;
 		}
 	}
@@ -1410,7 +1476,19 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 			std::cout << std::endl << "---------- Lost Track ----------" << std::flush << std::endl;
 		}
 	}
-	
+	*/
+	edm::Handle<CSCCorrelatedLCTDigiCollection> corrlcts;
+	e.getByLabel( "simCscTriggerPrimitiveDigis",corrlcts);
+	CSCCorrelatedLCTDigiCollection::DigiRangeIterator csc;
+	for(csc=corrlcts.product()->begin(); csc!=corrlcts.product()->end(); csc++)
+	{
+		CSCCorrelatedLCTDigiCollection::Range range1 = corrlcts.product()->get((*csc).first);
+		CSCCorrelatedLCTDigiCollection::const_iterator lct;
+		for(lct = range1.first; lct!= range1.second; lct++)
+		{
+			int bunchX = ( (lct->getBX()) - 6 );
+			//std::cout << "Bunch Crossing: " << bunchX << "." << std::endl;
+		}
+	}
+
 }
-
-
