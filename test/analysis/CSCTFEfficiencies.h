@@ -12,6 +12,7 @@
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "L1Trigger/CSCTrackFinder/src/CSCTFDTReceiver.h"
+#include "L1Trigger/CSCTrackFinder/interface/CSCSectorReceiverLUT.h"
 
 //ROOT
 #include <TH1F.h>
@@ -38,6 +39,7 @@ class CSCTFEfficiencies : public edm::EDAnalyzer {
   // variables persistent across events should be declared here.
   //
 	CSCTFDTReceiver* my_dtrc;
+	CSCSectorReceiverLUT *srLUTs_[5][6][2];
 	
   edm::InputTag lctProducer;
   std::string outFile;//c
@@ -63,6 +65,7 @@ class CSCTFEfficiencies : public edm::EDAnalyzer {
   TH2F* PhiResVPt;
   TH2F* PtResVPt, *PtResVEta;
 	TH1F* dtStubBx;
+	TH1F* overDeleta12, *overDelphi12, *overDeleta25, *overDelphi25, *overDeleta15, *overDelphi15;
   TLegend* TrackerLeg1, *TrackerLeg2;
   
 };

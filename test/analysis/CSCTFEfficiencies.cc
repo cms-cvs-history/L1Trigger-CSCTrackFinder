@@ -16,6 +16,7 @@
 #include <L1Trigger/CSCTrackFinder/interface/CSCTrackFinderDataTypes.h>
 #include <L1Trigger/CSCTrackFinder/test/analysis/CSCTFEfficiencies.h>
 
+#include "DataFormats/L1CSCTrackFinder/interface/TrackStub.h"
 #include <DataFormats/CSCDigi/interface/CSCCorrelatedLCTDigiCollection.h>
 #include <DataFormats/MuonDetId/interface/CSCDetId.h>
 #include <DataFormats/MuonDetId/interface/CSCTriggerNumbering.h>
@@ -42,7 +43,7 @@ namespace csctf_analysis
   {
     Double_t fitval = (0.5*TMath::Erf((pt[0]/par[0] + 1.0)/(TMath::Sqrt(2.0)*par[1])) +
 		       0.5*TMath::Erf((pt[0]/par[0] - 1.0)/(TMath::Sqrt(2.0)*par[1])) )
-                      *(par[2] + par[3]*pt[0]);
+           *(par[2] + par[3]*pt[0]);
     return fitval;
   }
 }
@@ -51,10 +52,31 @@ CSCTFEfficiencies::CSCTFEfficiencies(edm::ParameterSet const& conf)
 {
   cnttrk = 0;
   cntGen = 0;
-  
+
   outFile = conf.getUntrackedParameter<std::string>("OutFile");//c
 	
 	my_dtrc = new CSCTFDTReceiver();
+	
+	bzero(srLUTs_,sizeof(srLUTs_));
+  bool TMB07=true;
+  edm::ParameterSet srLUTset;
+  srLUTset.addUntrackedParameter<bool>("ReadLUTs", false);
+  srLUTset.addUntrackedParameter<bool>("Binary",   false);
+  srLUTset.addUntrackedParameter<std::string>("LUTPath", "./");
+  for(int endcap = 1; endcap<=2; endcap++)
+  {
+		for(int sector=1; sector<=6; sector++)
+		{
+     	for(int station=1,fpga=0; station<=4 && fpga<5; station++)
+     	{
+ 				if(station==1)
+        	for(int subSector=0; subSector<2; subSector++)
+        		srLUTs_[fpga++][sector-1][endcap-1] = new CSCSectorReceiverLUT(endcap, sector, subSector+1, station, srLUTset, TMB07);
+   			else
+   				srLUTs_[fpga++][sector-1][endcap-1] = new CSCSectorReceiverLUT(endcap, sector, 0, station, srLUTset, TMB07);
+     	}
+		}
+  }
 }
 
 void CSCTFEfficiencies::DeleteHistos()
@@ -141,6 +163,13 @@ void CSCTFEfficiencies::beginJob(edm::EventSetup const& es)
 	
 	dtStubBx = new TH1F("dtStubBx", "Stub timing from DT", 13, -6.5, 6.5);
 	
+	overDeleta12 = new TH1F("overDeleta12", "#Delta #eta_{12} lost Tracks overlap", 128, 0, 128);
+	overDelphi12 = new TH1F("overDelphi12", "#Delta #phi_{12} lost Tracks overlap", 4096, 0, 4096);
+	overDeleta25 = new TH1F("overDeleta25", "#Delta #eta_{25} lost Tracks overlap", 128, 0, 128);
+	overDelphi25 = new TH1F("overDelphi25", "#Delta #phi_{25} lost Tracks overlap", 4096, 0, 4096);
+	overDeleta15 = new TH1F("overDeleta15", "#Delta #eta_{15} lost Tracks overlap", 128, 0, 128);
+	overDelphi15 = new TH1F("overDelphi15", "#Delta #phi_{15} lost Tracks overlap", 4096, 0, 4096);
+	
 	ghosts = 0;
 	haloGhosts = 0;
 	lostTracks = 0;
@@ -204,7 +233,7 @@ void CSCTFEfficiencies::endJob()
 	/////////////////////
 	//// Efficiency /////
 	/////////////////////
-	/*
+	
 	EffPt10->Divide(matchedPt10, fidPtDen);
 	EffPt20->Divide(matchedPt20, fidPtDen);
 	EffPt40->Divide(matchedPt40, fidPtDen);
@@ -345,13 +374,19 @@ void CSCTFEfficiencies::endJob()
 	Hlist.Add(ptResolutionQ3);
 	Hlist.Add(ptResolutionEtaLow);
 	Hlist.Add(ptResolutionEtaHigh);
+	Hlist.Add(overDeleta12);
+	Hlist.Add(overDelphi12);
+	Hlist.Add(overDeleta25);
+	Hlist.Add(overDelphi25);
+	Hlist.Add(overDeleta15);
+	Hlist.Add(overDelphi15);
 	Hlist.Write();
-	delete fAnalysis;*/
+	delete fAnalysis;
 }
 
 void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 {
-	/*
+	
   const float ptscale[33] = { 
   	-1.,   0.0,   1.5,   2.0,   2.5,   3.0,   3.5,   4.0,
     4.5,   5.0,   6.0,   7.0,   8.0,  10.0,  12.0,  14.0,  
@@ -366,17 +401,6 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	e.getByLabel("simCsctfDigis","CSC", tfTracks);
 	e.getByLabel("g4SimHits",simTracks);
 	e.getByLabel("g4SimHits",simVertexs);
-	
-	edm::Handle<L1MuDTChambPhContainer> dttrig;
-	e.getByLabel("simDtTriggerPrimitiveDigis",dttrig);
-	std::vector<L1MuDTChambPhDigi> *dtStubs = dttrig->getContainer();
-	std::vector<L1MuDTChambPhDigi>::const_iterator iter;
-	for(iter = dtStubs->begin(); iter != dtStubs->end(); iter++)
-	{
-		//std::cout << "Dt stub ana bx: " << iter->bxNum() << std::endl;
-		dtStubBx->Fill(iter->bxNum());
-	}
-	
 					
 	//std::vector<L1MuRegionalCand>::const_iterator tfTrk;
 	//for(tfTrk = tfTracks->begin(); tfTrk != tfTracks->end(); tfTrk++) 	
@@ -409,20 +433,8 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	int T1Q, T2Q, T3Q, T4Q;
 	int pairQ1, pairQ2, pairQ3, pairQ4;
 	int simTrkCount = 0;
+	double genEta =0;
 	
-	edm::Handle<reco::GenParticleCollection>  genParticles;
-  e.getByLabel("genParticles", genParticles);
-	for (reco::GenParticleCollection::const_iterator p=genParticles->begin(); p!=genParticles->end(); ++p) {
- 		int id = abs(p->pdgId());
-	 	if (id == 13) {  // mu
-			float ptt =  p->pt();
-			float etaa = p->eta();
-			float phii = p->phi();
-			std::cout << "Generator Pt, eta, phi: " << ptt << ", " << etaa << ", " << phii << std::endl;
-		
-		}
-	}
-
 	//Declare iterators for sim & tf loops
 	edm::SimTrackContainer::const_iterator simTrk = simTracks->begin();
 	std::vector<L1MuRegionalCand>::const_iterator tfTrk;
@@ -431,7 +443,6 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	{
 		simTrkCount++;
 		TLorentzVector mom;
-		//Hep3Vector position;
 		mom.SetPxPyPzE(simTrk->momentum().x(), simTrk->momentum().y(), simTrk->momentum().z(), simTrk->momentum().t());
 		
 		double genPhi = (mom.Phi() > 0) ? mom.Phi() : mom.Phi() + 2*M_PI;
@@ -441,16 +452,13 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 			///////////////////////////////
 			//// Sim Track Information ////
 			///////////////////////////////
-		
 			firstMuon++;	
-			double genEta = mom.PseudoRapidity();
+			genEta = mom.PseudoRapidity();
 			double genPt = mom.Pt();
 			double genE = mom.E();
 			double genPz = mom.Z();
 			double genP = mom.P();
 			std::cout << "Sim Track Pt, eta, phi: " << genPt << ", " << genEta << ", " << genPhi << std::endl;
-			
-			
 			
 			if( (genPt >= 2) && (genEta >= 0.8 ) )
 			{
@@ -510,11 +518,11 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 					
 					if( ( tfLoop != 1 ) && ( firstMuonHalo == 1 ) ) haloGhosts++;
 					
-					/*if( ( genEta >= 1.2 ) && ( genEta <= 2.1 ) && ( mecQuality > 1 )  && ( tfLoop == 1 ) )
+					if( ( genEta >= 1.2 ) && ( genEta <= 2.1 ) && ( mecQuality > 1 )  && ( tfLoop == 1 ) )
 					{
 						fidPtDen->Fill(genPt);
-					}*/
-					/*
+					}
+					
 					if( mecChargePacked == 1) // Packed charge = 1 for -1 and 0 for +1
 					{
 						mecCharge = -1;
@@ -1470,24 +1478,102 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 							
 	if( simCounter >= (tfLoop +1))
 	{
+		//////////////////////
+		//Debug low Eta Eff //
+		//////////////////////
+		if( (genEta > 0.9) && (genEta <1.2))
+		{
+			/////////////////////////////////////////
+			// Define Collection to hold all stubs //
+			/////////////////////////////////////////
+			CSCTriggerContainer<csctf::TrackStub> stub_list;
+			
+			///////////////////////////////////////////////////////////////////////
+			// Loop over CSC Correlated LCT Digis, adding them to Stub Container //
+			///////////////////////////////////////////////////////////////////////
+			edm::Handle<CSCCorrelatedLCTDigiCollection> lcts;
+			e.getByLabel( "simCscTriggerPrimitiveDigis",lcts);
+			CSCCorrelatedLCTDigiCollection::DigiRangeIterator Citer;
+  		for(Citer = lcts->begin(); Citer != lcts->end(); Citer++)
+    	{
+      	CSCCorrelatedLCTDigiCollection::const_iterator Diter = (*Citer).second.first;
+      	CSCCorrelatedLCTDigiCollection::const_iterator Dend = (*Citer).second.second;
+
+	  		for(; Diter != Dend; Diter++)
+				{
+	  			csctf::TrackStub theStub((*Diter),(*Citer).first);
+	  			stub_list.push_back(theStub);
+				}
+    	}
+		
+			////////////////////////////////////
+			// Append Stub list with DT Stubs //
+			////////////////////////////////////
+			edm::Handle<L1MuDTChambPhContainer> dttrig;
+			e.getByLabel("simDtTriggerPrimitiveDigis",dttrig);
+			CSCTriggerContainer<csctf::TrackStub> dtstubs = my_dtrc->process(dttrig.product());
+  		stub_list.push_many(dtstubs);
+			
+			////////////////////////////////////////
+			// Creat an array for stubs eta & phi //
+			////////////////////////////////////////
+			int stubArray[5][4];
+			for( int i=0; i<5; i++) stubArray[i][0] = 0;
+			
+			///////////////////////////////////////////////////////////
+			// Loop over all Track Stubs, filling Array for analysis //
+			///////////////////////////////////////////////////////////
+			std::vector<csctf::TrackStub> justStubs = stub_list.get();
+			for(std::vector<csctf::TrackStub>::iterator itr=justStubs.begin(); itr!=justStubs.end(); itr++)
+			{
+				unsigned int Endcap    = itr->endcap();
+        unsigned int Station   = itr->station();
+        unsigned int Sector    = itr->sector();
+        unsigned int SubSector = itr->subsector();
+        unsigned int CscId     = itr->cscid();
+        unsigned int Fpga      = ( SubSector ? SubSector-1 : Station+1 );
+				unsigned int bunchX		 = itr->BX();
+        std::cout << " Endcap, Station, Sector, SubSector, Bx: " << Endcap << ", " << Station << ", " << Sector << ", " << SubSector << ", " << bunchX<< std::endl;
+				if( Station != 5)
+				{
+					lclphidat lclPhi = srLUTs_[Fpga][Sector-1][Endcap-1]->localPhi(itr->getStrip(), itr->getPattern(), itr->getQuality(), itr->getBend());
+					gblphidat gblPhi = srLUTs_[Fpga][Sector-1][Endcap-1]->globalPhiME(lclPhi.phi_local, itr->getKeyWG(), CscId);
+					gbletadat gblEta = srLUTs_[Fpga][Sector-1][Endcap-1]->globalEtaME(lclPhi.phi_bend_local, lclPhi.phi_local, itr->getKeyWG(), CscId);
+					itr->setEtaPacked(gblEta.global_eta);
+					itr->setPhiPacked(gblPhi.global_phi);
+				}
+				stubArray[Station - 1][0] = 1;
+				stubArray[Station - 1][1] = Sector;
+				stubArray[Station - 1][2] = itr->etaPacked();
+				stubArray[Station - 1][3] = itr->phiPacked();
+			}
+			
+			/////////////////////////
+			// Analyze track stubs //
+			/////////////////////////
+			if( (stubArray[0][0]==1) && (stubArray[1][0]==1) && (stubArray[0][1]==stubArray[1][1]) )
+			{
+				overDeleta12->Fill(abs(stubArray[0][2]-stubArray[1][2]));
+				overDelphi12->Fill(abs(stubArray[0][2]-stubArray[1][2]));
+			}
+			
+			if( (stubArray[0][0]==1) && (stubArray[4][0]==1) && (stubArray[0][1]==stubArray[4][1]) )
+			{
+				overDeleta15->Fill(abs(stubArray[0][2]-stubArray[4][2]));
+				overDelphi15->Fill(abs(stubArray[0][2]-stubArray[4][2]));
+			}
+			
+			if( (stubArray[5][0]==1) && (stubArray[1][0]==1) && (stubArray[4][1]==stubArray[1][1]) )
+			{
+				overDeleta25->Fill(abs(stubArray[4][2]-stubArray[1][2]));
+				overDelphi25->Fill(abs(stubArray[4][2]-stubArray[1][2]));
+			}
+		}
+	
 		lostTracks++;
 		if(DEBUG == true)
 		{
 			std::cout << std::endl << "---------- Lost Track ----------" << std::flush << std::endl;
-		}
-	}
-	*/
-	edm::Handle<CSCCorrelatedLCTDigiCollection> corrlcts;
-	e.getByLabel( "simCscTriggerPrimitiveDigis",corrlcts);
-	CSCCorrelatedLCTDigiCollection::DigiRangeIterator csc;
-	for(csc=corrlcts.product()->begin(); csc!=corrlcts.product()->end(); csc++)
-	{
-		CSCCorrelatedLCTDigiCollection::Range range1 = corrlcts.product()->get((*csc).first);
-		CSCCorrelatedLCTDigiCollection::const_iterator lct;
-		for(lct = range1.first; lct!= range1.second; lct++)
-		{
-			int bunchX = ( (lct->getBX()) - 6 );
-			//std::cout << "Bunch Crossing: " << bunchX << "." << std::endl;
 		}
 	}
 
