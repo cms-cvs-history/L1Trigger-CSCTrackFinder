@@ -47,6 +47,7 @@ void vpp_generated::wrap
 	unsigned mindphi_halop, unsigned mindeta_halop,
 
 	unsigned straightp, unsigned curvedp,
+	unsigned mb1a_phi_offp, unsigned mb1b_phi_offp,
 	unsigned controlp
 )
 {
@@ -164,6 +165,8 @@ void vpp_generated::wrap
 
 	straight = straightp;
 	curved = curvedp;
+	mb1a_phi_off = mb1a_phi_offp;
+	mb1b_phi_off = mb1b_phi_offp;
 
 	// drive clock up and down
 	for (int i = 1; i >= 0; i--)

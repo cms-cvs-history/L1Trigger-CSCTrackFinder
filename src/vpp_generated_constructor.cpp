@@ -5,7 +5,7 @@
 // VPP library web-page: http://www.phys.ufl.edu/~madorsky/vpp/
 
 // Author    : madorsky
-// Timestamp : Thu Mar 26 13:01:21 2009
+// Timestamp : Thu Sep 17 15:04:16 2009
 
 #include "vpp_generated.h"
 vpp_generated::vpp_generated()
@@ -585,9 +585,13 @@ vpp_generated::vpp_generated()
 	spvpp_ptu3c_SelPhi_ptr_b_10_10 = (utype_b_10_10*) &spvpp_ptu3c_SelPhi;
 	RC_spvpp_bxcorrect_tid_ptr_b_10_9 = (utype_b_10_9*) &RC_spvpp_bxcorrect_tid;
 	spvpp_bxcorrect_tid_ptr_b_10_9 = (utype_b_10_9*) &spvpp_bxcorrect_tid;
+	RC_mb1ap_ptr_b_11_0 = (utype_b_11_0*) &RC_mb1ap;
+	RC_mb1bp_ptr_b_11_0 = (utype_b_11_0*) &RC_mb1bp;
 	RC_spvpp_Eqme12r_ptr_b_11_0 = (utype_b_11_0*) &RC_spvpp_Eqme12r;
 	RC_spvpp_Eqme13r_ptr_b_11_0 = (utype_b_11_0*) &RC_spvpp_Eqme13r;
 	RC_spvpp_Eqme14r_ptr_b_11_0 = (utype_b_11_0*) &RC_spvpp_Eqme14r;
+	RC_spvpp_dtbx_0_phi_ptr_b_11_0 = (utype_b_11_0*) &RC_spvpp_dtbx_0_phi;
+	RC_spvpp_dtbx_1_phi_ptr_b_11_0 = (utype_b_11_0*) &RC_spvpp_dtbx_1_phi;
 	RC_spvpp_mb1_LB_0_RB__ptr_b_11_0 = (utype_b_11_0*) &RC_spvpp_mb1[0];
 	RC_spvpp_mb1_LB_1_RB__ptr_b_11_0 = (utype_b_11_0*) &RC_spvpp_mb1[1];
 	RC_spvpp_mb1_LB_2_RB__ptr_b_11_0 = (utype_b_11_0*) &RC_spvpp_mb1[2];
@@ -643,9 +647,13 @@ vpp_generated::vpp_generated()
 	RC_spvpp_ptub2a_d_ptr_b_11_0 = (utype_b_11_0*) &RC_spvpp_ptub2a_d;
 	RC_spvpp_ptub2b_d_ptr_b_11_0 = (utype_b_11_0*) &RC_spvpp_ptub2b_d;
 	RC_spvpp_ptub2c_d_ptr_b_11_0 = (utype_b_11_0*) &RC_spvpp_ptub2c_d;
+	mb1ap_ptr_b_11_0 = (utype_b_11_0*) &mb1ap;
+	mb1bp_ptr_b_11_0 = (utype_b_11_0*) &mb1bp;
 	spvpp_Eqme12r_ptr_b_11_0 = (utype_b_11_0*) &spvpp_Eqme12r;
 	spvpp_Eqme13r_ptr_b_11_0 = (utype_b_11_0*) &spvpp_Eqme13r;
 	spvpp_Eqme14r_ptr_b_11_0 = (utype_b_11_0*) &spvpp_Eqme14r;
+	spvpp_dtbx_0_phi_ptr_b_11_0 = (utype_b_11_0*) &spvpp_dtbx_0_phi;
+	spvpp_dtbx_1_phi_ptr_b_11_0 = (utype_b_11_0*) &spvpp_dtbx_1_phi;
 	spvpp_mb1_LB_0_RB__ptr_b_11_0 = (utype_b_11_0*) &spvpp_mb1[0];
 	spvpp_mb1_LB_1_RB__ptr_b_11_0 = (utype_b_11_0*) &spvpp_mb1[1];
 	spvpp_mb1_LB_2_RB__ptr_b_11_0 = (utype_b_11_0*) &spvpp_mb1[2];
@@ -929,10 +937,14 @@ vpp_generated::vpp_generated()
 	spvpp_u2b1_9_mbB_ptr_b_12_10 = (utype_b_12_10*) &spvpp_u2b1_9_mbB;
 	RC_spvpp_bxcorrect_tid_ptr_b_12_11 = (utype_b_12_11*) &RC_spvpp_bxcorrect_tid;
 	spvpp_bxcorrect_tid_ptr_b_12_11 = (utype_b_12_11*) &spvpp_bxcorrect_tid;
+	RC_mb1a_phi_off_ptr_b_12_12 = (utype_b_12_12*) &RC_mb1a_phi_off;
+	RC_mb1b_phi_off_ptr_b_12_12 = (utype_b_12_12*) &RC_mb1b_phi_off;
 	RC_spvpp_Eqme12a_ptr_b_12_12 = (utype_b_12_12*) &RC_spvpp_Eqme12a;
 	RC_spvpp_Eqme12ov_ptr_b_12_12 = (utype_b_12_12*) &RC_spvpp_Eqme12ov;
 	RC_spvpp_Eqme13a_ptr_b_12_12 = (utype_b_12_12*) &RC_spvpp_Eqme13a;
 	RC_spvpp_Eqme14a_ptr_b_12_12 = (utype_b_12_12*) &RC_spvpp_Eqme14a;
+	RC_spvpp_dtbx_0_phi_ptr_b_12_12 = (utype_b_12_12*) &RC_spvpp_dtbx_0_phi;
+	RC_spvpp_dtbx_1_phi_ptr_b_12_12 = (utype_b_12_12*) &RC_spvpp_dtbx_1_phi;
 	RC_spvpp_pass12_ptr_b_12_12 = (utype_b_12_12*) &RC_spvpp_pass12;
 	RC_spvpp_pass12ov_ptr_b_12_12 = (utype_b_12_12*) &RC_spvpp_pass12ov;
 	RC_spvpp_pass13_ptr_b_12_12 = (utype_b_12_12*) &RC_spvpp_pass13;
@@ -955,10 +967,14 @@ vpp_generated::vpp_generated()
 	RC_spvpp_ptub2a_d_ptr_b_12_12 = (utype_b_12_12*) &RC_spvpp_ptub2a_d;
 	RC_spvpp_ptub2b_d_ptr_b_12_12 = (utype_b_12_12*) &RC_spvpp_ptub2b_d;
 	RC_spvpp_ptub2c_d_ptr_b_12_12 = (utype_b_12_12*) &RC_spvpp_ptub2c_d;
+	mb1a_phi_off_ptr_b_12_12 = (utype_b_12_12*) &mb1a_phi_off;
+	mb1b_phi_off_ptr_b_12_12 = (utype_b_12_12*) &mb1b_phi_off;
 	spvpp_Eqme12a_ptr_b_12_12 = (utype_b_12_12*) &spvpp_Eqme12a;
 	spvpp_Eqme12ov_ptr_b_12_12 = (utype_b_12_12*) &spvpp_Eqme12ov;
 	spvpp_Eqme13a_ptr_b_12_12 = (utype_b_12_12*) &spvpp_Eqme13a;
 	spvpp_Eqme14a_ptr_b_12_12 = (utype_b_12_12*) &spvpp_Eqme14a;
+	spvpp_dtbx_0_phi_ptr_b_12_12 = (utype_b_12_12*) &spvpp_dtbx_0_phi;
+	spvpp_dtbx_1_phi_ptr_b_12_12 = (utype_b_12_12*) &spvpp_dtbx_1_phi;
 	spvpp_pass12_ptr_b_12_12 = (utype_b_12_12*) &spvpp_pass12;
 	spvpp_pass12ov_ptr_b_12_12 = (utype_b_12_12*) &spvpp_pass12ov;
 	spvpp_pass13_ptr_b_12_12 = (utype_b_12_12*) &spvpp_pass13;
@@ -996,6 +1012,12 @@ vpp_generated::vpp_generated()
 	RC_spvpp_ptub2a_d_ptr_b_12_9 = (utype_b_12_9*) &RC_spvpp_ptub2a_d;
 	RC_spvpp_ptub2b_d_ptr_b_12_9 = (utype_b_12_9*) &RC_spvpp_ptub2b_d;
 	RC_spvpp_ptub2c_d_ptr_b_12_9 = (utype_b_12_9*) &RC_spvpp_ptub2c_d;
+	RC_spvpp_u2aIdt_ptr_b_12_9 = (utype_b_12_9*) &RC_spvpp_u2aIdt;
+	RC_spvpp_u2bIdt_ptr_b_12_9 = (utype_b_12_9*) &RC_spvpp_u2bIdt;
+	RC_spvpp_u2cIdt_ptr_b_12_9 = (utype_b_12_9*) &RC_spvpp_u2cIdt;
+	RC_spvpp_u3aIdt_ptr_b_12_9 = (utype_b_12_9*) &RC_spvpp_u3aIdt;
+	RC_spvpp_u3bIdt_ptr_b_12_9 = (utype_b_12_9*) &RC_spvpp_u3bIdt;
+	RC_spvpp_u3cIdt_ptr_b_12_9 = (utype_b_12_9*) &RC_spvpp_u3cIdt;
 	idHp_ptr_b_12_9 = (utype_b_12_9*) &idHp;
 	idLp_ptr_b_12_9 = (utype_b_12_9*) &idLp;
 	idMp_ptr_b_12_9 = (utype_b_12_9*) &idMp;
@@ -1011,6 +1033,12 @@ vpp_generated::vpp_generated()
 	spvpp_ptub2a_d_ptr_b_12_9 = (utype_b_12_9*) &spvpp_ptub2a_d;
 	spvpp_ptub2b_d_ptr_b_12_9 = (utype_b_12_9*) &spvpp_ptub2b_d;
 	spvpp_ptub2c_d_ptr_b_12_9 = (utype_b_12_9*) &spvpp_ptub2c_d;
+	spvpp_u2aIdt_ptr_b_12_9 = (utype_b_12_9*) &spvpp_u2aIdt;
+	spvpp_u2bIdt_ptr_b_12_9 = (utype_b_12_9*) &spvpp_u2bIdt;
+	spvpp_u2cIdt_ptr_b_12_9 = (utype_b_12_9*) &spvpp_u2cIdt;
+	spvpp_u3aIdt_ptr_b_12_9 = (utype_b_12_9*) &spvpp_u3aIdt;
+	spvpp_u3bIdt_ptr_b_12_9 = (utype_b_12_9*) &spvpp_u3bIdt;
+	spvpp_u3cIdt_ptr_b_12_9 = (utype_b_12_9*) &spvpp_u3cIdt;
 	RC_spvpp_Eq2b1_ptr_b_13_12 = (utype_b_13_12*) &RC_spvpp_Eq2b1;
 	RC_spvpp_Eqme12_ptr_b_13_12 = (utype_b_13_12*) &RC_spvpp_Eqme12;
 	RC_spvpp_Eqme13_ptr_b_13_12 = (utype_b_13_12*) &RC_spvpp_Eqme13;
@@ -1041,10 +1069,10 @@ vpp_generated::vpp_generated()
 	spvpp_ub2aIdrrr_ptr_b_13_9 = (utype_b_13_9*) &spvpp_ub2aIdrrr;
 	spvpp_ub2bIdrrr_ptr_b_13_9 = (utype_b_13_9*) &spvpp_ub2bIdrrr;
 	spvpp_ub2cIdrrr_ptr_b_13_9 = (utype_b_13_9*) &spvpp_ub2cIdrrr;
-	RC_mb1ap_ptr_b_14_0 = (utype_b_14_0*) &RC_mb1ap;
-	RC_mb1bp_ptr_b_14_0 = (utype_b_14_0*) &RC_mb1bp;
-	mb1ap_ptr_b_14_0 = (utype_b_14_0*) &mb1ap;
-	mb1bp_ptr_b_14_0 = (utype_b_14_0*) &mb1bp;
+	RC_spvpp_dtbx_0_mb1a_ptr_b_14_0 = (utype_b_14_0*) &RC_spvpp_dtbx_0_mb1a;
+	RC_spvpp_dtbx_1_mb1a_ptr_b_14_0 = (utype_b_14_0*) &RC_spvpp_dtbx_1_mb1a;
+	spvpp_dtbx_0_mb1a_ptr_b_14_0 = (utype_b_14_0*) &spvpp_dtbx_0_mb1a;
+	spvpp_dtbx_1_mb1a_ptr_b_14_0 = (utype_b_14_0*) &spvpp_dtbx_1_mb1a;
 	RC_spvpp_bxa__bxamb1_tin_ptr_b_14_12 = (utype_b_14_12*) &RC_spvpp_bxa__bxamb1_tin;
 	spvpp_bxa__bxamb1_tin_ptr_b_14_12 = (utype_b_14_12*) &spvpp_bxa__bxamb1_tin;
 	RC_spvpp_bxcorrect_tid_ptr_b_14_13 = (utype_b_14_13*) &RC_spvpp_bxcorrect_tid;
@@ -1073,6 +1101,10 @@ vpp_generated::vpp_generated()
 	spvpp_mb1_LB_1_RB__ptr_b_14_2 = (utype_b_14_2*) &spvpp_mb1[1];
 	spvpp_mb1_LB_2_RB__ptr_b_14_2 = (utype_b_14_2*) &spvpp_mb1[2];
 	spvpp_mb1_LB_3_RB__ptr_b_14_2 = (utype_b_14_2*) &spvpp_mb1[3];
+	RC_mb1ap_ptr_b_15_12 = (utype_b_15_12*) &RC_mb1ap;
+	RC_mb1bp_ptr_b_15_12 = (utype_b_15_12*) &RC_mb1bp;
+	mb1ap_ptr_b_15_12 = (utype_b_15_12*) &mb1ap;
+	mb1bp_ptr_b_15_12 = (utype_b_15_12*) &mb1bp;
 	RC_spvpp_Eq2b1_ptr_b_15_14 = (utype_b_15_14*) &RC_spvpp_Eq2b1;
 	RC_spvpp_Eqme12_ptr_b_15_14 = (utype_b_15_14*) &RC_spvpp_Eqme12;
 	RC_spvpp_Eqme13_ptr_b_15_14 = (utype_b_15_14*) &RC_spvpp_Eqme13;
@@ -1081,22 +1113,22 @@ vpp_generated::vpp_generated()
 	spvpp_Eqme12_ptr_b_15_14 = (utype_b_15_14*) &spvpp_Eqme12;
 	spvpp_Eqme13_ptr_b_15_14 = (utype_b_15_14*) &spvpp_Eqme13;
 	spvpp_Eqme14_ptr_b_15_14 = (utype_b_15_14*) &spvpp_Eqme14;
-	RC_mb1ap_ptr_b_15_15 = (utype_b_15_15*) &RC_mb1ap;
-	RC_mb1bp_ptr_b_15_15 = (utype_b_15_15*) &RC_mb1bp;
 	RC_spvpp_Eqme12a_ptr_b_15_15 = (utype_b_15_15*) &RC_spvpp_Eqme12a;
 	RC_spvpp_Eqme12ov_ptr_b_15_15 = (utype_b_15_15*) &RC_spvpp_Eqme12ov;
 	RC_spvpp_Eqme13a_ptr_b_15_15 = (utype_b_15_15*) &RC_spvpp_Eqme13a;
 	RC_spvpp_Eqme14a_ptr_b_15_15 = (utype_b_15_15*) &RC_spvpp_Eqme14a;
+	RC_spvpp_dtbx_0_mb1a_ptr_b_15_15 = (utype_b_15_15*) &RC_spvpp_dtbx_0_mb1a;
+	RC_spvpp_dtbx_1_mb1a_ptr_b_15_15 = (utype_b_15_15*) &RC_spvpp_dtbx_1_mb1a;
 	RC_spvpp_pass12_ptr_b_15_15 = (utype_b_15_15*) &RC_spvpp_pass12;
 	RC_spvpp_pass12ov_ptr_b_15_15 = (utype_b_15_15*) &RC_spvpp_pass12ov;
 	RC_spvpp_pass13_ptr_b_15_15 = (utype_b_15_15*) &RC_spvpp_pass13;
 	RC_spvpp_pass14_ptr_b_15_15 = (utype_b_15_15*) &RC_spvpp_pass14;
-	mb1ap_ptr_b_15_15 = (utype_b_15_15*) &mb1ap;
-	mb1bp_ptr_b_15_15 = (utype_b_15_15*) &mb1bp;
 	spvpp_Eqme12a_ptr_b_15_15 = (utype_b_15_15*) &spvpp_Eqme12a;
 	spvpp_Eqme12ov_ptr_b_15_15 = (utype_b_15_15*) &spvpp_Eqme12ov;
 	spvpp_Eqme13a_ptr_b_15_15 = (utype_b_15_15*) &spvpp_Eqme13a;
 	spvpp_Eqme14a_ptr_b_15_15 = (utype_b_15_15*) &spvpp_Eqme14a;
+	spvpp_dtbx_0_mb1a_ptr_b_15_15 = (utype_b_15_15*) &spvpp_dtbx_0_mb1a;
+	spvpp_dtbx_1_mb1a_ptr_b_15_15 = (utype_b_15_15*) &spvpp_dtbx_1_mb1a;
 	spvpp_pass12_ptr_b_15_15 = (utype_b_15_15*) &spvpp_pass12;
 	spvpp_pass12ov_ptr_b_15_15 = (utype_b_15_15*) &spvpp_pass12ov;
 	spvpp_pass13_ptr_b_15_15 = (utype_b_15_15*) &spvpp_pass13;
@@ -5420,6 +5452,12 @@ vpp_generated::vpp_generated()
 	RC_spvpp_bxa__bxame3_larg1_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_bxa__bxame3_larg1;
 	RC_spvpp_bxa__bxame4_larg1_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_bxa__bxame4_larg1;
 	RC_spvpp_bxcorrect_larg1_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_bxcorrect_larg1;
+	RC_spvpp_u2aIdt_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_u2aIdt;
+	RC_spvpp_u2bIdt_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_u2bIdt;
+	RC_spvpp_u2cIdt_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_u2cIdt;
+	RC_spvpp_u3aIdt_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_u3aIdt;
+	RC_spvpp_u3bIdt_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_u3bIdt;
+	RC_spvpp_u3cIdt_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_u3cIdt;
 	RC_spvpp_u4aIdrrr_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_u4aIdrrr;
 	RC_spvpp_u4bIdrrr_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_u4bIdrrr;
 	RC_spvpp_u4cIdrrr_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_u4cIdrrr;
@@ -5438,6 +5476,12 @@ vpp_generated::vpp_generated()
 	spvpp_bxa__bxame3_larg1_ptr_b_8_5 = (utype_b_8_5*) &spvpp_bxa__bxame3_larg1;
 	spvpp_bxa__bxame4_larg1_ptr_b_8_5 = (utype_b_8_5*) &spvpp_bxa__bxame4_larg1;
 	spvpp_bxcorrect_larg1_ptr_b_8_5 = (utype_b_8_5*) &spvpp_bxcorrect_larg1;
+	spvpp_u2aIdt_ptr_b_8_5 = (utype_b_8_5*) &spvpp_u2aIdt;
+	spvpp_u2bIdt_ptr_b_8_5 = (utype_b_8_5*) &spvpp_u2bIdt;
+	spvpp_u2cIdt_ptr_b_8_5 = (utype_b_8_5*) &spvpp_u2cIdt;
+	spvpp_u3aIdt_ptr_b_8_5 = (utype_b_8_5*) &spvpp_u3aIdt;
+	spvpp_u3bIdt_ptr_b_8_5 = (utype_b_8_5*) &spvpp_u3bIdt;
+	spvpp_u3cIdt_ptr_b_8_5 = (utype_b_8_5*) &spvpp_u3cIdt;
 	spvpp_u4aIdrrr_ptr_b_8_5 = (utype_b_8_5*) &spvpp_u4aIdrrr;
 	spvpp_u4bIdrrr_ptr_b_8_5 = (utype_b_8_5*) &spvpp_u4bIdrrr;
 	spvpp_u4cIdrrr_ptr_b_8_5 = (utype_b_8_5*) &spvpp_u4cIdrrr;

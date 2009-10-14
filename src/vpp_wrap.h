@@ -45,5 +45,6 @@ void wrap
 	unsigned mindphi_halop, unsigned mindeta_halop,
 
 	unsigned straightp, unsigned curvedp,
+	unsigned mb1a_phi_offp, unsigned mb1b_phi_offp,
 	unsigned controlp
 );

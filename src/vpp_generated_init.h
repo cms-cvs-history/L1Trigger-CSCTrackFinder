@@ -5,7 +5,7 @@
 // VPP library web-page: http://www.phys.ufl.edu/~madorsky/vpp/
 
 // Author    : madorsky
-// Timestamp : Thu Mar 26 13:01:21 2009
+// Timestamp : Thu Sep 17 15:04:16 2009
 
 siginit (clkp);
 siginit (control);
@@ -29,7 +29,9 @@ siginit (maxdphi_halo112);
 siginit (maxdphi_halo113);
 siginit (maxdphi_halo12);
 siginit (maxdphi_halo13);
+siginit (mb1a_phi_off);
 siginit (mb1ap);
+siginit (mb1b_phi_off);
 siginit (mb1bp);
 siginit (me1ap);
 siginit (me1ar);
@@ -415,8 +417,12 @@ siginit (spvpp_bxcorrect_stubd);
 siginit (spvpp_bxcorrect_stubn);
 siginit (spvpp_bxcorrect_tid);
 siginit (spvpp_bxcorrect_zcnt);
+siginit (spvpp_dtbx_0_mb1a);
 siginit (spvpp_dtbx_0_mb1ar);
+siginit (spvpp_dtbx_0_phi);
+siginit (spvpp_dtbx_1_mb1a);
 siginit (spvpp_dtbx_1_mb1ar);
+siginit (spvpp_dtbx_1_phi);
 siginit (spvpp_etaPT2a);
 siginit (spvpp_etaPT2ar);
 siginit (spvpp_etaPT2arr);

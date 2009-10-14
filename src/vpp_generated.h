@@ -5,7 +5,7 @@
 // VPP library web-page: http://www.phys.ufl.edu/~madorsky/vpp/
 
 // Author    : madorsky
-// Timestamp : Thu Mar 26 13:01:21 2009
+// Timestamp : Thu Sep 17 15:04:16 2009
 
 #ifndef __VPP_GENERATED_H__
 #define __VPP_GENERATED_H__
@@ -17,6 +17,8 @@ typedef union {ULLONG u; struct fl{ULLONG l : 12; ULLONG h : 7;}f;} utype_b_18_1
 typedef union {ULLONG u; struct fl{ULLONG l : 19; ULLONG h : 4;}f;} utype_b_22_19;
 typedef union {ULLONG u; struct fl{ULLONG l : 23; ULLONG h : 4;}f;} utype_b_26_23;
 typedef union {ULLONG u; struct fl{ULLONG l : 23; ULLONG h : 1;}f;} utype_b_23_23;
+typedef union {ULLONG u; struct fl{ULLONG l : 12; ULLONG h : 1;}f;} utype_b_12_12;
+typedef union {ULLONG u; struct fl{ULLONG l : 12; ULLONG h : 4;}f;} utype_b_15_12;
 typedef union {ULLONG u; struct fl{ULLONG l : 15; ULLONG h : 1;}f;} utype_b_15_15;
 typedef union {ULLONG u; struct fl{ULLONG h : 15;}f;} utype_b_14_0;
 typedef union {ULLONG u; struct fl{ULLONG l : 1; ULLONG h : 2;}f;} utype_b_2_1;
@@ -60,7 +62,6 @@ typedef union {ULLONG u; struct fl{ULLONG h : 9;}f;} utype_b_8_0;
 typedef union {ULLONG u; struct fl{ULLONG l : 10; ULLONG h : 2;}f;} utype_b_11_10;
 typedef union {ULLONG u; struct fl{ULLONG h : 10;}f;} utype_b_9_0;
 typedef union {ULLONG u; struct fl{ULLONG h : 11;}f;} utype_b_10_0;
-typedef union {ULLONG u; struct fl{ULLONG l : 12; ULLONG h : 1;}f;} utype_b_12_12;
 typedef union {ULLONG u; struct fl{ULLONG l : 13; ULLONG h : 1;}f;} utype_b_13_13;
 typedef union {ULLONG u; struct fl{ULLONG l : 14; ULLONG h : 1;}f;} utype_b_14_14;
 typedef union {ULLONG u; struct fl{ULLONG l : 16; ULLONG h : 1;}f;} utype_b_16_16;
@@ -99,9 +100,9 @@ typedef union {ULLONG u; struct fl{ULLONG l : 8; ULLONG h : 8;}f;} utype_b_15_8;
 typedef union {ULLONG u; struct fl{ULLONG l : 24; ULLONG h : 12;}f;} utype_b_35_24;
 typedef union {ULLONG u; struct fl{ULLONG l : 12; ULLONG h : 6;}f;} utype_b_17_12;
 typedef union {ULLONG u; struct fl{ULLONG l : 16; ULLONG h : 8;}f;} utype_b_23_16;
+typedef union {ULLONG u; struct fl{ULLONG l : 9; ULLONG h : 4;}f;} utype_b_12_9;
 typedef union {ULLONG u; struct fl{ULLONG l : 4; ULLONG h : 4;}f;} utype_b_7_4;
 typedef union {ULLONG u; struct fl{ULLONG l : 1; ULLONG h : 4;}f;} utype_b_4_1;
-typedef union {ULLONG u; struct fl{ULLONG l : 9; ULLONG h : 4;}f;} utype_b_12_9;
 typedef union {ULLONG u; struct fl{ULLONG l : 1; ULLONG h : 5;}f;} utype_b_5_1;
 typedef union {ULLONG u; struct fl{ULLONG l : 2; ULLONG h : 4;}f;} utype_b_5_2;
 typedef union {ULLONG u; struct fl{ULLONG l : 14; ULLONG h : 5;}f;} utype_b_18_14;
@@ -125,6 +126,239 @@ class vpp_generated
 	void run();
 #include "vpp_wrap.h"
 	int __glob__change__;
+	void au2_0();
+	void au2_1();
+	void au2_2();
+	void au2a_0();
+	void au2a_1();
+	void au2a_2();
+	void au2b_0();
+	void au2b_1();
+	void au2b_2();
+	void au3_0();
+	void au3_1();
+	void au3_2();
+	void au3a_0();
+	void au3a_1();
+	void au3a_2();
+	void au4_0();
+	void au4_1();
+	void au4_2();
+	void bxa_();
+	void bxamb1();
+	void bxame1ac();
+	void bxame1df();
+	void bxame2();
+	void bxame3();
+	void bxame4();
+	void bxcorrect();
+	void dtbx_0();
+	void dtbx_1();
+	void etu12_0();
+	void etu12_1();
+	void etu12_10();
+	void etu12_11();
+	void etu12_12();
+	void etu12_13();
+	void etu12_14();
+	void etu12_15();
+	void etu12_16();
+	void etu12_17();
+	void etu12_2();
+	void etu12_3();
+	void etu12_4();
+	void etu12_5();
+	void etu12_6();
+	void etu12_7();
+	void etu12_8();
+	void etu12_9();
+	void etu12ov_0();
+	void etu12ov_1();
+	void etu12ov_10();
+	void etu12ov_11();
+	void etu12ov_12();
+	void etu12ov_13();
+	void etu12ov_14();
+	void etu12ov_15();
+	void etu12ov_16();
+	void etu12ov_17();
+	void etu12ov_2();
+	void etu12ov_3();
+	void etu12ov_4();
+	void etu12ov_5();
+	void etu12ov_6();
+	void etu12ov_7();
+	void etu12ov_8();
+	void etu12ov_9();
+	void etu13_0();
+	void etu13_1();
+	void etu13_10();
+	void etu13_11();
+	void etu13_12();
+	void etu13_13();
+	void etu13_14();
+	void etu13_15();
+	void etu13_16();
+	void etu13_17();
+	void etu13_2();
+	void etu13_3();
+	void etu13_4();
+	void etu13_5();
+	void etu13_6();
+	void etu13_7();
+	void etu13_8();
+	void etu13_9();
+	void etu14_0();
+	void etu14_1();
+	void etu14_10();
+	void etu14_11();
+	void etu14_12();
+	void etu14_13();
+	void etu14_14();
+	void etu14_15();
+	void etu14_16();
+	void etu14_17();
+	void etu14_2();
+	void etu14_3();
+	void etu14_4();
+	void etu14_5();
+	void etu14_6();
+	void etu14_7();
+	void etu14_8();
+	void etu14_9();
+	void fsuv();
+	void fsuva();
+	void mux();
+	void ptu2a();
+	void ptu2b();
+	void ptu2c();
+	void ptu3a();
+	void ptu3b();
+	void ptu3c();
+	void ptu4a();
+	void ptu4b();
+	void ptu4c();
+	void ptua2a();
+	void ptua2b();
+	void ptua2c();
+	void ptua3a();
+	void ptua3b();
+	void ptua3c();
+	void ptub2a();
+	void ptub2b();
+	void ptub2c();
+	void spvpp();
+	void u12_0();
+	void u12_1();
+	void u12_10();
+	void u12_11();
+	void u12_12();
+	void u12_13();
+	void u12_14();
+	void u12_15();
+	void u12_16();
+	void u12_17();
+	void u12_2();
+	void u12_3();
+	void u12_4();
+	void u12_5();
+	void u12_6();
+	void u12_7();
+	void u12_8();
+	void u12_9();
+	void u12ov_0();
+	void u12ov_1();
+	void u12ov_10();
+	void u12ov_11();
+	void u12ov_12();
+	void u12ov_13();
+	void u12ov_14();
+	void u12ov_15();
+	void u12ov_16();
+	void u12ov_17();
+	void u12ov_2();
+	void u12ov_3();
+	void u12ov_4();
+	void u12ov_5();
+	void u12ov_6();
+	void u12ov_7();
+	void u12ov_8();
+	void u12ov_9();
+	void u13_0();
+	void u13_1();
+	void u13_10();
+	void u13_11();
+	void u13_12();
+	void u13_13();
+	void u13_14();
+	void u13_15();
+	void u13_16();
+	void u13_17();
+	void u13_2();
+	void u13_3();
+	void u13_4();
+	void u13_5();
+	void u13_6();
+	void u13_7();
+	void u13_8();
+	void u13_9();
+	void u14_0();
+	void u14_1();
+	void u14_10();
+	void u14_11();
+	void u14_12();
+	void u14_13();
+	void u14_14();
+	void u14_15();
+	void u14_16();
+	void u14_17();
+	void u14_2();
+	void u14_3();
+	void u14_4();
+	void u14_5();
+	void u14_6();
+	void u14_7();
+	void u14_8();
+	void u14_9();
+	void u23_0();
+	void u23_1();
+	void u23_2();
+	void u23_3();
+	void u23_4();
+	void u23_5();
+	void u23_6();
+	void u23_7();
+	void u23_8();
+	void u24_0();
+	void u24_1();
+	void u24_2();
+	void u24_3();
+	void u24_4();
+	void u24_5();
+	void u24_6();
+	void u24_7();
+	void u24_8();
+	void u2b1_0();
+	void u2b1_1();
+	void u2b1_10();
+	void u2b1_11();
+	void u2b1_2();
+	void u2b1_3();
+	void u2b1_4();
+	void u2b1_5();
+	void u2b1_6();
+	void u2b1_7();
+	void u2b1_8();
+	void u2b1_9();
+	void u34_0();
+	void u34_1();
+	void u34_2();
+	void u34_3();
+	void u34_4();
+	void u34_5();
+	void u34_6();
+	void u34_7();
+	void u34_8();
 	Signal (clkp) 
 	Signal (control) 
 	Signal (curved) 
@@ -147,7 +381,9 @@ class vpp_generated
 	Signal (maxdphi_halo113) 
 	Signal (maxdphi_halo12) 
 	Signal (maxdphi_halo13) 
+	Signal (mb1a_phi_off) 
 	Signal (mb1ap) 
+	Signal (mb1b_phi_off) 
 	Signal (mb1bp) 
 	Signal (me1ap) 
 	Signal (me1ar) 
@@ -533,8 +769,12 @@ class vpp_generated
 	Signal (spvpp_bxcorrect_stubn) 
 	Signal (spvpp_bxcorrect_tid) 
 	Signal (spvpp_bxcorrect_zcnt) 
+	Signal (spvpp_dtbx_0_mb1a) 
 	Signal (spvpp_dtbx_0_mb1ar) 
+	Signal (spvpp_dtbx_0_phi) 
+	Signal (spvpp_dtbx_1_mb1a) 
 	Signal (spvpp_dtbx_1_mb1ar) 
+	Signal (spvpp_dtbx_1_phi) 
 	Signal (spvpp_etaPT2a) 
 	Signal (spvpp_etaPT2ar) 
 	Signal (spvpp_etaPT2arr) 
@@ -4561,9 +4801,13 @@ class vpp_generated
 	utype_b_10_10 *spvpp_ptu3c_SelPhi_ptr_b_10_10;
 	utype_b_10_9 *RC_spvpp_bxcorrect_tid_ptr_b_10_9;
 	utype_b_10_9 *spvpp_bxcorrect_tid_ptr_b_10_9;
+	utype_b_11_0 *RC_mb1ap_ptr_b_11_0;
+	utype_b_11_0 *RC_mb1bp_ptr_b_11_0;
 	utype_b_11_0 *RC_spvpp_Eqme12r_ptr_b_11_0;
 	utype_b_11_0 *RC_spvpp_Eqme13r_ptr_b_11_0;
 	utype_b_11_0 *RC_spvpp_Eqme14r_ptr_b_11_0;
+	utype_b_11_0 *RC_spvpp_dtbx_0_phi_ptr_b_11_0;
+	utype_b_11_0 *RC_spvpp_dtbx_1_phi_ptr_b_11_0;
 	utype_b_11_0 *RC_spvpp_mb1_LB_0_RB__ptr_b_11_0;
 	utype_b_11_0 *RC_spvpp_mb1_LB_1_RB__ptr_b_11_0;
 	utype_b_11_0 *RC_spvpp_mb1_LB_2_RB__ptr_b_11_0;
@@ -4619,9 +4863,13 @@ class vpp_generated
 	utype_b_11_0 *RC_spvpp_ptub2a_d_ptr_b_11_0;
 	utype_b_11_0 *RC_spvpp_ptub2b_d_ptr_b_11_0;
 	utype_b_11_0 *RC_spvpp_ptub2c_d_ptr_b_11_0;
+	utype_b_11_0 *mb1ap_ptr_b_11_0;
+	utype_b_11_0 *mb1bp_ptr_b_11_0;
 	utype_b_11_0 *spvpp_Eqme12r_ptr_b_11_0;
 	utype_b_11_0 *spvpp_Eqme13r_ptr_b_11_0;
 	utype_b_11_0 *spvpp_Eqme14r_ptr_b_11_0;
+	utype_b_11_0 *spvpp_dtbx_0_phi_ptr_b_11_0;
+	utype_b_11_0 *spvpp_dtbx_1_phi_ptr_b_11_0;
 	utype_b_11_0 *spvpp_mb1_LB_0_RB__ptr_b_11_0;
 	utype_b_11_0 *spvpp_mb1_LB_1_RB__ptr_b_11_0;
 	utype_b_11_0 *spvpp_mb1_LB_2_RB__ptr_b_11_0;
@@ -4905,10 +5153,14 @@ class vpp_generated
 	utype_b_12_10 *spvpp_u2b1_9_mbB_ptr_b_12_10;
 	utype_b_12_11 *RC_spvpp_bxcorrect_tid_ptr_b_12_11;
 	utype_b_12_11 *spvpp_bxcorrect_tid_ptr_b_12_11;
+	utype_b_12_12 *RC_mb1a_phi_off_ptr_b_12_12;
+	utype_b_12_12 *RC_mb1b_phi_off_ptr_b_12_12;
 	utype_b_12_12 *RC_spvpp_Eqme12a_ptr_b_12_12;
 	utype_b_12_12 *RC_spvpp_Eqme12ov_ptr_b_12_12;
 	utype_b_12_12 *RC_spvpp_Eqme13a_ptr_b_12_12;
 	utype_b_12_12 *RC_spvpp_Eqme14a_ptr_b_12_12;
+	utype_b_12_12 *RC_spvpp_dtbx_0_phi_ptr_b_12_12;
+	utype_b_12_12 *RC_spvpp_dtbx_1_phi_ptr_b_12_12;
 	utype_b_12_12 *RC_spvpp_pass12_ptr_b_12_12;
 	utype_b_12_12 *RC_spvpp_pass12ov_ptr_b_12_12;
 	utype_b_12_12 *RC_spvpp_pass13_ptr_b_12_12;
@@ -4931,10 +5183,14 @@ class vpp_generated
 	utype_b_12_12 *RC_spvpp_ptub2a_d_ptr_b_12_12;
 	utype_b_12_12 *RC_spvpp_ptub2b_d_ptr_b_12_12;
 	utype_b_12_12 *RC_spvpp_ptub2c_d_ptr_b_12_12;
+	utype_b_12_12 *mb1a_phi_off_ptr_b_12_12;
+	utype_b_12_12 *mb1b_phi_off_ptr_b_12_12;
 	utype_b_12_12 *spvpp_Eqme12a_ptr_b_12_12;
 	utype_b_12_12 *spvpp_Eqme12ov_ptr_b_12_12;
 	utype_b_12_12 *spvpp_Eqme13a_ptr_b_12_12;
 	utype_b_12_12 *spvpp_Eqme14a_ptr_b_12_12;
+	utype_b_12_12 *spvpp_dtbx_0_phi_ptr_b_12_12;
+	utype_b_12_12 *spvpp_dtbx_1_phi_ptr_b_12_12;
 	utype_b_12_12 *spvpp_pass12_ptr_b_12_12;
 	utype_b_12_12 *spvpp_pass12ov_ptr_b_12_12;
 	utype_b_12_12 *spvpp_pass13_ptr_b_12_12;
@@ -4972,6 +5228,12 @@ class vpp_generated
 	utype_b_12_9 *RC_spvpp_ptub2a_d_ptr_b_12_9;
 	utype_b_12_9 *RC_spvpp_ptub2b_d_ptr_b_12_9;
 	utype_b_12_9 *RC_spvpp_ptub2c_d_ptr_b_12_9;
+	utype_b_12_9 *RC_spvpp_u2aIdt_ptr_b_12_9;
+	utype_b_12_9 *RC_spvpp_u2bIdt_ptr_b_12_9;
+	utype_b_12_9 *RC_spvpp_u2cIdt_ptr_b_12_9;
+	utype_b_12_9 *RC_spvpp_u3aIdt_ptr_b_12_9;
+	utype_b_12_9 *RC_spvpp_u3bIdt_ptr_b_12_9;
+	utype_b_12_9 *RC_spvpp_u3cIdt_ptr_b_12_9;
 	utype_b_12_9 *idHp_ptr_b_12_9;
 	utype_b_12_9 *idLp_ptr_b_12_9;
 	utype_b_12_9 *idMp_ptr_b_12_9;
@@ -4987,6 +5249,12 @@ class vpp_generated
 	utype_b_12_9 *spvpp_ptub2a_d_ptr_b_12_9;
 	utype_b_12_9 *spvpp_ptub2b_d_ptr_b_12_9;
 	utype_b_12_9 *spvpp_ptub2c_d_ptr_b_12_9;
+	utype_b_12_9 *spvpp_u2aIdt_ptr_b_12_9;
+	utype_b_12_9 *spvpp_u2bIdt_ptr_b_12_9;
+	utype_b_12_9 *spvpp_u2cIdt_ptr_b_12_9;
+	utype_b_12_9 *spvpp_u3aIdt_ptr_b_12_9;
+	utype_b_12_9 *spvpp_u3bIdt_ptr_b_12_9;
+	utype_b_12_9 *spvpp_u3cIdt_ptr_b_12_9;
 	utype_b_13_12 *RC_spvpp_Eq2b1_ptr_b_13_12;
 	utype_b_13_12 *RC_spvpp_Eqme12_ptr_b_13_12;
 	utype_b_13_12 *RC_spvpp_Eqme13_ptr_b_13_12;
@@ -5017,10 +5285,10 @@ class vpp_generated
 	utype_b_13_9 *spvpp_ub2aIdrrr_ptr_b_13_9;
 	utype_b_13_9 *spvpp_ub2bIdrrr_ptr_b_13_9;
 	utype_b_13_9 *spvpp_ub2cIdrrr_ptr_b_13_9;
-	utype_b_14_0 *RC_mb1ap_ptr_b_14_0;
-	utype_b_14_0 *RC_mb1bp_ptr_b_14_0;
-	utype_b_14_0 *mb1ap_ptr_b_14_0;
-	utype_b_14_0 *mb1bp_ptr_b_14_0;
+	utype_b_14_0 *RC_spvpp_dtbx_0_mb1a_ptr_b_14_0;
+	utype_b_14_0 *RC_spvpp_dtbx_1_mb1a_ptr_b_14_0;
+	utype_b_14_0 *spvpp_dtbx_0_mb1a_ptr_b_14_0;
+	utype_b_14_0 *spvpp_dtbx_1_mb1a_ptr_b_14_0;
 	utype_b_14_12 *RC_spvpp_bxa__bxamb1_tin_ptr_b_14_12;
 	utype_b_14_12 *spvpp_bxa__bxamb1_tin_ptr_b_14_12;
 	utype_b_14_13 *RC_spvpp_bxcorrect_tid_ptr_b_14_13;
@@ -5049,6 +5317,10 @@ class vpp_generated
 	utype_b_14_2 *spvpp_mb1_LB_1_RB__ptr_b_14_2;
 	utype_b_14_2 *spvpp_mb1_LB_2_RB__ptr_b_14_2;
 	utype_b_14_2 *spvpp_mb1_LB_3_RB__ptr_b_14_2;
+	utype_b_15_12 *RC_mb1ap_ptr_b_15_12;
+	utype_b_15_12 *RC_mb1bp_ptr_b_15_12;
+	utype_b_15_12 *mb1ap_ptr_b_15_12;
+	utype_b_15_12 *mb1bp_ptr_b_15_12;
 	utype_b_15_14 *RC_spvpp_Eq2b1_ptr_b_15_14;
 	utype_b_15_14 *RC_spvpp_Eqme12_ptr_b_15_14;
 	utype_b_15_14 *RC_spvpp_Eqme13_ptr_b_15_14;
@@ -5057,22 +5329,22 @@ class vpp_generated
 	utype_b_15_14 *spvpp_Eqme12_ptr_b_15_14;
 	utype_b_15_14 *spvpp_Eqme13_ptr_b_15_14;
 	utype_b_15_14 *spvpp_Eqme14_ptr_b_15_14;
-	utype_b_15_15 *RC_mb1ap_ptr_b_15_15;
-	utype_b_15_15 *RC_mb1bp_ptr_b_15_15;
 	utype_b_15_15 *RC_spvpp_Eqme12a_ptr_b_15_15;
 	utype_b_15_15 *RC_spvpp_Eqme12ov_ptr_b_15_15;
 	utype_b_15_15 *RC_spvpp_Eqme13a_ptr_b_15_15;
 	utype_b_15_15 *RC_spvpp_Eqme14a_ptr_b_15_15;
+	utype_b_15_15 *RC_spvpp_dtbx_0_mb1a_ptr_b_15_15;
+	utype_b_15_15 *RC_spvpp_dtbx_1_mb1a_ptr_b_15_15;
 	utype_b_15_15 *RC_spvpp_pass12_ptr_b_15_15;
 	utype_b_15_15 *RC_spvpp_pass12ov_ptr_b_15_15;
 	utype_b_15_15 *RC_spvpp_pass13_ptr_b_15_15;
 	utype_b_15_15 *RC_spvpp_pass14_ptr_b_15_15;
-	utype_b_15_15 *mb1ap_ptr_b_15_15;
-	utype_b_15_15 *mb1bp_ptr_b_15_15;
 	utype_b_15_15 *spvpp_Eqme12a_ptr_b_15_15;
 	utype_b_15_15 *spvpp_Eqme12ov_ptr_b_15_15;
 	utype_b_15_15 *spvpp_Eqme13a_ptr_b_15_15;
 	utype_b_15_15 *spvpp_Eqme14a_ptr_b_15_15;
+	utype_b_15_15 *spvpp_dtbx_0_mb1a_ptr_b_15_15;
+	utype_b_15_15 *spvpp_dtbx_1_mb1a_ptr_b_15_15;
 	utype_b_15_15 *spvpp_pass12_ptr_b_15_15;
 	utype_b_15_15 *spvpp_pass12ov_ptr_b_15_15;
 	utype_b_15_15 *spvpp_pass13_ptr_b_15_15;
@@ -9396,6 +9668,12 @@ class vpp_generated
 	utype_b_8_5 *RC_spvpp_bxa__bxame3_larg1_ptr_b_8_5;
 	utype_b_8_5 *RC_spvpp_bxa__bxame4_larg1_ptr_b_8_5;
 	utype_b_8_5 *RC_spvpp_bxcorrect_larg1_ptr_b_8_5;
+	utype_b_8_5 *RC_spvpp_u2aIdt_ptr_b_8_5;
+	utype_b_8_5 *RC_spvpp_u2bIdt_ptr_b_8_5;
+	utype_b_8_5 *RC_spvpp_u2cIdt_ptr_b_8_5;
+	utype_b_8_5 *RC_spvpp_u3aIdt_ptr_b_8_5;
+	utype_b_8_5 *RC_spvpp_u3bIdt_ptr_b_8_5;
+	utype_b_8_5 *RC_spvpp_u3cIdt_ptr_b_8_5;
 	utype_b_8_5 *RC_spvpp_u4aIdrrr_ptr_b_8_5;
 	utype_b_8_5 *RC_spvpp_u4bIdrrr_ptr_b_8_5;
 	utype_b_8_5 *RC_spvpp_u4cIdrrr_ptr_b_8_5;
@@ -9414,6 +9692,12 @@ class vpp_generated
 	utype_b_8_5 *spvpp_bxa__bxame3_larg1_ptr_b_8_5;
 	utype_b_8_5 *spvpp_bxa__bxame4_larg1_ptr_b_8_5;
 	utype_b_8_5 *spvpp_bxcorrect_larg1_ptr_b_8_5;
+	utype_b_8_5 *spvpp_u2aIdt_ptr_b_8_5;
+	utype_b_8_5 *spvpp_u2bIdt_ptr_b_8_5;
+	utype_b_8_5 *spvpp_u2cIdt_ptr_b_8_5;
+	utype_b_8_5 *spvpp_u3aIdt_ptr_b_8_5;
+	utype_b_8_5 *spvpp_u3bIdt_ptr_b_8_5;
+	utype_b_8_5 *spvpp_u3cIdt_ptr_b_8_5;
 	utype_b_8_5 *spvpp_u4aIdrrr_ptr_b_8_5;
 	utype_b_8_5 *spvpp_u4bIdrrr_ptr_b_8_5;
 	utype_b_8_5 *spvpp_u4cIdrrr_ptr_b_8_5;
