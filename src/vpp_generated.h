@@ -5,7 +5,7 @@
 // VPP library web-page: http://www.phys.ufl.edu/~madorsky/vpp/
 
 // Author    : madorsky
-// Timestamp : Thu Sep 17 15:04:16 2009
+// Timestamp : Fri Oct 23 08:44:58 2009
 
 #ifndef __VPP_GENERATED_H__
 #define __VPP_GENERATED_H__
@@ -650,6 +650,8 @@ class vpp_generated
 	Signal (spvpp_bxa__bxamb1_m1) 
 	Signal (spvpp_bxa__bxamb1_m2) 
 	Signal (spvpp_bxa__bxamb1_m3) 
+	Signal (spvpp_bxa__bxamb1_qi) 
+	Signal (spvpp_bxa__bxamb1_qj) 
 	Signal (spvpp_bxa__bxamb1_res) 
 	Signal (spvpp_bxa__bxamb1_s) 
 	Signal (spvpp_bxa__bxamb1_tin) 
@@ -667,6 +669,8 @@ class vpp_generated
 	Signal (spvpp_bxa__bxame1ac_m0) 
 	Signal (spvpp_bxa__bxame1ac_m1) 
 	Signal (spvpp_bxa__bxame1ac_m2) 
+	Signal (spvpp_bxa__bxame1ac_qi) 
+	Signal (spvpp_bxa__bxame1ac_qj) 
 	Signal (spvpp_bxa__bxame1ac_res) 
 	Signal (spvpp_bxa__bxame1ac_s) 
 	Signal (spvpp_bxa__bxame1ac_tin) 
@@ -684,6 +688,8 @@ class vpp_generated
 	Signal (spvpp_bxa__bxame1df_m0) 
 	Signal (spvpp_bxa__bxame1df_m1) 
 	Signal (spvpp_bxa__bxame1df_m2) 
+	Signal (spvpp_bxa__bxame1df_qi) 
+	Signal (spvpp_bxa__bxame1df_qj) 
 	Signal (spvpp_bxa__bxame1df_res) 
 	Signal (spvpp_bxa__bxame1df_s) 
 	Signal (spvpp_bxa__bxame1df_tin) 
@@ -701,6 +707,8 @@ class vpp_generated
 	Signal (spvpp_bxa__bxame2_m0) 
 	Signal (spvpp_bxa__bxame2_m1) 
 	Signal (spvpp_bxa__bxame2_m2) 
+	Signal (spvpp_bxa__bxame2_qi) 
+	Signal (spvpp_bxa__bxame2_qj) 
 	Signal (spvpp_bxa__bxame2_res) 
 	Signal (spvpp_bxa__bxame2_s) 
 	Signal (spvpp_bxa__bxame2_tin) 
@@ -718,6 +726,8 @@ class vpp_generated
 	Signal (spvpp_bxa__bxame3_m0) 
 	Signal (spvpp_bxa__bxame3_m1) 
 	Signal (spvpp_bxa__bxame3_m2) 
+	Signal (spvpp_bxa__bxame3_qi) 
+	Signal (spvpp_bxa__bxame3_qj) 
 	Signal (spvpp_bxa__bxame3_res) 
 	Signal (spvpp_bxa__bxame3_s) 
 	Signal (spvpp_bxa__bxame3_tin) 
@@ -735,6 +745,8 @@ class vpp_generated
 	Signal (spvpp_bxa__bxame4_m0) 
 	Signal (spvpp_bxa__bxame4_m1) 
 	Signal (spvpp_bxa__bxame4_m2) 
+	Signal (spvpp_bxa__bxame4_qi) 
+	Signal (spvpp_bxa__bxame4_qj) 
 	Signal (spvpp_bxa__bxame4_res) 
 	Signal (spvpp_bxa__bxame4_s) 
 	Signal (spvpp_bxa__bxame4_tin) 
@@ -764,6 +776,8 @@ class vpp_generated
 	Signal (spvpp_bxcorrect_m2) 
 	Signal (spvpp_bxcorrect_pretrig) 
 	Signal (spvpp_bxcorrect_res) 
+	Signal (spvpp_bxcorrect_ri) 
+	Signal (spvpp_bxcorrect_rj) 
 	Signal (spvpp_bxcorrect_s) 
 	Signal (spvpp_bxcorrect_stubd) 
 	Signal (spvpp_bxcorrect_stubn) 
@@ -1099,7 +1113,9 @@ class vpp_generated
 	Signal (spvpp_fsuv_phib2b) 
 	Signal (spvpp_fsuv_phib2c) 
 	Signal (spvpp_fsuv_res) 
+	Signal (spvpp_fsuv_ri) 
 	Signal (spvpp_fsuv_rilgrj) 
+	Signal (spvpp_fsuv_rj) 
 	Signal (spvpp_fsuv_s) 
 	Signal (spvpp_fsuv_survived) 
 	Signal (spvpp_fsuva_Exists) 
@@ -1126,7 +1142,9 @@ class vpp_generated
 	Signal (spvpp_fsuva_phi3a) 
 	Signal (spvpp_fsuva_phi3b) 
 	Signal (spvpp_fsuva_phi3c) 
+	Signal (spvpp_fsuva_ri) 
 	Signal (spvpp_fsuva_rilgrj) 
+	Signal (spvpp_fsuva_rj) 
 	Signal (spvpp_fsuva_s) 
 	Signal (spvpp_fsuva_survived) 
 	Signal (spvpp_idH) 

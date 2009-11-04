@@ -444,21 +444,18 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		simTrkCount++;
 		TLorentzVector mom;
 		mom.SetPxPyPzE(simTrk->momentum().x(), simTrk->momentum().y(), simTrk->momentum().z(), simTrk->momentum().t());
-		
-		double genPhi = (mom.Phi() > 0) ? mom.Phi() : mom.Phi() + 2*M_PI;
-		
-		if( fabs(simTrk->type()) == 13 ) // Disclude electrons from scattering
+		if( (fabs(simTrk->type()) == 13) && (mom.Pt() > 1))
 		{
 			///////////////////////////////
 			//// Sim Track Information ////
 			///////////////////////////////
-			firstMuon++;	
+			firstMuon++;
+			double genPhi = (mom.Phi() > 0) ? mom.Phi() : mom.Phi() + 2*M_PI;
 			genEta = mom.PseudoRapidity();
 			double genPt = mom.Pt();
 			double genE = mom.E();
 			double genPz = mom.Z();
 			double genP = mom.P();
-			std::cout << "Sim Track Pt, eta, phi: " << genPt << ", " << genEta << ", " << genPhi << std::endl;
 			
 			if( (genPt >= 2) && (genEta >= 0.8 ) )
 			{
@@ -655,7 +652,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 					
 				}//tfTrack loop
 				
-				if (tfLoop == 0) std::cout << "Sim info for lost track (Pt, eta, phi): " << genPt << ", " << genEta << ", " << genPhi << "." << std::endl;
+				if ((tfLoop == 0) && (DEBUG == true)) std::cout << "Sim info for lost track (Pt, eta, phi): " << genPt << ", " << genEta << ", " << genPhi << "." << std::endl;
 				
 				////////////////////////////
 				//// Matched Track Info ////
@@ -1388,39 +1385,41 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 			{
 				TLorentzVector mom;
 				mom.SetPxPyPzE(simTrk->momentum().x(), simTrk->momentum().y(), simTrk->momentum().z(), simTrk->momentum().t());
-				double genPhi = (mom.Phi() > 0) ? mom.Phi() : mom.Phi() + 2*M_PI;
-				double genEta = mom.PseudoRapidity();
-				double genPt = mom.Pt();
+				if(mom.Pt() > 2){
+					double genPhi = (mom.Phi() > 0) ? mom.Phi() : mom.Phi() + 2*M_PI;
+					double genEta = mom.PseudoRapidity();
+					double genPt = mom.Pt();
 				
-				if( fabs(simTrk->type()) != 13 )
-				{
-					electronCount++;
-				}
+					if( fabs(simTrk->type()) != 13 )
+					{
+						electronCount++;
+					}
 			
-				if( fabs(simTrk->type()) == 13 ) // Disclude electrons from scattering
-				{
-					if( tfLoop2 == 1 )
+					if( fabs(simTrk->type()) == 13 ) // Disclude electrons from scattering
 					{
-						R1 = sqrt( ( mecPhi - genPhi )*( mecPhi - genPhi) + ( mecEta - genEta )*( mecEta - genEta ) );
-						T1Phi = genPhi;
-						T1Eta = genEta;
-						T1Pt = genPt;
-						bunches1 = mecBx;
-						ghostPtRes1 = ( 1/( mecPt ) - 1/( genPt ) )/(1/( genPt )) ;
-						ghostQ1 = mecQuality;
-					}
+						if( tfLoop2 == 1 )
+						{
+							R1 = sqrt( ( mecPhi - genPhi )*( mecPhi - genPhi) + ( mecEta - genEta )*( mecEta - genEta ) );
+							T1Phi = genPhi;
+							T1Eta = genEta;
+							T1Pt = genPt;
+							bunches1 = mecBx;
+							ghostPtRes1 = ( 1/( mecPt ) - 1/( genPt ) )/(1/( genPt )) ;
+							ghostQ1 = mecQuality;
+						}
 					
-					if( tfLoop2 == 2 )
-					{
-						R2 = sqrt( ( mecPhi - genPhi )*( mecPhi - genPhi) + ( mecEta - genEta )*( mecEta - genEta ) );
-						T2Phi = genPhi;
-						T2Eta = genEta;
-						T2Pt = genPt;
-						bunches2 = mecBx;
-						ghostPtRes1 = ( 1/( mecPt ) - 1/( genPt ) )/(1/( genPt )) ;
-						ghostQ2 = mecQuality;
-					}
-				}//muon Cut
+						if( tfLoop2 == 2 )
+						{
+							R2 = sqrt( ( mecPhi - genPhi )*( mecPhi - genPhi) + ( mecEta - genEta )*( mecEta - genEta ) );
+							T2Phi = genPhi;
+							T2Eta = genEta;
+							T2Pt = genPt;
+							bunches2 = mecBx;
+							ghostPtRes1 = ( 1/( mecPt ) - 1/( genPt ) )/(1/( genPt )) ;
+							ghostQ2 = mecQuality;
+						}
+					}//muon Cut
+				}//Ptcut
 			}//sim Loop
 		}//tf Loop
 
@@ -1473,107 +1472,6 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		if(DEBUG == true)
 		{
 			std::cout << std::endl << "---------- Fake Track ------------" << std::flush << std::endl;
-		}
-	}
-							
-	if( simCounter >= (tfLoop +1))
-	{
-		//////////////////////
-		//Debug low Eta Eff //
-		//////////////////////
-		if( (genEta > 0.9) && (genEta <1.2))
-		{
-			/////////////////////////////////////////
-			// Define Collection to hold all stubs //
-			/////////////////////////////////////////
-			CSCTriggerContainer<csctf::TrackStub> stub_list;
-			
-			///////////////////////////////////////////////////////////////////////
-			// Loop over CSC Correlated LCT Digis, adding them to Stub Container //
-			///////////////////////////////////////////////////////////////////////
-			edm::Handle<CSCCorrelatedLCTDigiCollection> lcts;
-			e.getByLabel( "simCscTriggerPrimitiveDigis",lcts);
-			CSCCorrelatedLCTDigiCollection::DigiRangeIterator Citer;
-  		for(Citer = lcts->begin(); Citer != lcts->end(); Citer++)
-    	{
-      	CSCCorrelatedLCTDigiCollection::const_iterator Diter = (*Citer).second.first;
-      	CSCCorrelatedLCTDigiCollection::const_iterator Dend = (*Citer).second.second;
-
-	  		for(; Diter != Dend; Diter++)
-				{
-	  			csctf::TrackStub theStub((*Diter),(*Citer).first);
-	  			stub_list.push_back(theStub);
-				}
-    	}
-		
-			////////////////////////////////////
-			// Append Stub list with DT Stubs //
-			////////////////////////////////////
-			edm::Handle<L1MuDTChambPhContainer> dttrig;
-			e.getByLabel("simDtTriggerPrimitiveDigis",dttrig);
-			CSCTriggerContainer<csctf::TrackStub> dtstubs = my_dtrc->process(dttrig.product());
-  		stub_list.push_many(dtstubs);
-			
-			////////////////////////////////////////
-			// Creat an array for stubs eta & phi //
-			////////////////////////////////////////
-			int stubArray[5][4];
-			for( int i=0; i<5; i++) stubArray[i][0] = 0;
-			
-			///////////////////////////////////////////////////////////
-			// Loop over all Track Stubs, filling Array for analysis //
-			///////////////////////////////////////////////////////////
-			std::vector<csctf::TrackStub> justStubs = stub_list.get();
-			for(std::vector<csctf::TrackStub>::iterator itr=justStubs.begin(); itr!=justStubs.end(); itr++)
-			{
-				unsigned int Endcap    = itr->endcap();
-        unsigned int Station   = itr->station();
-        unsigned int Sector    = itr->sector();
-        unsigned int SubSector = itr->subsector();
-        unsigned int CscId     = itr->cscid();
-        unsigned int Fpga      = ( SubSector ? SubSector-1 : Station+1 );
-				unsigned int bunchX		 = itr->BX();
-        std::cout << " Endcap, Station, Sector, SubSector, Bx: " << Endcap << ", " << Station << ", " << Sector << ", " << SubSector << ", " << bunchX<< std::endl;
-				if( Station != 5)
-				{
-					lclphidat lclPhi = srLUTs_[Fpga][Sector-1][Endcap-1]->localPhi(itr->getStrip(), itr->getPattern(), itr->getQuality(), itr->getBend());
-					gblphidat gblPhi = srLUTs_[Fpga][Sector-1][Endcap-1]->globalPhiME(lclPhi.phi_local, itr->getKeyWG(), CscId);
-					gbletadat gblEta = srLUTs_[Fpga][Sector-1][Endcap-1]->globalEtaME(lclPhi.phi_bend_local, lclPhi.phi_local, itr->getKeyWG(), CscId);
-					itr->setEtaPacked(gblEta.global_eta);
-					itr->setPhiPacked(gblPhi.global_phi);
-				}
-				stubArray[Station - 1][0] = 1;
-				stubArray[Station - 1][1] = Sector;
-				stubArray[Station - 1][2] = itr->etaPacked();
-				stubArray[Station - 1][3] = itr->phiPacked();
-			}
-			
-			/////////////////////////
-			// Analyze track stubs //
-			/////////////////////////
-			if( (stubArray[0][0]==1) && (stubArray[1][0]==1) && (stubArray[0][1]==stubArray[1][1]) )
-			{
-				overDeleta12->Fill(abs(stubArray[0][2]-stubArray[1][2]));
-				overDelphi12->Fill(abs(stubArray[0][2]-stubArray[1][2]));
-			}
-			
-			if( (stubArray[0][0]==1) && (stubArray[4][0]==1) && (stubArray[0][1]==stubArray[4][1]) )
-			{
-				overDeleta15->Fill(abs(stubArray[0][2]-stubArray[4][2]));
-				overDelphi15->Fill(abs(stubArray[0][2]-stubArray[4][2]));
-			}
-			
-			if( (stubArray[5][0]==1) && (stubArray[1][0]==1) && (stubArray[4][1]==stubArray[1][1]) )
-			{
-				overDeleta25->Fill(abs(stubArray[4][2]-stubArray[1][2]));
-				overDelphi25->Fill(abs(stubArray[4][2]-stubArray[1][2]));
-			}
-		}
-	
-		lostTracks++;
-		if(DEBUG == true)
-		{
-			std::cout << std::endl << "---------- Lost Track ----------" << std::flush << std::endl;
 		}
 	}
 
