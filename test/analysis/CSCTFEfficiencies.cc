@@ -86,7 +86,7 @@ void CSCTFEfficiencies::DeleteHistos()
 	if(simPt) delete simPt;
 }
 
-void CSCTFEfficiencies::beginJob(edm::EventSetup const& es)
+void CSCTFEfficiencies::beginJob()
 {
 	simEta = new TH1F("simEta","Simulated Track #eta",500,0, 2.5); 
 	simPhi = new TH1F("simPhi","Simulated Track #phi",128,0,6.4);
