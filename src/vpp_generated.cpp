@@ -5,7 +5,7 @@
 // VPP library web-page: http://www.phys.ufl.edu/~madorsky/vpp/
 
 // Author    : madorsky
-// Timestamp : Fri Oct 23 08:44:58 2009
+// Timestamp : Fri Jan 22 12:47:22 2010
 
 #include "vpp_generated.h"
 #include "vpp_tools.h"
@@ -5658,9 +5658,10 @@ void vpp_generated::bxcorrect()
     spvpp_bxcorrect_id[0] = spvpp_idH;
     spvpp_bxcorrect_id[1] = spvpp_idM;
     spvpp_bxcorrect_id[2] = spvpp_idL;
-    spvpp_bxcorrect_r[0] = spvpp_rankH;
-    spvpp_bxcorrect_r[1] = spvpp_rankM;
-    spvpp_bxcorrect_r[2] = spvpp_rankL;
+    spvpp_bxcorrect_r[0] = sigcat((1 & 0x1), 1, spvpp_rankH, 6);
+    spvpp_bxcorrect_r[1] = sigcat((1 & 0x1), 1, spvpp_rankM, 6);
+    spvpp_bxcorrect_coll = spvpp_bxcorrect_b3_ptr_b_8_5->f.h != (15 & 0xf);
+    spvpp_bxcorrect_r[2] = sigcat(spvpp_bxcorrect_coll, 1, spvpp_rankL, 6);
     spvpp_bxcorrect_tid = spvpp_bxcorrect_id[0];
     spvpp_bxcorrect_del2t = 0;
     spvpp_bxcorrect_del1t = 0;

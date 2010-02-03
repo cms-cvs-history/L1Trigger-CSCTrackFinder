@@ -5,7 +5,7 @@
 // VPP library web-page: http://www.phys.ufl.edu/~madorsky/vpp/
 
 // Author    : madorsky
-// Timestamp : Fri Oct 23 08:44:58 2009
+// Timestamp : Fri Jan 22 12:47:22 2010
 
 #include "vpp_generated.h"
 vpp_generated::vpp_generated()
@@ -5451,6 +5451,7 @@ vpp_generated::vpp_generated()
 	RC_spvpp_bxa__bxame2_larg1_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_bxa__bxame2_larg1;
 	RC_spvpp_bxa__bxame3_larg1_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_bxa__bxame3_larg1;
 	RC_spvpp_bxa__bxame4_larg1_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_bxa__bxame4_larg1;
+	RC_spvpp_bxcorrect_b3_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_bxcorrect_b3;
 	RC_spvpp_bxcorrect_larg1_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_bxcorrect_larg1;
 	RC_spvpp_u2aIdt_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_u2aIdt;
 	RC_spvpp_u2bIdt_ptr_b_8_5 = (utype_b_8_5*) &RC_spvpp_u2bIdt;
@@ -5475,6 +5476,7 @@ vpp_generated::vpp_generated()
 	spvpp_bxa__bxame2_larg1_ptr_b_8_5 = (utype_b_8_5*) &spvpp_bxa__bxame2_larg1;
 	spvpp_bxa__bxame3_larg1_ptr_b_8_5 = (utype_b_8_5*) &spvpp_bxa__bxame3_larg1;
 	spvpp_bxa__bxame4_larg1_ptr_b_8_5 = (utype_b_8_5*) &spvpp_bxa__bxame4_larg1;
+	spvpp_bxcorrect_b3_ptr_b_8_5 = (utype_b_8_5*) &spvpp_bxcorrect_b3;
 	spvpp_bxcorrect_larg1_ptr_b_8_5 = (utype_b_8_5*) &spvpp_bxcorrect_larg1;
 	spvpp_u2aIdt_ptr_b_8_5 = (utype_b_8_5*) &spvpp_u2aIdt;
 	spvpp_u2bIdt_ptr_b_8_5 = (utype_b_8_5*) &spvpp_u2bIdt;

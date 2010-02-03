@@ -5,7 +5,7 @@
 // VPP library web-page: http://www.phys.ufl.edu/~madorsky/vpp/
 
 // Author    : madorsky
-// Timestamp : Fri Oct 23 08:44:58 2009
+// Timestamp : Fri Jan 22 12:47:22 2010
 
 siginit (clkp);
 siginit (control);
@@ -415,6 +415,7 @@ siginit (spvpp_bxcorrect__CountZ);
 siginit (spvpp_bxcorrect_b1);
 siginit (spvpp_bxcorrect_b2);
 siginit (spvpp_bxcorrect_b3);
+siginit (spvpp_bxcorrect_coll);
 siginit (spvpp_bxcorrect_del1t);
 siginit (spvpp_bxcorrect_del2t);
 siginit (spvpp_bxcorrect_ilgj);
