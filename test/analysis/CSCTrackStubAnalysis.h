@@ -29,7 +29,7 @@ class CSCTrackStubAnalysis : public edm::EDAnalyzer {
   virtual ~CSCTrackStubAnalysis() {}
   virtual void analyze(edm::Event const& e, edm::EventSetup const& iSetup);
   virtual void endJob();
-  virtual void beginJob(edm::EventSetup const&);
+  virtual void beginJob();
  private:
   // variables persistent across events should be declared here.
   //
