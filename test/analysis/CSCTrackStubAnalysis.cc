@@ -32,7 +32,7 @@ void CSCTrackStubAnalysis::DeleteHistos()
   if(hDTvsCSC_phi_corr) delete hDTvsCSC_phi_corr;
 }
 
-void CSCTrackStubAnalysis::beginJob(edm::EventSetup const& es)
+void CSCTrackStubAnalysis::beginJob()
 {
   hDTts_phi = new TH1I("hDTts_phi","DT Track Stub Phi",4096,-2047,2047);
   hCSCts_phi  = new TH1I("hCSCts_phi","CSC Track Stub Phi",4096,0,4095);

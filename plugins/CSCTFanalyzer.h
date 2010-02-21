@@ -7,7 +7,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/ESHandle.h"
-#include "FWCore/ParameterSet/interface/InputTag.h"
+#include "FWCore/Utilities/interface/InputTag.h"
 #include "CondFormats/L1TObjects/interface/L1MuTriggerScales.h"
 
 #include "TTree.h"
@@ -36,7 +36,7 @@ private:
 public:
 	virtual void analyze(edm::Event const& e, edm::EventSetup const& iSetup);
 	virtual void endJob(void);
-	virtual void beginJob(edm::EventSetup const&){}
+	virtual void beginJob(){}
 
 	explicit CSCTFanalyzer(edm::ParameterSet const& pset);
 	virtual ~CSCTFanalyzer(void) {}
