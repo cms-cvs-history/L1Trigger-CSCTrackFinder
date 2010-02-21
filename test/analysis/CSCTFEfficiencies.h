@@ -29,7 +29,7 @@ class CSCTFEfficiencies : public edm::EDAnalyzer {
   virtual ~CSCTFEfficiencies() {}
   virtual void analyze(edm::Event const& e, edm::EventSetup const& iSetup);
   virtual void endJob();
-  virtual void beginJob(edm::EventSetup const&);
+  virtual void beginJob();
   int ghosts;
   int haloGhosts;
   int lostTracks;
