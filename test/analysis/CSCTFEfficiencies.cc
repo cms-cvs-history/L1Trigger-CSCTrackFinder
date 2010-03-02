@@ -515,11 +515,6 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 					
 					if( ( tfLoop != 1 ) && ( firstMuonHalo == 1 ) ) haloGhosts++;
 					
-					if( ( genEta >= 1.2 ) && ( genEta <= 2.1 ) && ( mecQuality > 1 )  && ( tfLoop == 1 ) )
-					{
-						fidPtDen->Fill(genPt);
-					}
-					
 					if( mecChargePacked == 1) // Packed charge = 1 for -1 and 0 for +1
 					{
 						mecCharge = -1;
