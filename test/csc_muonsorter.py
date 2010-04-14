@@ -7,14 +7,19 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.source = cms.Source("PoolSource",
 		fileNames = cms.untracked.vstring(
-			'/store/relval/CMSSW_3_4_0_pre2/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/STARTUP3XY_V9-v1/0003/F297D9D4-97BD-DE11-8AEF-001731AF6653.root',
-			'/store/relval/CMSSW_3_4_0_pre2/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/STARTUP3XY_V9-v1/0003/A4EA7F95-9ABD-DE11-BD83-001A92971ACC.root',
-			'/store/relval/CMSSW_3_4_0_pre2/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/STARTUP3XY_V9-v1/0003/7AD839D3-C0BD-DE11-88E9-001731AF65F9.root',
-			'/store/relval/CMSSW_3_4_0_pre2/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/STARTUP3XY_V9-v1/0003/6452B3DF-90BD-DE11-AAAC-0030486792AC.root',
-			'/store/relval/CMSSW_3_4_0_pre2/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/STARTUP3XY_V9-v1/0003/4A2753A7-96BD-DE11-AC63-001BFCDBD1BC.root',
-			'/store/relval/CMSSW_3_4_0_pre2/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/STARTUP3XY_V9-v1/0003/32DF8C96-91BD-DE11-A0F6-003048679168.root',
-			'/store/relval/CMSSW_3_4_0_pre2/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/STARTUP3XY_V9-v1/0003/1EA4A325-90BD-DE11-8010-0026189438D3.root',
-			'/store/relval/CMSSW_3_4_0_pre2/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/STARTUP3XY_V9-v1/0003/1E13E856-92BD-DE11-8420-00248C55CC3C.root'
+			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/185B139D-DC37-DF11-B027-0018F3D09708.root',
+			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/284ED12D-DB37-DF11-A6C4-001A92810AA6.root',
+			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/3221C82B-DC37-DF11-8D28-001A928116B8.root',
+			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/3C16119A-DA37-DF11-8638-003048679168.root',
+			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/60B7A69B-DD37-DF11-9F1F-001A92971B68.root',
+			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/6669BAAA-D537-DF11-B987-0018F3D09630.root',
+			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/AC7AC12D-DB37-DF11-9EAD-0018F3D096EE.root',
+			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/C2CE571B-DE37-DF11-8FC5-001A92971ADC.root',
+			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/D0D16F2F-D837-DF11-A231-0018F3D0965C.root',
+			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/EAE7DD2C-DD37-DF11-B782-003048678F1C.root',
+			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/F4168C9C-DB37-DF11-AD5A-003048679168.root'
+	
+			#'file:./SingleMuPtHigh_EtaOverlap.root'
 	),
 	#skipEvents=cms.untracked.uint32(173)
 )
@@ -29,12 +34,20 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load("Configuration.StandardSequences.Geometry_cff")
 process.load("Configuration.StandardSequences.Simulation_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-#process.GlobalTag.globaltag = 'MC_31X_V10::All'
-process.GlobalTag.globaltag = 'GR09_R_35X_V3::All'
+process.GlobalTag.globaltag = 'START3X_V25::All'
+
 # L1 Emulator
 #############
-process.load("Configuration.StandardSequences.Simulation_cff")
-process.load("Configuration.StandardSequences.SimL1Emulator_cff")
+import L1Trigger.CSCTrackFinder.csctfTrackDigis_cfi
+process.joeTrackOut = L1Trigger.CSCTrackFinder.csctfTrackDigis_cfi.csctfTrackDigis.clone()
+process.joeTrackOut.SectorReceiverInput = 'simCscTriggerPrimitiveDigis:MPCSORTED'
+process.joeTrackOut.DTproducer = 'simDtTriggerPrimitiveDigis'
+#process.joeTrackOut.SectorProcessor.trigger_on_ME1a = True
+#process.joeTrackOut.SectorProcessor.trigger_on_ME1b = True
+#process.joeTrackOut.SectorProcessor.mindeta113_accp = 25
+import L1Trigger.CSCTrackFinder.csctfDigis_cfi
+process.joeOut = L1Trigger.CSCTrackFinder.csctfDigis_cfi.csctfDigis.clone()
+process.joeOut.CSCTrackProducer = 'joeTrackOut'
 
 # Analysis Module Definition
 ############################
@@ -51,8 +64,8 @@ process.FEVT = cms.OutputModule("PoolOutputModule",
 	
 # Path Definition
 #################
-#process.p = cms.Path(process.effic) process.pdigi*
-process.p = cms.Path(process.simCscTriggerPrimitiveDigis*process.simDtTriggerPrimitiveDigis*process.simCsctfTrackDigis*process.simCsctfDigis*process.effic)
+process.p = cms.Path(process.joeTrackOut*process.joeOut*process.effic)
+#process.p = cms.Path(process.simCscTriggerPrimitiveDigis*process.simDtTriggerPrimitiveDigis*process.simCsctfTrackDigis*process.simCsctfDigis*process.effic)
 #process.p = cms.Path(process.simCscTriggerPrimitiveDigis*process.simDtTriggerPrimitiveDigis*process.simCsctfTrackDigis*process.simCsctfDigis)
 #process.outpath = cms.EndPath(process.FEVT)
 #process.schedule = cms.Schedule(process.p, process.outpath)

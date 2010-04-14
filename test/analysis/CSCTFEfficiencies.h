@@ -48,6 +48,7 @@ class CSCTFEfficiencies : public edm::EDAnalyzer {
   void DeleteHistos();
   Int_t cnttrk, cntGen;
 
+	TH1F* modeOcc;
   TH1F* simEta, *simPhi, *simPt, *simPz, *simP, *simEHalo, *fidPtDen;
   TH1F* trackedEta, *trackedPhi, *trackedPt, *trackedBx, *trackedEHalo, *trackedPtHalo;
   TH1F* matchedPhi, *matchedEta, *matchedPt, *Radius, *HaloPRes;

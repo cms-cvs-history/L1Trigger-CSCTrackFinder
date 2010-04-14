@@ -73,7 +73,9 @@ CSCTFEfficiencies::CSCTFEfficiencies(edm::ParameterSet const& conf)
         	for(int subSector=0; subSector<2; subSector++)
         		srLUTs_[fpga++][sector-1][endcap-1] = new CSCSectorReceiverLUT(endcap, sector, subSector+1, station, srLUTset, TMB07);
    			else
+				{
    				srLUTs_[fpga++][sector-1][endcap-1] = new CSCSectorReceiverLUT(endcap, sector, 0, station, srLUTset, TMB07);
+				}
      	}
 		}
   }
@@ -88,6 +90,8 @@ void CSCTFEfficiencies::DeleteHistos()
 
 void CSCTFEfficiencies::beginJob()
 {
+	modeOcc = new TH1F("modeOcc","Mode Occupancy",15,1,16);
+
 	simEta = new TH1F("simEta","Simulated Track #eta",500,0, 2.5); 
 	simPhi = new TH1F("simPhi","Simulated Track #phi",128,0,6.4);
 	simPt = new TH1F("simPt","Simulated Track Transverse Momentum", 140, 0, 7000);
@@ -326,6 +330,7 @@ void CSCTFEfficiencies::endJob()
 	//////////////////////
 	fAnalysis = new TFile(outFile.c_str(), "RECREATE");//c
 	TObjArray Hlist(0);
+	Hlist.Add(modeOcc);
 	Hlist.Add(dtStubBx);
 	Hlist.Add(EffPt10);
 	Hlist.Add(EffPt20);
@@ -398,7 +403,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 	edm::Handle<edm::SimTrackContainer> simTracks;
 	edm::Handle<std::vector<L1MuRegionalCand> > tfTracks;
 	edm::Handle<std::vector<SimVertex> > simVertexs;
-	e.getByLabel("simCsctfDigis","CSC", tfTracks);
+	e.getByLabel("joeOut","CSC", tfTracks);
 	e.getByLabel("g4SimHits",simTracks);
 	e.getByLabel("g4SimHits",simVertexs);
 					
@@ -444,20 +449,22 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 		simTrkCount++;
 		TLorentzVector mom;
 		mom.SetPxPyPzE(simTrk->momentum().x(), simTrk->momentum().y(), simTrk->momentum().z(), simTrk->momentum().t());
-		if( (fabs(simTrk->type()) == 13) && (mom.Pt() > 1))
+		
+		double genPhi = (mom.Phi() > 0) ? mom.Phi() : mom.Phi() + 2*M_PI;
+		double genP = mom.P();
+		
+		if((genP >= 2) &&  (fabs(simTrk->type()) == 13) ) // Disclude electrons from scattering
 		{
 			///////////////////////////////
 			//// Sim Track Information ////
 			///////////////////////////////
-			firstMuon++;
-			double genPhi = (mom.Phi() > 0) ? mom.Phi() : mom.Phi() + 2*M_PI;
+			firstMuon++;	
 			genEta = mom.PseudoRapidity();
-			double genPt = mom.Pt();
 			double genE = mom.E();
 			double genPz = mom.Z();
-			double genP = mom.P();
+			double genPt = mom.Pt();
 			
-			if( (genPt >= 2) && (genEta >= 0.8 ) )
+			if( (genPt>2.0) && (genEta >= 0.9 ) )
 			{
 				simCounter++;
 				simEta->Fill( fabs(genEta) );
@@ -647,7 +654,7 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 					
 				}//tfTrack loop
 				
-				if ((tfLoop == 0) && (DEBUG == true)) std::cout << "Sim info for lost track (Pt, eta, phi): " << genPt << ", " << genEta << ", " << genPhi << "." << std::endl;
+				if (tfLoop == 0) std::cout << "Sim info for lost track (Pt, eta, phi): " << genPt << ", " << genEta << ", " << genPhi << "." << std::endl;
 				
 				////////////////////////////
 				//// Matched Track Info ////
@@ -1380,41 +1387,39 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 			{
 				TLorentzVector mom;
 				mom.SetPxPyPzE(simTrk->momentum().x(), simTrk->momentum().y(), simTrk->momentum().z(), simTrk->momentum().t());
-				if(mom.Pt() > 2){
+				
+				if( fabs(simTrk->type()) != 13 )
+				{
+					electronCount++;
+				}
+			
+				if( fabs(simTrk->type()) == 13 ) // Disclude electrons from scattering
+				{
 					double genPhi = (mom.Phi() > 0) ? mom.Phi() : mom.Phi() + 2*M_PI;
 					double genEta = mom.PseudoRapidity();
 					double genPt = mom.Pt();
-				
-					if( fabs(simTrk->type()) != 13 )
+					if( tfLoop2 == 1 )
 					{
-						electronCount++;
+						R1 = sqrt( ( mecPhi - genPhi )*( mecPhi - genPhi) + ( mecEta - genEta )*( mecEta - genEta ) );
+						T1Phi = genPhi;
+						T1Eta = genEta;
+						T1Pt = genPt;
+						bunches1 = mecBx;
+						ghostPtRes1 = ( 1/( mecPt ) - 1/( genPt ) )/(1/( genPt )) ;
+						ghostQ1 = mecQuality;
 					}
-			
-					if( fabs(simTrk->type()) == 13 ) // Disclude electrons from scattering
-					{
-						if( tfLoop2 == 1 )
-						{
-							R1 = sqrt( ( mecPhi - genPhi )*( mecPhi - genPhi) + ( mecEta - genEta )*( mecEta - genEta ) );
-							T1Phi = genPhi;
-							T1Eta = genEta;
-							T1Pt = genPt;
-							bunches1 = mecBx;
-							ghostPtRes1 = ( 1/( mecPt ) - 1/( genPt ) )/(1/( genPt )) ;
-							ghostQ1 = mecQuality;
-						}
 					
-						if( tfLoop2 == 2 )
-						{
-							R2 = sqrt( ( mecPhi - genPhi )*( mecPhi - genPhi) + ( mecEta - genEta )*( mecEta - genEta ) );
-							T2Phi = genPhi;
-							T2Eta = genEta;
-							T2Pt = genPt;
-							bunches2 = mecBx;
-							ghostPtRes1 = ( 1/( mecPt ) - 1/( genPt ) )/(1/( genPt )) ;
-							ghostQ2 = mecQuality;
-						}
-					}//muon Cut
-				}//Ptcut
+					if( tfLoop2 == 2 )
+					{
+						R2 = sqrt( ( mecPhi - genPhi )*( mecPhi - genPhi) + ( mecEta - genEta )*( mecEta - genEta ) );
+						T2Phi = genPhi;
+						T2Eta = genEta;
+						T2Pt = genPt;
+						bunches2 = mecBx;
+						ghostPtRes1 = ( 1/( mecPt ) - 1/( genPt ) )/(1/( genPt )) ;
+						ghostQ2 = mecQuality;
+					}
+				}//muon Cut
 			}//sim Loop
 		}//tf Loop
 
@@ -1469,5 +1474,13 @@ void CSCTFEfficiencies::analyze(edm::Event const& e, edm::EventSetup const& es)
 			std::cout << std::endl << "---------- Fake Track ------------" << std::flush << std::endl;
 		}
 	}
-
+	
+	edm::Handle<L1CSCTrackCollection> tracks;
+  e.getByLabel("joeTrackOut",tracks);
+  for(L1CSCTrackCollection::const_iterator trk=tracks->begin(); trk<tracks->end(); trk++)
+	{
+		long LUTAdd = trk->first.ptLUTAddress();
+		int trigMode = ( (LUTAdd)&0xf0000 ) >> 16;
+		modeOcc->Fill(trigMode);
+	}
 }
