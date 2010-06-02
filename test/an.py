@@ -26,6 +26,7 @@ process.csctfanalyzer = cms.EDAnalyzer("CSCTFanalyzer",
          dataTrackProducer = cms.untracked.InputTag("csctfTrackDigis"),
          emulTrackProducer = cms.untracked.InputTag("null"),
          lctProducer       = cms.untracked.InputTag("cscTriggerPrimitiveDigis:MPCSORTED"),
+         mbProducer        = cms.untracked.InputTag("csctfunpacker:DT"),
          verbose           = cms.untracked.uint32(1)
 )
 
