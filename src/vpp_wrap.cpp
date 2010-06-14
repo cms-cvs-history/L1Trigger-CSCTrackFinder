@@ -58,8 +58,8 @@ void vpp_generated::wrap
 	static ULLONG me4arr,me4brr,me4crr;
 
 	// delayed DT inputs for serialization
-	static ULLONG mb1aPhir, mb1aQr;
-	static ULLONG mb1bPhir, mb1bQr;
+	//	static ULLONG mb1aPhir, mb1aQr;
+	//	static ULLONG mb1bPhir, mb1bQr;
 
 	// put delayed inputs into the core inputs (internal variables of vpp_generated)
 	me1ar = me1arr;
@@ -102,16 +102,19 @@ void vpp_generated::wrap
 	me4crr = ((me4cValidp&1)<<23) |                          ((me4cQp&0xf)<<19) | ((me4cEtap&0x7f)<<12) |  (me4cPhip&0xfff);
 			  			
 	// serialize 4 DT inputs into 2 inputs for the core
-	if      (mb1aQp != 0) {mb1ap =             ((mb1aQp&0x7)<<12) | (mb1aPhip&0xfff); }
-	else if (mb1aQr != 0) {mb1ap = (1 << 15) | ((mb1aQr&0x7)<<12) | (mb1aPhir&0xfff);}
-	else mb1ap = 0;
+	// if      (mb1aQp != 0) {mb1ap =             ((mb1aQp&0x7)<<12) | (mb1aPhip&0xfff); }
+	// else if (mb1aQr != 0) {mb1ap = (1 << 15) | ((mb1aQr&0x7)<<12) | (mb1aPhir&0xfff);}
+	// else mb1ap = 0;
 
-	if      (mb1bQp != 0) {mb1bp =             ((mb1bQp&0x7)<<12) | (mb1bPhip&0xfff); }
-	else if (mb1bQr != 0) {mb1bp = (1 << 15) | ((mb1bQr&0x7)<<12) | (mb1bPhir&0xfff);}
-	else mb1bp = 0;
+	// if      (mb1bQp != 0) {mb1bp =             ((mb1bQp&0x7)<<12) | (mb1bPhip&0xfff); }
+	// else if (mb1bQr != 0) {mb1bp = (1 << 15) | ((mb1bQr&0x7)<<12) | (mb1bPhir&0xfff);}
+	// else mb1bp = 0;
 
-	mb1aPhir = mb1cPhip; mb1aQr = mb1cQp;
-	mb1bPhir = mb1dPhip; mb1bQr = mb1dQp;
+	mb1ap = ((mb1aValidp&1) << 15) | ((mb1aQp&0x7)<<12) | (mb1aPhip&0xfff);
+	mb1bp = ((mb1bValidp&1) << 15) | ((mb1bQp&0x7)<<12) | (mb1bPhip&0xfff);
+
+	// mb1aPhir = mb1cPhip; mb1aQr = mb1cQp;
+	// mb1bPhir = mb1dPhip; mb1bQr = mb1dQp;
 
 	// put all other inputs into core inputs
 	mneta12  = mneta12p; 
