@@ -348,8 +348,8 @@ ptdat CSCTFPtLUT::calcPt(const ptadd& address) const
       break;
     case 11:
       // singles trigger
-      ptR_front = trigger_ptscale->getPtScale()->getLowEdge(31);
-      ptR_rear  = trigger_ptscale->getPtScale()->getLowEdge(31);
+      ptR_front = trigger_ptscale->getPtScale()->getLowEdge(5);
+      ptR_rear  = trigger_ptscale->getPtScale()->getLowEdge(5);
       break;
     case 15:
       // halo trigger
