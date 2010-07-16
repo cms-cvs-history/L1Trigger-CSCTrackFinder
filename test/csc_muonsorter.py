@@ -7,21 +7,19 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.source = cms.Source("PoolSource",
 		fileNames = cms.untracked.vstring(
-			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/185B139D-DC37-DF11-B027-0018F3D09708.root',
-			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/284ED12D-DB37-DF11-A6C4-001A92810AA6.root',
-			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/3221C82B-DC37-DF11-8D28-001A928116B8.root',
-			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/3C16119A-DA37-DF11-8638-003048679168.root',
-			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/60B7A69B-DD37-DF11-9F1F-001A92971B68.root',
-			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/6669BAAA-D537-DF11-B987-0018F3D09630.root',
-			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/AC7AC12D-DB37-DF11-9EAD-0018F3D096EE.root',
-			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/C2CE571B-DE37-DF11-8FC5-001A92971ADC.root',
-			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/D0D16F2F-D837-DF11-A231-0018F3D0965C.root',
-			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/EAE7DD2C-DD37-DF11-B782-003048678F1C.root',
-			'/store/relval/CMSSW_3_5_5/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START3X_V25-v1/0006/F4168C9C-DB37-DF11-AD5A-003048679168.root'
-	
-			#'file:./SingleMuPtHigh_EtaOverlap.root'
+			'/store/relval/CMSSW_3_6_3/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START36_V10-v1/0005/64159D00-0878-DF11-A575-0026189438DE.root',
+			'/store/relval/CMSSW_3_6_3/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START36_V10-v1/0005/6454B9B8-0878-DF11-A989-002618943923.root',
+			'/store/relval/CMSSW_3_6_3/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START36_V10-v1/0005/66C3C49E-0A78-DF11-B7A9-0030486792A8.root',
+			'/store/relval/CMSSW_3_6_3/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START36_V10-v1/0005/963C8A21-0A78-DF11-B9E8-003048678FA0.root',
+			'/store/relval/CMSSW_3_6_3/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START36_V10-v1/0005/9A4492B1-0B78-DF11-8534-0018F3D096E0.root',
+			'/store/relval/CMSSW_3_6_3/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START36_V10-v1/0005/9CE4D72A-0A78-DF11-BE15-003048678FFA.root',
+			'/store/relval/CMSSW_3_6_3/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START36_V10-v1/0005/DEF4B715-0B78-DF11-B011-002618943953.root',
+			'/store/relval/CMSSW_3_6_3/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START36_V10-v1/0005/E2788F9D-0A78-DF11-A762-001A9281171E.root',
+			'/store/relval/CMSSW_3_6_3/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START36_V10-v1/0005/E47ABDA5-0C78-DF11-B5A4-001A92810AA4.root',
+			'/store/relval/CMSSW_3_6_3/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START36_V10-v1/0005/E8F6EE9B-0A78-DF11-B0B3-002618943833.root',
+			'/store/relval/CMSSW_3_6_3/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START36_V10-v1/0005/EA0C7D29-0978-DF11-8E76-003048678FF2.root',
+			'/store/relval/CMSSW_3_6_3/RelValZMM/GEN-SIM-DIGI-RAW-HLTDEBUG/START36_V10-v1/0005/F25B3091-0A78-DF11-88CE-0026189438DE.root'
 	),
-	#skipEvents=cms.untracked.uint32(173)
 )
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
@@ -34,7 +32,7 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load("Configuration.StandardSequences.Geometry_cff")
 process.load("Configuration.StandardSequences.Simulation_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-process.GlobalTag.globaltag = 'START3X_V25::All'
+process.GlobalTag.globaltag = 'START36_V10::All'
 
 # L1 Emulator
 #############
@@ -45,9 +43,11 @@ process.joeTrackOut.DTproducer = 'simDtTriggerPrimitiveDigis'
 #process.joeTrackOut.SectorProcessor.trigger_on_ME1a = True
 #process.joeTrackOut.SectorProcessor.trigger_on_ME1b = True
 #process.joeTrackOut.SectorProcessor.mindeta113_accp = 25
+process.joeTrackOut.SectorProcessor.initializeFromPSet = True
 import L1Trigger.CSCTrackFinder.csctfDigis_cfi
 process.joeOut = L1Trigger.CSCTrackFinder.csctfDigis_cfi.csctfDigis.clone()
 process.joeOut.CSCTrackProducer = 'joeTrackOut'
+
 
 # Analysis Module Definition
 ############################
