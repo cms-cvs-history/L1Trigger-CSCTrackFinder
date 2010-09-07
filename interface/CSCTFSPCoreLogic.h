@@ -57,7 +57,9 @@ class CSCTFSPCoreLogic
 
  public:
 
-  CSCTFSPCoreLogic() : runme(false) {}
+    CSCTFSPCoreLogic() : runme(false),
+      spFirmwareVersion(0), coreFirmwareVersion(0),
+      verboseCore(false){}
 
   void loadData(const CSCTriggerContainer<csctf::TrackStub>&,
 		const unsigned& endcap, const unsigned& sector,
@@ -89,8 +91,14 @@ class CSCTFSPCoreLogic
 
   CSCTriggerContainer<csc::L1Track> tracks();
   
-  void SetFirmwareVersion(const unsigned int fwVer) {firmwareVersion=fwVer; }
-  unsigned int GetFirmwareVersion() {return firmwareVersion; }
+  void SetSPFirmwareVersion(const unsigned int fwVer) {spFirmwareVersion=fwVer; }
+  unsigned int GetSPFirmwareVersion() {return spFirmwareVersion; }
+
+  void SetCoreFirmwareVersion(const unsigned int fwVer) {coreFirmwareVersion=fwVer; }
+  unsigned int GetCoreFirmwareVersion() {return coreFirmwareVersion; }
+
+  void SetVerbose(const bool verb) { verboseCore=verb; }
+  bool IsVerbose() { return verboseCore; }
 
  private:
   vpp_generated_2010_01_22 sp_2010_01_22_;
@@ -99,7 +107,9 @@ class CSCTFSPCoreLogic
   std::vector<SPio> io_;
   bool runme;
   CSCTriggerContainer<csc::L1Track> mytracks;
-  unsigned int firmwareVersion;
+  unsigned int spFirmwareVersion;
+  unsigned int coreFirmwareVersion;
+  bool verboseCore;
 };
 
 #endif

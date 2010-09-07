@@ -196,7 +196,7 @@ void CSCTFSPCoreLogic::loadData(const CSCTriggerContainer<csctf::TrackStub>& the
 		  	switch(stubi->getMPCLink())
 		  	{
 		  	case 1:
-			  if (this->GetFirmwareVersion() <= 20100210) {
+			  if (this->GetSPFirmwareVersion() < 20100629) {
 			    // introducing the bug which was causing only even DT qualities
 			    // to get accepted
 			    if(stubi->getQuality()%2==1)
@@ -213,7 +213,7 @@ void CSCTFSPCoreLogic::loadData(const CSCTriggerContainer<csctf::TrackStub>& the
 			  }
 			break;
 		    	case 2:
-			  if (this->GetFirmwareVersion() <= 20100210) {
+			  if (this->GetSPFirmwareVersion() < 20100629) {
 			    // introducing the bug which was causing only even DT qualities
 			    // to get accepted
 			    if(stubi->getQuality()%2==1)
@@ -291,12 +291,9 @@ bool CSCTFSPCoreLogic::run(const unsigned& endcap, const unsigned& sector, const
   {
 	
 
-    switch(this->GetFirmwareVersion()) {
+    switch(this->GetCoreFirmwareVersion()) {
     case 20100122:
       using namespace std;
-      cout << "The SP FIRMWARE is:" 
-		<< this->GetFirmwareVersion()
-		<< endl;
       sp_2010_01_22_.wrap
 	(
 	 io->me1aVp, io->me1aQp, io->me1aEtap, io->me1aPhip, io->me1aCSCIdp,
@@ -349,11 +346,8 @@ bool CSCTFSPCoreLogic::run(const unsigned& endcap, const unsigned& sector, const
 	 (m_preTrigger<<7)|(m_allowCLCTonly<<5)|(m_allowALCTonly<<4)|(m_extend_length<<1)|(m_widePhi)
 	 );
 
-
+      break;
     case 20100728:
-      std::cout << "The SP FIRMWARE is:" 
-		<< this->GetFirmwareVersion()
-		<< std::endl;
       sp_2010_07_28_.wrap
 	(
 	 io->me1aVp, io->me1aQp, io->me1aEtap, io->me1aPhip, io->me1aCSCIdp,
@@ -405,11 +399,8 @@ bool CSCTFSPCoreLogic::run(const unsigned& endcap, const unsigned& sector, const
 	 mbaPhiOff, mbbPhiOff,
 	 (m_preTrigger<<7)|(m_allowCLCTonly<<5)|(m_allowALCTonly<<4)|(m_extend_length<<1)|(m_widePhi)
 	 );
-
+      break;
     case 20100901:
-      std::cout << "The SP FIRMWARE is:" 
-		<< this->GetFirmwareVersion()
-		<< std::endl;
       sp_2010_09_01_.wrap
 	(
 	 io->me1aVp, io->me1aQp, io->me1aEtap, io->me1aPhip, io->me1aCSCIdp,
@@ -461,11 +452,10 @@ bool CSCTFSPCoreLogic::run(const unsigned& endcap, const unsigned& sector, const
 	 mbaPhiOff, mbbPhiOff,
 	 (m_preTrigger<<7)|(m_allowCLCTonly<<5)|(m_allowALCTonly<<4)|(m_extend_length<<1)|(m_widePhi)
 	 );
-
+      break;
     default:
-      std::cout << "The SP FIRMWARE is:" 
-		<< this->GetFirmwareVersion()
-		<< std::endl;
+      edm::LogInfo("CSCSTFSPCoreLogic") << "Warning: using the default core is what you want?"
+					<< " Core version is " << this->GetCoreFirmwareVersion();
       sp_2010_01_22_.wrap
 	(
 	 io->me1aVp, io->me1aQp, io->me1aEtap, io->me1aPhip, io->me1aCSCIdp,
@@ -515,14 +505,17 @@ bool CSCTFSPCoreLogic::run(const unsigned& endcap, const unsigned& sector, const
 	 
 	 straightp, curvedp,
 	 mbaPhiOff, mbbPhiOff,
-	 (m_preTrigger<<7)|(m_allowCLCTonly<<5)|(m_allowALCTonly<<4)|(m_extend_length<<1)|(m_widePhi)
-	 );
+	 (m_preTrigger<<7)|(m_allowCLCTonly<<5)|(m_allowALCTonly<<4)|(m_extend_length<<1)|(m_widePhi));
+      break;
+      
     }
 
-    /*std::cout << io->me1aVp << " " << io->me1aQp << " " << io->me1aEtap << " " << io->me1aPhip << " " << io->me1aCSCIdp << std::endl;
+    if ( IsVerbose() ) {
+      std::cout << "Core Verbose Output For Debugging\n";
+      std::cout << io->me1aVp << " " << io->me1aQp << " " << io->me1aEtap << " " << io->me1aPhip << " " << io->me1aCSCIdp << std::endl;
       std::cout << io->me1bVp << " " << io->me1bQp << " " << io->me1bEtap << " " << io->me1bPhip << " " << io->me1bCSCIdp << std::endl;
       std::cout << io->me1cVp << " " << io->me1cQp << " " << io->me1cEtap << " " << io->me1cPhip << " " << io->me1cCSCIdp << std::endl;
-      
+    
       std::cout << io->me1dVp << " " << io->me1dQp << " " << io->me1dEtap << " " << io->me1dPhip << " " << io->me1dCSCIdp << std::endl;
       std::cout << io->me1eVp << " " << io->me1eQp << " " << io->me1eEtap << " " << io->me1ePhip << " " << io->me1eCSCIdp << std::endl;
       std::cout << io->me1fVp << " " << io->me1fQp << " " << io->me1fEtap << " " << io->me1fPhip << " " << io->me1fCSCIdp << std::endl;
@@ -551,7 +544,7 @@ bool CSCTFSPCoreLogic::run(const unsigned& endcap, const unsigned& sector, const
       std::cout << io->me1idH << " " << io->me2idH << " " << io->me3idH << " " << io->me4idH << " " << io->mb1idH << " " << io->mb2idH << std::endl;
       std::cout << io->me1idM << " " << io->me2idM << " " << io->me3idM << " " << io->me4idM << " " << io->mb1idM << " " << io->mb2idM << std::endl;
       std::cout << io->me1idL << " " << io->me2idL << " " << io->me3idL << " " << io->me4idL << " " << io->mb1idL << " " << io->mb2idL << std::endl << std::endl;
-    */
+    }
     ++bx;
   }
   
