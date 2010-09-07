@@ -28,7 +28,11 @@ CSCTFTrackProducer::CSCTFTrackProducer(const edm::ParameterSet& pset)
   dt_producer  = pset.getUntrackedParameter<edm::InputTag>("DTproducer");
   sp_pset = pset.getParameter<edm::ParameterSet>("SectorProcessor");
   useDT = pset.getParameter<bool>("useDT");
+  // if readDtDirect is True then the DT stubs are the one read by the CSCTF
+  // this option can be used for data/emulator comparison, not for MC
+  // production
   readDtDirect = pset.getParameter<bool>("readDtDirect");
+  mb_producer = pset.getUntrackedParameter<edm::InputTag>("mbProducer",edm::InputTag("csctfunpacker","DT"));
   TMB07 = pset.getParameter<bool>("isTMB07");
   my_dtrc = new CSCTFDTReceiver();
   m_scalesCacheID = 0ULL ;
@@ -91,15 +95,15 @@ void CSCTFTrackProducer::produce(edm::Event & e, const edm::EventSetup& c)
   if(readDtDirect == false)
   {
     edm::Handle<L1MuDTChambPhContainer> dttrig;
-	e.getByLabel(dt_producer.label(),dt_producer.instance(), dttrig);
-	emulStub = my_dtrc->process(dttrig.product());
+    e.getByLabel(dt_producer.label(),dt_producer.instance(), dttrig);
+    emulStub = my_dtrc->process(dttrig.product());
   } else {
     edm::Handle<CSCTriggerContainer<csctf::TrackStub> > stubsFromDt;
-    e.getByLabel("csctfunpacker","DT",stubsFromDt);
-	const CSCTriggerContainer<csctf::TrackStub>* stubPointer = stubsFromDt.product();
-	emulStub.push_many(*stubPointer);
+    e.getByLabel(mb_producer.label(),mb_producer.instance(),stubsFromDt);
+    const CSCTriggerContainer<csctf::TrackStub>* stubPointer = stubsFromDt.product();
+    emulStub.push_many(*stubPointer);
   } 
-
+  
   my_builder->buildTracks(LCTs.product(), (useDT?&emulStub:0), track_product.get(), dt_stubs.get());
 
   e.put(track_product);

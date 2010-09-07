@@ -97,11 +97,13 @@ csctfTrackDigis = cms.EDProducer("CSCTFTrackProducer",
                                                             firmwareFA = cms.uint32(20090521),
                                                             firmwareDD = cms.uint32(20090521),
                                                             firmwareVM = cms.uint32(20090521),
-                                                            initializeFromPSet = cms.bool(False)
+                                                            initializeFromPSet = cms.bool(False),
+                                                            isCoreVerbose = cms.bool(False)
                                                             ),
                                  isTMB07 = cms.bool(True),
                                  useDT = cms.bool(True),
                                  readDtDirect = cms.bool(False),
+                                 mbProducer = cms.untracked.InputTag("csctfunpacker","DT") # this is used only if  readDtDirect is True
                                  )
 
 
