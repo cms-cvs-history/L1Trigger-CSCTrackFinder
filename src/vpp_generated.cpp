@@ -5,7 +5,7 @@
 // VPP library web-page: http://www.phys.ufl.edu/~madorsky/vpp/
 
 // Author    : madorsky
-// Timestamp : Fri Jan 22 12:47:22 2010
+// Timestamp : Wed Sep  8 04:47:46 2010
 
 #include "vpp_generated.h"
 #include "vpp_tools.h"
@@ -20755,7 +20755,7 @@ void vpp_generated::ptu2a()
     spvpp_ptu2a_pt = (spvpp_ptu2a_modenew == 0) ? spvpp_ptu2a_d : spvpp_ptu2a_c;
     spvpp_ptu2a_si = ((((((((spvpp_ptu2a_a_ptr_b_11_9->f.h != 0)  ||  (spvpp_ptu2a_b_ptr_b_11_8->f.h != 0)) & 0xffffffffffffffffLL) && (spvpp_ptu2a_modenew == 1)) & 0xffffffffffffffffLL)  ||  (((((spvpp_ptu2a_d_ptr_b_12_9->f.h != 7) && (spvpp_ptu2a_d_ptr_b_12_9->f.h != 8)) & 0xffffffffffffffffLL) && (spvpp_ptu2a_modeout > 5)) & 0xffffffffffffffffLL)) & 0xffffffffffffffffLL)) ? 1 : 0;
     spvpp_ptu2a_modeMem = (spvpp_ptu2a_si == 0) ? spvpp_ptu2a_modeout : 1;
-    spvpp_ptu2a_sign = spvpp_ptu2a_phiA >= spvpp_ptu2a_phiB;
+    spvpp_ptu2a_sign = spvpp_ptu2a_phiA < spvpp_ptu2a_phiB;
     spvpp_pt2a = spvpp_ptu2a_pt;
     spvpp_sign2a = spvpp_ptu2a_sign;
     spvpp_mode2a = spvpp_ptu2a_modeMem;
@@ -21058,7 +21058,7 @@ void vpp_generated::ptu2b()
     spvpp_ptu2b_pt = (spvpp_ptu2b_modenew == 0) ? spvpp_ptu2b_d : spvpp_ptu2b_c;
     spvpp_ptu2b_si = ((((((((spvpp_ptu2b_a_ptr_b_11_9->f.h != 0)  ||  (spvpp_ptu2b_b_ptr_b_11_8->f.h != 0)) & 0xffffffffffffffffLL) && (spvpp_ptu2b_modenew == 1)) & 0xffffffffffffffffLL)  ||  (((((spvpp_ptu2b_d_ptr_b_12_9->f.h != 7) && (spvpp_ptu2b_d_ptr_b_12_9->f.h != 8)) & 0xffffffffffffffffLL) && (spvpp_ptu2b_modeout > 5)) & 0xffffffffffffffffLL)) & 0xffffffffffffffffLL)) ? 1 : 0;
     spvpp_ptu2b_modeMem = (spvpp_ptu2b_si == 0) ? spvpp_ptu2b_modeout : 1;
-    spvpp_ptu2b_sign = spvpp_ptu2b_phiA >= spvpp_ptu2b_phiB;
+    spvpp_ptu2b_sign = spvpp_ptu2b_phiA < spvpp_ptu2b_phiB;
     spvpp_pt2b = spvpp_ptu2b_pt;
     spvpp_sign2b = spvpp_ptu2b_sign;
     spvpp_mode2b = spvpp_ptu2b_modeMem;
@@ -21361,7 +21361,7 @@ void vpp_generated::ptu2c()
     spvpp_ptu2c_pt = (spvpp_ptu2c_modenew == 0) ? spvpp_ptu2c_d : spvpp_ptu2c_c;
     spvpp_ptu2c_si = ((((((((spvpp_ptu2c_a_ptr_b_11_9->f.h != 0)  ||  (spvpp_ptu2c_b_ptr_b_11_8->f.h != 0)) & 0xffffffffffffffffLL) && (spvpp_ptu2c_modenew == 1)) & 0xffffffffffffffffLL)  ||  (((((spvpp_ptu2c_d_ptr_b_12_9->f.h != 7) && (spvpp_ptu2c_d_ptr_b_12_9->f.h != 8)) & 0xffffffffffffffffLL) && (spvpp_ptu2c_modeout > 5)) & 0xffffffffffffffffLL)) & 0xffffffffffffffffLL)) ? 1 : 0;
     spvpp_ptu2c_modeMem = (spvpp_ptu2c_si == 0) ? spvpp_ptu2c_modeout : 1;
-    spvpp_ptu2c_sign = spvpp_ptu2c_phiA >= spvpp_ptu2c_phiB;
+    spvpp_ptu2c_sign = spvpp_ptu2c_phiA < spvpp_ptu2c_phiB;
     spvpp_pt2c = spvpp_ptu2c_pt;
     spvpp_sign2c = spvpp_ptu2c_sign;
     spvpp_mode2c = spvpp_ptu2c_modeMem;
@@ -21664,7 +21664,7 @@ void vpp_generated::ptu3a()
     spvpp_ptu3a_pt = (spvpp_ptu3a_modenew == 0) ? spvpp_ptu3a_d : spvpp_ptu3a_c;
     spvpp_ptu3a_si = ((((((((spvpp_ptu3a_a_ptr_b_11_9->f.h != 0)  ||  (spvpp_ptu3a_b_ptr_b_11_8->f.h != 0)) & 0xffffffffffffffffLL) && (spvpp_ptu3a_modenew == 1)) & 0xffffffffffffffffLL)  ||  (((((spvpp_ptu3a_d_ptr_b_12_9->f.h != 7) && (spvpp_ptu3a_d_ptr_b_12_9->f.h != 8)) & 0xffffffffffffffffLL) && (spvpp_ptu3a_modeout > 5)) & 0xffffffffffffffffLL)) & 0xffffffffffffffffLL)) ? 1 : 0;
     spvpp_ptu3a_modeMem = (spvpp_ptu3a_si == 0) ? spvpp_ptu3a_modeout : 1;
-    spvpp_ptu3a_sign = spvpp_ptu3a_phiA >= spvpp_ptu3a_phiB;
+    spvpp_ptu3a_sign = spvpp_ptu3a_phiA < spvpp_ptu3a_phiB;
     spvpp_pt3a = spvpp_ptu3a_pt;
     spvpp_sign3a = spvpp_ptu3a_sign;
     spvpp_mode3a = spvpp_ptu3a_modeMem;
@@ -21967,7 +21967,7 @@ void vpp_generated::ptu3b()
     spvpp_ptu3b_pt = (spvpp_ptu3b_modenew == 0) ? spvpp_ptu3b_d : spvpp_ptu3b_c;
     spvpp_ptu3b_si = ((((((((spvpp_ptu3b_a_ptr_b_11_9->f.h != 0)  ||  (spvpp_ptu3b_b_ptr_b_11_8->f.h != 0)) & 0xffffffffffffffffLL) && (spvpp_ptu3b_modenew == 1)) & 0xffffffffffffffffLL)  ||  (((((spvpp_ptu3b_d_ptr_b_12_9->f.h != 7) && (spvpp_ptu3b_d_ptr_b_12_9->f.h != 8)) & 0xffffffffffffffffLL) && (spvpp_ptu3b_modeout > 5)) & 0xffffffffffffffffLL)) & 0xffffffffffffffffLL)) ? 1 : 0;
     spvpp_ptu3b_modeMem = (spvpp_ptu3b_si == 0) ? spvpp_ptu3b_modeout : 1;
-    spvpp_ptu3b_sign = spvpp_ptu3b_phiA >= spvpp_ptu3b_phiB;
+    spvpp_ptu3b_sign = spvpp_ptu3b_phiA < spvpp_ptu3b_phiB;
     spvpp_pt3b = spvpp_ptu3b_pt;
     spvpp_sign3b = spvpp_ptu3b_sign;
     spvpp_mode3b = spvpp_ptu3b_modeMem;
@@ -22270,7 +22270,7 @@ void vpp_generated::ptu3c()
     spvpp_ptu3c_pt = (spvpp_ptu3c_modenew == 0) ? spvpp_ptu3c_d : spvpp_ptu3c_c;
     spvpp_ptu3c_si = ((((((((spvpp_ptu3c_a_ptr_b_11_9->f.h != 0)  ||  (spvpp_ptu3c_b_ptr_b_11_8->f.h != 0)) & 0xffffffffffffffffLL) && (spvpp_ptu3c_modenew == 1)) & 0xffffffffffffffffLL)  ||  (((((spvpp_ptu3c_d_ptr_b_12_9->f.h != 7) && (spvpp_ptu3c_d_ptr_b_12_9->f.h != 8)) & 0xffffffffffffffffLL) && (spvpp_ptu3c_modeout > 5)) & 0xffffffffffffffffLL)) & 0xffffffffffffffffLL)) ? 1 : 0;
     spvpp_ptu3c_modeMem = (spvpp_ptu3c_si == 0) ? spvpp_ptu3c_modeout : 1;
-    spvpp_ptu3c_sign = spvpp_ptu3c_phiA >= spvpp_ptu3c_phiB;
+    spvpp_ptu3c_sign = spvpp_ptu3c_phiA < spvpp_ptu3c_phiB;
     spvpp_pt3c = spvpp_ptu3c_pt;
     spvpp_sign3c = spvpp_ptu3c_sign;
     spvpp_mode3c = spvpp_ptu3c_modeMem;
@@ -22350,7 +22350,7 @@ void vpp_generated::ptu4a()
     spvpp_ptu4a_IdValid_ptr_b_1_1->f.h = (RC_spvpp_me4Id1r[0] != 0) ? 1 : 0;
     spvpp_ptu4a_etaPT = (spvpp_ptu4a_IdValid_ptr_b_1_1->f.h == 1) ? spvpp_ptu4a_me1Eta[RC_spvpp_me4Id1r[0]] : 0;
     spvpp_ptu4a_etaPT = ((((spvpp_ptu4a_CSCID[RC_spvpp_me4Id1r[0]] > 3) && (spvpp_ptu4a_etaPT >= 14)) & 0xffffffffffffffffLL)) ? 13 : ((((((spvpp_ptu4a_CSCID[RC_spvpp_me4Id1r[0]] < 4) && (spvpp_ptu4a_CSCID[RC_spvpp_me4Id1r[0]] > 0)) & 0xffffffffffffffffLL) && (spvpp_ptu4a_etaPT < 14)) & 0xffffffffffffffffLL)) ? 14 : spvpp_ptu4a_etaPT;
-    spvpp_ptu4a_phi = (spvpp_ptu4a_IdValid_ptr_b_1_1->f.h == 1) ? spvpp_ptu4a_me1Phi[RC_spvpp_me4Id1r[0]] : 0;
+    spvpp_ptu4a_phi = (spvpp_ptu4a_IdValid_ptr_b_0_0->f.h == 1) ? spvpp_ptu4a_me4Phi[(1 & 0x3)] : 0;
     spvpp_ptu4a_FR = (RC_spvpp_me4Id1r[0] != 0) ? spvpp_ptu4a_me1FR[RC_spvpp_me4Id1r[0]] : 0;
     spvpp_ptu4a_phiA = spvpp_ptu4a_me1Phi[RC_spvpp_me4Id1r[0]];
     spvpp_ptu4a_phiB = spvpp_ptu4a_me4Phi[(1 & 0x3)];
@@ -22360,7 +22360,7 @@ void vpp_generated::ptu4a()
     spvpp_ptu4a_si = ((((spvpp_ptu4a_d_ptr_b_12_9->f.h != 7) && (spvpp_ptu4a_d_ptr_b_12_9->f.h != 8)) & 0xffffffffffffffffLL)) ? 1 : 0;
     spvpp_ptu4a_modeMem = (spvpp_ptu4a_si == 0) ? spvpp_ptu4a_modeout : 1;
     spvpp_pt4a = spvpp_ptu4a_d;
-    spvpp_sign4a = spvpp_ptu4a_d_ptr_b_12_12->f.h;
+    spvpp_sign4a = (!(spvpp_ptu4a_d_ptr_b_12_12->f.h)) & 0x1;
     spvpp_mode4a = spvpp_ptu4a_modeMem;
     spvpp_etaPT4a = spvpp_ptu4a_etaPT;
     spvpp_FR4a = spvpp_ptu4a_FR;
@@ -22440,7 +22440,7 @@ void vpp_generated::ptu4b()
     spvpp_ptu4b_IdValid_ptr_b_1_1->f.h = (RC_spvpp_me4Id1r[1] != 0) ? 1 : 0;
     spvpp_ptu4b_etaPT = (spvpp_ptu4b_IdValid_ptr_b_1_1->f.h == 1) ? spvpp_ptu4b_me1Eta[RC_spvpp_me4Id1r[1]] : 0;
     spvpp_ptu4b_etaPT = ((((spvpp_ptu4b_CSCID[RC_spvpp_me4Id1r[1]] > 3) && (spvpp_ptu4b_etaPT >= 14)) & 0xffffffffffffffffLL)) ? 13 : ((((((spvpp_ptu4b_CSCID[RC_spvpp_me4Id1r[1]] < 4) && (spvpp_ptu4b_CSCID[RC_spvpp_me4Id1r[1]] > 0)) & 0xffffffffffffffffLL) && (spvpp_ptu4b_etaPT < 14)) & 0xffffffffffffffffLL)) ? 14 : spvpp_ptu4b_etaPT;
-    spvpp_ptu4b_phi = (spvpp_ptu4b_IdValid_ptr_b_1_1->f.h == 1) ? spvpp_ptu4b_me1Phi[RC_spvpp_me4Id1r[1]] : 0;
+    spvpp_ptu4b_phi = (spvpp_ptu4b_IdValid_ptr_b_0_0->f.h == 1) ? spvpp_ptu4b_me4Phi[(2 & 0x3)] : 0;
     spvpp_ptu4b_FR = (RC_spvpp_me4Id1r[1] != 0) ? spvpp_ptu4b_me1FR[RC_spvpp_me4Id1r[1]] : 0;
     spvpp_ptu4b_phiA = spvpp_ptu4b_me1Phi[RC_spvpp_me4Id1r[1]];
     spvpp_ptu4b_phiB = spvpp_ptu4b_me4Phi[(2 & 0x3)];
@@ -22450,7 +22450,7 @@ void vpp_generated::ptu4b()
     spvpp_ptu4b_si = ((((spvpp_ptu4b_d_ptr_b_12_9->f.h != 7) && (spvpp_ptu4b_d_ptr_b_12_9->f.h != 8)) & 0xffffffffffffffffLL)) ? 1 : 0;
     spvpp_ptu4b_modeMem = (spvpp_ptu4b_si == 0) ? spvpp_ptu4b_modeout : 1;
     spvpp_pt4b = spvpp_ptu4b_d;
-    spvpp_sign4b = spvpp_ptu4b_d_ptr_b_12_12->f.h;
+    spvpp_sign4b = (!(spvpp_ptu4b_d_ptr_b_12_12->f.h)) & 0x1;
     spvpp_mode4b = spvpp_ptu4b_modeMem;
     spvpp_etaPT4b = spvpp_ptu4b_etaPT;
     spvpp_FR4b = spvpp_ptu4b_FR;
@@ -22530,7 +22530,7 @@ void vpp_generated::ptu4c()
     spvpp_ptu4c_IdValid_ptr_b_1_1->f.h = (RC_spvpp_me4Id1r[2] != 0) ? 1 : 0;
     spvpp_ptu4c_etaPT = (spvpp_ptu4c_IdValid_ptr_b_1_1->f.h == 1) ? spvpp_ptu4c_me1Eta[RC_spvpp_me4Id1r[2]] : 0;
     spvpp_ptu4c_etaPT = ((((spvpp_ptu4c_CSCID[RC_spvpp_me4Id1r[2]] > 3) && (spvpp_ptu4c_etaPT >= 14)) & 0xffffffffffffffffLL)) ? 13 : ((((((spvpp_ptu4c_CSCID[RC_spvpp_me4Id1r[2]] < 4) && (spvpp_ptu4c_CSCID[RC_spvpp_me4Id1r[2]] > 0)) & 0xffffffffffffffffLL) && (spvpp_ptu4c_etaPT < 14)) & 0xffffffffffffffffLL)) ? 14 : spvpp_ptu4c_etaPT;
-    spvpp_ptu4c_phi = (spvpp_ptu4c_IdValid_ptr_b_1_1->f.h == 1) ? spvpp_ptu4c_me1Phi[RC_spvpp_me4Id1r[2]] : 0;
+    spvpp_ptu4c_phi = (spvpp_ptu4c_IdValid_ptr_b_0_0->f.h == 1) ? spvpp_ptu4c_me4Phi[(3 & 0x3)] : 0;
     spvpp_ptu4c_FR = (RC_spvpp_me4Id1r[2] != 0) ? spvpp_ptu4c_me1FR[RC_spvpp_me4Id1r[2]] : 0;
     spvpp_ptu4c_phiA = spvpp_ptu4c_me1Phi[RC_spvpp_me4Id1r[2]];
     spvpp_ptu4c_phiB = spvpp_ptu4c_me4Phi[(3 & 0x3)];
@@ -22540,7 +22540,7 @@ void vpp_generated::ptu4c()
     spvpp_ptu4c_si = ((((spvpp_ptu4c_d_ptr_b_12_9->f.h != 7) && (spvpp_ptu4c_d_ptr_b_12_9->f.h != 8)) & 0xffffffffffffffffLL)) ? 1 : 0;
     spvpp_ptu4c_modeMem = (spvpp_ptu4c_si == 0) ? spvpp_ptu4c_modeout : 1;
     spvpp_pt4c = spvpp_ptu4c_d;
-    spvpp_sign4c = spvpp_ptu4c_d_ptr_b_12_12->f.h;
+    spvpp_sign4c = (!(spvpp_ptu4c_d_ptr_b_12_12->f.h)) & 0x1;
     spvpp_mode4c = spvpp_ptu4c_modeMem;
     spvpp_etaPT4c = spvpp_ptu4c_etaPT;
     spvpp_FR4c = spvpp_ptu4c_FR;
@@ -22808,7 +22808,7 @@ void vpp_generated::ptub2a()
     spvpp_ptub2a_pt = spvpp_ptub2a_d;
     spvpp_ptub2a_si = ((((((spvpp_ptub2a_d_ptr_b_12_9->f.h != 7) && (spvpp_ptub2a_d_ptr_b_12_9->f.h != 8)) & 0xffffffffffffffffLL) && (spvpp_ptub2a_mode > 5)) & 0xffffffffffffffffLL)) ? 1 : 0;
     spvpp_ptub2a_modeMem = (spvpp_ptub2a_si == 0) ? spvpp_ptub2a_mode : 1;
-    spvpp_ptub2a_sign = spvpp_ptub2a_phiA >= spvpp_ptub2a_phiB;
+    spvpp_ptub2a_sign = spvpp_ptub2a_phiA < spvpp_ptub2a_phiB;
     spvpp_ptb2a = spvpp_ptub2a_pt;
     spvpp_signb2a = spvpp_ptub2a_sign;
     spvpp_modeb2a = spvpp_ptub2a_modeMem;
@@ -22951,7 +22951,7 @@ void vpp_generated::ptub2b()
     spvpp_ptub2b_pt = spvpp_ptub2b_d;
     spvpp_ptub2b_si = ((((((spvpp_ptub2b_d_ptr_b_12_9->f.h != 7) && (spvpp_ptub2b_d_ptr_b_12_9->f.h != 8)) & 0xffffffffffffffffLL) && (spvpp_ptub2b_mode > 5)) & 0xffffffffffffffffLL)) ? 1 : 0;
     spvpp_ptub2b_modeMem = (spvpp_ptub2b_si == 0) ? spvpp_ptub2b_mode : 1;
-    spvpp_ptub2b_sign = spvpp_ptub2b_phiA >= spvpp_ptub2b_phiB;
+    spvpp_ptub2b_sign = spvpp_ptub2b_phiA < spvpp_ptub2b_phiB;
     spvpp_ptb2b = spvpp_ptub2b_pt;
     spvpp_signb2b = spvpp_ptub2b_sign;
     spvpp_modeb2b = spvpp_ptub2b_modeMem;
@@ -23094,7 +23094,7 @@ void vpp_generated::ptub2c()
     spvpp_ptub2c_pt = spvpp_ptub2c_d;
     spvpp_ptub2c_si = ((((((spvpp_ptub2c_d_ptr_b_12_9->f.h != 7) && (spvpp_ptub2c_d_ptr_b_12_9->f.h != 8)) & 0xffffffffffffffffLL) && (spvpp_ptub2c_mode > 5)) & 0xffffffffffffffffLL)) ? 1 : 0;
     spvpp_ptub2c_modeMem = (spvpp_ptub2c_si == 0) ? spvpp_ptub2c_mode : 1;
-    spvpp_ptub2c_sign = spvpp_ptub2c_phiA >= spvpp_ptub2c_phiB;
+    spvpp_ptub2c_sign = spvpp_ptub2c_phiA < spvpp_ptub2c_phiB;
     spvpp_ptb2c = spvpp_ptub2c_pt;
     spvpp_signb2c = spvpp_ptub2c_sign;
     spvpp_modeb2c = spvpp_ptub2c_modeMem;
