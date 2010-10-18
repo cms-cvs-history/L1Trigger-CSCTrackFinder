@@ -154,6 +154,8 @@ CSCTFSectorProcessor::CSCTFSectorProcessor(const unsigned& endcap,
   firmSP_Map.insert(std::pair<int,int>(20100728,20100728));
 
   firmSP_Map.insert(std::pair<int,int>(20100901,20100901));
+
+  firmSP_Map.insert(std::pair<int,int>(20101011,20101011));
 }
 
 
@@ -355,10 +357,10 @@ void CSCTFSectorProcessor::initialize(const edm::EventSetup& c){
   if(QualityEnableME4b<0) throw cms::Exception("CSCTFTrackBuilder")<<"QualityEnableME4b parameter left uninitialized";
   if(QualityEnableME4c<0) throw cms::Exception("CSCTFTrackBuilder")<<"QualityEnableME4c parameter left uninitialized";
 
-  if (m_firmSP<0) throw cms::Exception("CSCTFSectorProcessor")<< " firmwareSP parameter left uninitialized!!!\n";
-  if (m_firmFA<0) throw cms::Exception("CSCTFSectorProcessor")<< " firmwareFA parameter left uninitialized!!!\n";
-  if (m_firmDD<0) throw cms::Exception("CSCTFSectorProcessor")<< " firmwareDD parameter left uninitialized!!!\n";
-  if (m_firmVM<0) throw cms::Exception("CSCTFSectorProcessor")<< " firmwareVM parameter left uninitialized!!!\n";
+  if (m_firmSP<1) throw cms::Exception("CSCTFSectorProcessor")<< " firmwareSP parameter left uninitialized!!!\n";
+  if (m_firmFA<1) throw cms::Exception("CSCTFSectorProcessor")<< " firmwareFA parameter left uninitialized!!!\n";
+  if (m_firmDD<1) throw cms::Exception("CSCTFSectorProcessor")<< " firmwareDD parameter left uninitialized!!!\n";
+  if (m_firmVM<1) throw cms::Exception("CSCTFSectorProcessor")<< " firmwareVM parameter left uninitialized!!!\n";
 
   if ( (m_firmFA != m_firmDD) ||
        (m_firmFA != m_firmVM) ||
@@ -523,47 +525,67 @@ bool CSCTFSectorProcessor::run(const CSCTriggerContainer<csctf::TrackStub>& stub
   for(std::vector<csctf::TrackStub>::iterator itr=stub_vec_filtered.begin(); itr!=stub_vec_filtered.end(); itr++)
     {
       if(itr->station() != 5)
-	{
-	  CSCDetId id(itr->getDetId().rawId());
-	  unsigned fpga = (id.station() == 1) ? CSCTriggerNumbering::triggerSubSectorFromLabels(id) - 1 : id.station();
+        {
+          CSCDetId id(itr->getDetId().rawId());
+          unsigned fpga = (id.station() == 1) ? CSCTriggerNumbering::triggerSubSectorFromLabels(id) - 1 : id.station();
 
-	  lclphidat lclPhi;
-	  try {
-	    lclPhi = srLUTs_[FPGAs[fpga]]->localPhi(itr->getStrip(), itr->getPattern(), itr->getQuality(), itr->getBend());
-	  } catch( cms::Exception &e ) {
-	    bzero(&lclPhi,sizeof(lclPhi));
-	    edm::LogWarning("CSCTFSectorProcessor:run()") << "Exception from LocalPhi LUT in " << FPGAs[fpga]
-							  << "(strip="<<itr->getStrip()<<",pattern="<<itr->getPattern()<<",quality="<<itr->getQuality()<<",bend="<<itr->getBend()<<")" <<std::endl;
-	  }
-	  gblphidat gblPhi;
-	  try {
-	    unsigned csc_id = itr->cscid();
-	    if (!m_gangedME1a) csc_id = itr->cscidSeparateME1a();
-	    gblPhi = srLUTs_[FPGAs[fpga]]->globalPhiME(lclPhi.phi_local, itr->getKeyWG(), csc_id);
-	  } catch( cms::Exception &e ) {
-	    bzero(&gblPhi,sizeof(gblPhi));
-	    edm::LogWarning("CSCTFSectorProcessor:run()") << "Exception from GlobalPhi LUT in " << FPGAs[fpga]
-							  << "(phi_local="<<lclPhi.phi_local<<",KeyWG="<<itr->getKeyWG()<<",csc="<<itr->cscid()<<")"<<std::endl;
-	  }
-	  gbletadat gblEta;
-	  try {
-	    gblEta = srLUTs_[FPGAs[fpga]]->globalEtaME(lclPhi.phi_bend_local, lclPhi.phi_local, itr->getKeyWG(), itr->cscid());
-	  } catch( cms::Exception &e ) {
-	    bzero(&gblEta,sizeof(gblEta));
-	    edm::LogWarning("CSCTFSectorProcessor:run()") << "Exception from GlobalEta LUT in " << FPGAs[fpga]
-							  << "(phi_bend_local="<<lclPhi.phi_bend_local<<",phi_local="<<lclPhi.phi_local<<",KeyWG="<<itr->getKeyWG()<<",csc="<<itr->cscid()<<")"<<std::endl;
-	  }
+          lclphidat lclPhi;
+          try {
+            lclPhi = srLUTs_[FPGAs[fpga]]->localPhi(itr->getStrip(), itr->getPattern(), itr->getQuality(), itr->getBend());
+          } catch( cms::Exception &e ) {
+            bzero(&lclPhi,sizeof(lclPhi));
+            edm::LogWarning("CSCTFSectorProcessor:run()") << "Exception from LocalPhi LUT in " << FPGAs[fpga]
+                                                          << "(strip="<<itr->getStrip()<<",pattern="<<itr->getPattern()<<",quality="<<itr->getQuality()<<",bend="<<itr->getBend()<<")" <<std::endl;
+          }
 
-	  itr->setEtaPacked(gblEta.global_eta);
-	  itr->setPhiPacked(gblPhi.global_phi);
+          gblphidat gblPhi;
+          try {
+            unsigned csc_id = itr->cscid();
+            if (!m_gangedME1a) csc_id = itr->cscidSeparateME1a();
+            gblPhi = srLUTs_[FPGAs[fpga]]->globalPhiME(lclPhi.phi_local, itr->getKeyWG(), csc_id);
+        
+          } catch( cms::Exception &e ) {
+            bzero(&gblPhi,sizeof(gblPhi));
+            edm::LogWarning("CSCTFSectorProcessor:run()") << "Exception from GlobalPhi LUT in " << FPGAs[fpga]
+                                                          << "(phi_local="<<lclPhi.phi_local<<",KeyWG="<<itr->getKeyWG()<<",csc="<<itr->cscid()<<")"<<std::endl;
+          }
 
-	  if(itr->station() == 1) dt_stubs.push_back(*itr); // send stubs to DT
+          gbletadat gblEta;
+          try {
+            gblEta = srLUTs_[FPGAs[fpga]]->globalEtaME(lclPhi.phi_bend_local, lclPhi.phi_local, itr->getKeyWG(), itr->cscid());
+          } catch( cms::Exception &e ) {
+            bzero(&gblEta,sizeof(gblEta));
+            edm::LogWarning("CSCTFSectorProcessor:run()") << "Exception from GlobalEta LUT in " << FPGAs[fpga]
+                                                          << "(phi_bend_local="<<lclPhi.phi_bend_local<<",phi_local="<<lclPhi.phi_local<<",KeyWG="<<itr->getKeyWG()<<",csc="<<itr->cscid()<<")"<<std::endl;
+          }
 
-	  LogDebug("CSCTFSectorProcessor:run()") << "LCT found, processed by FPGA: " << FPGAs[fpga] << std::endl
-						 << " LCT now has (eta, phi) of: (" << itr->etaValue() << "," << itr->phiValue() <<")\n";
-	}
+          gblphidat gblPhiDT;
+          try {
+            gblPhiDT = srLUTs_[FPGAs[fpga]]->globalPhiMB(lclPhi.phi_local, itr->getKeyWG(), itr->cscid());
+          } catch( cms::Exception &e ) {
+            bzero(&gblPhiDT,sizeof(gblPhiDT));
+            edm::LogWarning("CSCTFSectorProcessor:run()") << "Exception from GlobalPhi DT LUT in " << FPGAs[fpga]
+                                                          << "(phi_local="<<lclPhi.phi_local<<",KeyWG="<<itr->getKeyWG()<<",csc="<<itr->cscid()<<")"<<std::endl;
+          }
+
+          itr->setEtaPacked(gblEta.global_eta);
+
+          if(itr->station() == 1 ) {
+            //&& itr->cscId() > 6) { //only ring 3 
+            itr->setPhiPacked(gblPhiDT.global_phi);// convert the DT to convert
+            dt_stubs.push_back(*itr); // send stubs to DT
+          }
+
+          //reconvert the ME1 LCT to the CSCTF units.
+          //the same iterator is used to fill two containers, 
+          //the CSCTF one (stub_vec_filtered) and LCTs sent to DTTF (dt_stubs)
+          itr->setPhiPacked(gblPhi.global_phi);
+
+          LogDebug("CSCTFSectorProcessor:run()") << "LCT found, processed by FPGA: " << FPGAs[fpga] << std::endl
+                                                 << " LCT now has (eta, phi) of: (" << itr->etaValue() << "," << itr->phiValue() <<")\n";
+        }
     }
-
+  
   CSCTriggerContainer<csctf::TrackStub> processedStubs(stub_vec_filtered);
 
   /** STEP TWO
@@ -773,4 +795,7 @@ void CSCTFSectorProcessor::printDisclaimer(int firmSP, int firmFA){
 
   if (firmSP==20100901)
     edm::LogInfo( "CSCTFSectorProcessor" ) << "\t * Inverted charge bit\n";
+
+  if (firmSP==20101011)
+    edm::LogInfo( "CSCTFSectorProcessor" ) << "\t * Added CSC-DT assembling tracks ME1-MB2/1\n";
 }
