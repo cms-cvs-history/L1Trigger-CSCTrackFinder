@@ -18,14 +18,13 @@ csctfTrackDigis = cms.EDProducer("CSCTFTrackProducer",
                                                                              PtMethod = cms.untracked.uint32(4)
                                                                              ),
 		
-                                                            # Operational mode control
                                                             ##########################
                                                             AllowALCTonly = cms.bool(False),
                                                             AllowCLCTonly = cms.bool(False),
                                                             rescaleSinglesPhi  = cms.bool(True),
                                                             run_core = cms.bool(True),
-                                                            trigger_on_MB1a = cms.bool(False),
-                                                            trigger_on_MB1d = cms.bool(False),
+                                                            trigger_on_MB1a = cms.bool(True),
+                                                            trigger_on_MB1d = cms.bool(True),
                                                             trigger_on_ME1a = cms.bool(False),
                                                             trigger_on_ME1b = cms.bool(False),
                                                             trigger_on_ME2 = cms.bool(False),
@@ -102,7 +101,7 @@ csctfTrackDigis = cms.EDProducer("CSCTFTrackProducer",
                                                             ),
                                  isTMB07 = cms.bool(True),
                                  useDT = cms.bool(True),
-                                 readDtDirect = cms.bool(False),
+                                 readDtDirect = cms.bool(True),
                                  mbProducer = cms.untracked.InputTag("csctfunpacker","DT") # this is used only if  readDtDirect is True
                                  )
 
