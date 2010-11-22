@@ -787,8 +787,10 @@ void CSCTFSectorProcessor::printDisclaimer(int firmSP, int firmFA){
   else 
     edm::LogInfo( "CSCTFSectorProcessor" ) << "\t * Correct phi assignment for singles\n";
   
-  if (firmSP==20100629)
-    edm::LogInfo( "CSCTFSectorProcessor" ) << "\t * Correct MB quality masking\n";
+  if (firmSP==20100629){
+    edm::LogInfo( "CSCTFSectorProcessor" ) << "\t * Correct MB quality masking in the wrapper\n";
+    edm::LogInfo( "CSCTFSectorProcessor" ) << "\t * Core is 20100122\n";
+  }
 
   if (firmSP==20100728)
     edm::LogInfo( "CSCTFSectorProcessor" ) << "\t * Inverted MB clocks\n";
