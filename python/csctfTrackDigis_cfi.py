@@ -103,8 +103,7 @@ csctfTrackDigis = cms.EDProducer("CSCTFTrackProducer",
                                    
 		#use firmware version and PTLUTs listed in this files if True
                 #use firmware and PTLUTs from O2O if False 
-                #initializeFromPSet = cms.bool(True)
-                initializeFromPSet = cms.bool(False)
+                initializeFromPSet = cms.bool(True)
 	),
                                  
 	isTMB07 = cms.bool(True),
